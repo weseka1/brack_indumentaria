@@ -135,13 +135,17 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    columna que el texto. */
 
 /* ===== sección VITRINA: la prenda flota bajo el reflector ===== */
-.estrella{position:relative;min-height:100svh;background:radial-gradient(120% 90% at 50% 30%,var(--white) 0%,var(--paper) 55%,var(--paper-2) 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:16vh 0 10vh}
+/* RITMO — el pico. La vitrina es el efecto que define el sitio: la prenda
+   flotando bajo el reflector. Pesaba 1,08 pantallas, lo mismo que el carrusel de
+   tarjetas de al lado; ahora es la sección más amplia de la página y el ojo
+   entiende dónde detenerse. Solo aire: no cambia una sola pieza de contenido. */
+.estrella{position:relative;min-height:138svh;background:radial-gradient(120% 90% at 50% 30%,var(--white) 0%,var(--paper) 55%,var(--paper-2) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:21vh 0 15vh}
 .estrella-light{position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(115deg,transparent 30%,rgba(var(--surface-rgb),.85) 46%,rgba(255,255,255,0) 60%);
   width:160%;left:-30%;mix-blend-mode:soft-light;animation:sweep 7.5s var(--ease) infinite}
 @keyframes sweep{0%{transform:translateX(-38%)}55%{transform:translateX(38%)}100%{transform:translateX(38%)}}
-.estrella-stage{position:relative;width:min(520px,74vw);z-index:2;margin-top:13vh}
+.estrella-stage{position:relative;width:min(520px,74vw);z-index:2;margin-top:9vh}
 .estrella-img{width:auto;max-width:100%;max-height:54vh;margin:0 auto;display:block;object-fit:contain;
   filter:drop-shadow(0 34px 44px rgba(var(--shadow-rgb),.3)) saturate(.98);will-change:transform,opacity}
 .estrella-shadow{position:absolute;left:16%;right:16%;bottom:5%;height:7%;
@@ -321,14 +325,18 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .carr-hint{padding:0 6vw;font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-35)}
 
 /* ===== bloque historia (contraste oscuro, calmo) ===== */
-.historia{background:var(--dark);color:var(--dark-ink);padding:16vh 6vw}
-.historia-head{max-width:52rem;margin:0 0 10vh}
+/* RITMO — el valle. Son cinco datos duros para leer de un golpe, no un momento
+   de contemplación, y ocupaban lo mismo que la vitrina. Se compacta el bloque y
+   baja la escala de los números: siguen siendo lo más grande de su sección, pero
+   dejan de competir con los titulares de las secciones vecinas. */
+.historia{background:var(--dark);color:var(--dark-ink);padding:6vh 6vw}
+.historia-head{max-width:52rem;margin:0 0 3.5vh}
 .historia-head .h2 em{font-style:italic;color:var(--accent-dark)}
-.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(246,247,248,.16);max-width:1240px;margin:0 auto;padding-bottom:3rem}
+.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(246,247,248,.16);max-width:1240px;margin:0 auto;padding-bottom:1.2rem}
 .hito{padding:2.6rem 1.6rem 0;border-left:1px solid rgba(246,247,248,.16)}
 .hito:first-child{border-left:none}
-@media(min-width:1001px){.hito:nth-child(even){transform:translateY(2.6rem)}}
-.hito .n{font-family:var(--serif);font-weight:300;font-size:clamp(2.6rem,4.6vw,4.4rem);color:var(--accent-dark);line-height:1}
+@media(min-width:1001px){.hito:nth-child(even){transform:translateY(1.7rem)}}
+.hito .n{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,3.7vw,3.5rem);color:var(--accent-dark);line-height:1}
 .hito .k{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(246,247,248,.55);margin-top:.9rem}
 .hito p{font-size:.86rem;color:rgba(246,247,248,.78);margin-top:.7rem}
 @media(max-width:1000px){.hitos{grid-template-columns:1fr 1fr}.hito{border-top:1px solid rgba(246,247,248,.16);padding-bottom:2rem}.hito:first-child{border-top:none}}
@@ -423,7 +431,11 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    Los clips son verticales (720x1080 y 884x1080) y la franja es apaisada: van
    con object-fit:cover y encuadre centrado, así llenan el ancho sin franjas a
    los costados en ninguna medida. */
-.franja{position:relative;height:70svh;overflow:hidden;background:var(--dark);isolation:isolate}
+/* RITMO — la llegada. Era de las secciones más cortas (0,70 pantallas) siendo
+   el único video del sitio y la prueba de que el local existe: pasaba de largo.
+   Sube en altura Y en escala del titular, para que se sienta como destino y no
+   solo como una sección más alta. */
+.franja{position:relative;height:95svh;overflow:hidden;background:var(--dark);isolation:isolate}
 /* el media sobresale arriba y abajo para que al hacer parallax no se vea el borde */
 .franja-media{position:absolute;inset:-9% 0;will-change:transform}
 .fr-clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;
@@ -438,7 +450,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .franja-copy{position:absolute;left:0;right:0;bottom:11.5%;z-index:3;text-align:center;padding:0 6vw;color:#F7F8FA}
 .franja-kicker{font-family:var(--mono);font-size:.62rem;letter-spacing:.44em;text-transform:uppercase;
   color:var(--accent-dark)}
-.franja-title{font-family:var(--serif);font-weight:300;font-size:clamp(1.9rem,4.4vw,3.6rem);
+.franja-title{font-family:var(--serif);font-weight:300;font-size:clamp(2.3rem,5.6vw,4.6rem);
   line-height:1.1;letter-spacing:-.01em;margin-top:1.1rem;
   text-shadow:0 2px 26px rgba(0,0,0,.55)}
 .franja-title em{font-style:italic}
@@ -450,9 +462,9 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   border-color:transparent transparent transparent #F7F8FA;margin-left:4px;
   filter:drop-shadow(0 2px 10px rgba(0,0,0,.5))}
 @media(max-width:760px){
-  .franja{height:50svh}
+  .franja{height:64svh}
   .franja-copy{bottom:8%}
-  .franja-title{font-size:clamp(1.5rem,6.4vw,2.2rem)}
+  .franja-title{font-size:clamp(1.8rem,7.6vw,2.7rem)}
   .franja-kicker{font-size:.56rem;letter-spacing:.34em}
 }
 .show-cta{display:flex;flex-direction:column;gap:.9rem;align-items:flex-start}
@@ -547,7 +559,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 
 /* la vitrina medía una pantalla entera CONTANDO el margen: con el panel se
    pasaba de largo y obligaba a un scroll de más para verla completa */
-.estrella{min-height:calc(100svh - var(--panel-gap) * 2)}
+.estrella{min-height:calc(138svh - var(--panel-gap) * 2)}
 /* el registro traía su fondo y su padding en el atributo style del HTML; el
    radio necesita que el fondo quede adentro del recorte */
 .registro{border-radius:var(--panel-r)!important}
@@ -1234,9 +1246,13 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   <div class="rev-track-wrap"><div class="rev-track" id="revTrack"></div></div>
 </section>
 <style>
-.reviews{background:var(--paper);padding:12vh 0;border-top:var(--hairline);overflow:hidden}
-.rev-head{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;padding:0 6vw;margin-bottom:5vh}
-.rev-num{font-family:var(--serif);font-weight:300;font-size:3.4rem;line-height:1}
+/* RITMO — la barra de datos. Son cuatro condiciones comerciales corriendo: ya
+   era corta y comprimida termina de leerse como lo que es, una franja de datos.
+   El cuerpo del texto de las tarjetas NO se toca: ahí hubo 32 fallas de
+   contraste y no se vuelve atrás por unos píxeles de alto. */
+.reviews{background:var(--paper);padding:8vh 0;border-top:var(--hairline);overflow:hidden}
+.rev-head{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;padding:0 6vw;margin-bottom:3vh}
+.rev-num{font-family:var(--serif);font-weight:300;font-size:2.75rem;line-height:1}
 .rev-stars{display:block;color:var(--gold);letter-spacing:.2em;font-size:.8rem}
 .rev-track-wrap{overflow:hidden}
 .rev-track{display:flex;gap:1.4rem;width:max-content;animation:rev-mq 40s linear infinite;padding:.5rem 0}
@@ -1332,7 +1348,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 </section>
 
 <!-- REGISTRO / ACCESO PREFERENTE -->
-<section class="registro" id="registro" style="background:var(--dark);color:var(--dark-ink);padding:14vh 6vw;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,5fr);gap:5vw;align-items:center">
+<section class="registro" id="registro" style="background:var(--dark);color:var(--dark-ink);padding:11vh 6vw;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,5fr);gap:5vw;align-items:center">
   <div>
     <p class="blq-kicker">Enterate de los drops antes que nadie</p>
     <h2 class="h2" style="margin-top:1rem">Te avisamos cuando entra <em style="font-style:italic;color:var(--accent-dark)">tu talle.</em></h2>
