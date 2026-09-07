@@ -1726,7 +1726,9 @@ document.querySelectorAll('.puesto-card').forEach(card => {
 .mt-typing i:nth-child(2){animation-delay:.15s}.mt-typing i:nth-child(3){animation-delay:.3s}
 @keyframes mtp{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
 .mt-input{display:flex;gap:.5rem;padding:.8rem;border-top:var(--hairline);background:rgba(var(--surface-rgb),.6)}
-.mt-input input{flex:1;border:var(--hairline);border-radius:2rem;padding:.7rem 1.1rem;font-family:var(--sans);font-size:.86rem;outline:none;background:var(--white)}
+.mt-input input{flex:1;border:var(--hairline);border-radius:2rem;padding:.7rem 1.1rem;font-family:var(--sans);
+  font-size:.86rem;outline:none;background:var(--white);color:var(--ink)}
+.mt-input input::placeholder{color:var(--ink-35)}
 .mt-input input:focus{border-color:var(--gold)}
 .mt-input button{width:42px;height:42px;border-radius:50%;background:var(--gold);color:var(--white);font-size:1.1rem}
 .mt-input button:hover{background:var(--ink)}
