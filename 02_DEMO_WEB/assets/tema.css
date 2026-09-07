@@ -1,0 +1,117 @@
+/* ============ TEMA DE BRACK — la paleta y el modo noche ============
+   Vive acá, y no inline en cada página, porque son DOS documentos (index.html
+   y coleccion.html) que tienen que apagarse igual. Duplicado, un retoque en
+   uno deja al otro atrás: es la forma exacta de las cicatrices nº6 y nº11
+   (el gráfico y la sección que quedaron con tinta oscura sobre fondo oscuro).
+
+   Acá adentro está TODO lo que cambia entre día y noche. Ninguna página define
+   colores propios: piden estas variables. Y las fotos de producto no se tocan
+   nunca — ni un filter, ni una opacidad.
+
+   Se carga en el <head>, antes que el CSS de cada página. */
+
+/* ============ BRACK v2 — esqueleto de Islas Group rebrandeado — paleta blanca iPhone ============ */
+:root{
+  /* BRACK — blanco estudio, estilo iPhone.
+     La vara de la casa es CLARA, monocroma y con aire (Estandar Web WESEKA):
+     el mismo blanco frío de Brack. Se probó una variante en carbón y se
+     descartó: el fondo oscuro tapa la ropa en vez de mostrarla, y las prendas
+     recortadas —que son casi todas negras— se empastaban contra el fondo.
+     Sobre blanco, la prenda es lo único que tiene color y se recorta sola.
+     Fondos nunca puros: blanco frío, no #fff; tinta casi negra, no #000. */
+  --paper:#F6F7F8;          /* blanco estudio */
+  --paper-2:#ECEEF0;
+  --white:#FCFCFD;          /* superficie de cards */
+  --ink:#111214;            /* tinta: casi negro, con temperatura */
+  --ink-60:rgba(17,18,20,.58);
+  --ink-35:rgba(17,18,20,.32);
+  --gold:#111214;           /* el "acento" es la propia tinta: monocromo total.
+                               En una tienda de ropa el color lo pone la prenda,
+                               no la interfaz. */
+  --gold-deep:#000000;
+  --dark:#0B0C0D;           /* bloques a sangre y pie */
+  --dark-ink:#F6F7F8;
+  --hairline:1px solid rgba(17,18,20,.10);
+  --sans:"Archivo",system-ui,sans-serif;
+  --serif:"Fraunces",Georgia,serif;
+  --mono:"IBM Plex Mono",monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+
+  /* ---- roles de color, en canales sueltos ----
+     Van como tripletas "r,g,b" a propósito: el sitio usa el mismo color en
+     una docena de alphas distintos (rgba(var(--surface-rgb),.65), .75, .8...). Con la
+     tripleta, un solo valor da vuelta todas las variantes y no hay que duplicar
+     una sola regla para el modo noche. */
+  --surface-rgb:255,255,255;   /* cristal de las cards */
+  --shadow-rgb:20,22,26;       /* sombras */
+  --chip-rgb:252,253,254;      /* chips y tags flotantes */
+  --nav-rgb:251,250,248;       /* barra del header y menú móvil */
+  --scrim-rgb:246,247,248;     /* velo sobre las fotos a sangre */
+  --line-rgb:17,18,20;         /* líneas finas y bordes */
+  --ph-a:#EDEFF2;              /* gradiente de placeholder mientras carga la foto */
+  --ph-b:#DDE1E6;
+  --amber:#FFA457;             /* el ámbar del local: la luz que queda encendida */
+  /* ---- los dos acentos ----
+     Hacen falta DOS porque el mismo rol cae sobre dos fondos opuestos:
+     --accent va sobre papel (kicker de la vitrina, segundero del reloj) y
+     --accent-dark va sobre los bloques a sangre (.blq, .historia, .registro),
+     que son oscuros en los dos temas. Con un solo valor, de día la tinta
+     quedaba negra sobre negro: es la cicatriz nº11 esperando repetirse. */
+  --accent:#111214;            /* sobre papel: de día el acento ES la tinta */
+  --accent-dark:#FFA457;       /* sobre bloque oscuro: el ámbar del local, día y noche */
+  --online:#2E8B57;            /* el verde de "estamos atendiendo" (semáforo, no marca) */
+  --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23111214'/%3E%3C/svg%3E");
+}
+
+/* ============ MODO NOCHE — el local con las luces bajas ============
+   Todo pasa por acá: ni una regla duplicada, ni un segundo stylesheet.
+   Las fotos de producto NO se tocan (ningún filter, ninguna opacidad). */
+:root[data-theme="night"]{
+  --paper:#0E0F11;
+  --paper-2:#141619;
+  --white:#15171A;             /* la card deja de ser papel y pasa a ser vitrina */
+  --ink:#EDEEF0;
+  --ink-60:rgba(237,238,240,.64);
+  --ink-35:rgba(237,238,240,.42);
+  --gold:#EDEEF0;              /* el acento sigue siendo la tinta, ahora clara */
+  --gold-deep:#FFFFFF;
+  --dark:#08090A;              /* los bloques que ya eran oscuros bajan un escalón */
+  --dark-ink:#F6F7F8;
+  --hairline:1px solid rgba(237,238,240,.13);
+  --surface-rgb:34,37,42;
+  --shadow-rgb:0,0,0;
+  --chip-rgb:22,24,28;
+  --nav-rgb:12,13,15;
+  --scrim-rgb:9,10,11;
+  --line-rgb:237,238,240;
+  --ph-a:#1A1D21;
+  --ph-b:#121417;
+  --accent:#FFA457;            /* de noche el acento sobre papel se enciende: el ámbar */
+  --accent-dark:#FFA457;       /* sobre bloque oscuro no cambia: ya era la luz encendida */
+  --online:#4FBF7F;            /* el verde sube de tono para leerse sobre el vidrio oscuro */
+  --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23EDEEF0'/%3E%3C/svg%3E");
+}
+
+/* ---- el interruptor, igual en las dos páginas ---- */
+/* interruptor de noche: un punto que se enciende. Sin sol ni luna. */
+.nite{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:.56rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ink-35);padding:.7rem .9rem;
+  border-radius:3rem;transition:color .35s var(--ease)}
+.nite:hover{color:var(--ink-60)}
+.nite-dot{width:7px;height:7px;border-radius:50%;border:1px solid currentColor;flex:0 0 auto;
+  transition:background-color .45s var(--ease),border-color .45s var(--ease),box-shadow .45s var(--ease)}
+.nite[aria-pressed="true"]{color:var(--ink-60)}
+.nite[aria-pressed="true"] .nite-dot{background:var(--amber);border-color:var(--amber);
+  box-shadow:0 0 9px 1px rgba(255,164,87,.55)}
+.nite:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px}
+@media(max-width:900px){.nite-txt{display:none}.nite{padding:.6rem .5rem}}
+
+/* la conmutación: una sola regla, las variables hacen el resto.
+   --tdelay se hereda, así que basta con ponerlo en cada sección para que
+   todo lo que hay adentro apague escalonado y no de golpe. */
+html.is-theming *{
+  transition-property:background-color,color,border-color,box-shadow,fill,-webkit-text-stroke-color!important;
+  transition-duration:.52s!important;
+  transition-timing-function:var(--ease)!important;
+  transition-delay:var(--tdelay,0ms)!important;
+}

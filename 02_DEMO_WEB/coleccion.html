@@ -10,85 +10,90 @@
 <title>El catálogo — Brack Indumentaria</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tema.css">
+<!-- sin defer: pinta el tema guardado antes del primer frame, si no el
+     catalogo entra en blanco y recien despues se apaga -->
+<script src="assets/tema.js"></script>
 <style>
-:root{--paper:#F5F6F8;--white:#FCFDFE;--ink:#14161A;--ink-60:rgba(20,22,26,.6);--ink-35:rgba(20,22,26,.35);
---blue:#1F4E8C;--blue-deep:#163B6C;--hair:1px solid rgba(20,22,26,.1);
---sans:"Archivo",system-ui,sans-serif;--serif:"Fraunces",Georgia,serif;--mono:"IBM Plex Mono",monospace;
---ease:cubic-bezier(.22,1,.36,1)}
+/* La paleta y el modo noche viven en assets/tema.css, compartidos con
+   index.html. Acá abajo solo van los estilos propios del catálogo. */
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}img{display:block;max-width:100%}
 button{font-family:inherit;background:none;border:none;color:inherit;cursor:pointer}
 .top{position:sticky;top:0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;
-padding:1rem 3vw;background:rgba(252,253,254,.94);backdrop-filter:blur(14px);border-bottom:var(--hair)}
+padding:1rem 3vw;background:rgba(var(--nav-rgb),.92);backdrop-filter:blur(14px);border-bottom:var(--hairline)}
 .top-back{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-60)}
 .top-back:hover{color:var(--ink)}
 .top-brand{font-family:var(--serif);letter-spacing:.28em;font-size:1rem;text-align:center}
-.top-brand small{display:block;font-size:.5rem;letter-spacing:.5em;color:var(--blue);margin-top:.15rem}
-.top-wa{justify-self:end;font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;background:var(--blue);
-color:#fff;padding:.65rem 1.3rem;border-radius:3rem}
+.top-brand small{display:block;font-size:.5rem;letter-spacing:.5em;color:var(--gold);margin-top:.15rem}
+.top-right{justify-self:end;display:flex;align-items:center;gap:.4rem}
+.top-wa{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;background:var(--gold);
+color:var(--white);padding:.65rem 1.3rem;border-radius:3rem}
 .top-wa:hover{background:var(--ink)}
 .head{padding:7vh 3vw 3vh;display:flex;align-items:baseline;justify-content:space-between;gap:2rem;flex-wrap:wrap}
 .head h1{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4vw,3.2rem)}
-.head .count{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;color:var(--blue);text-transform:uppercase}
+.head .count{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;color:var(--gold);text-transform:uppercase}
 .shop{display:grid;grid-template-columns:230px 1fr;gap:2.5rem;padding:0 3vw 10vh;align-items:start}
-.menu{position:sticky;top:5.4rem;background:var(--white);border:var(--hair);border-radius:1.2rem;padding:1.4rem 0;overflow:hidden}
+.menu{position:sticky;top:5.4rem;background:var(--white);border:var(--hairline);border-radius:1.2rem;padding:1.4rem 0;overflow:hidden}
 .menu .t{font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-35);padding:0 1.4rem 1rem}
 .menu button{display:flex;justify-content:space-between;gap:1rem;width:100%;text-align:left;padding:.55rem 1.4rem;
 font-size:.85rem;color:var(--ink-60);transition:all .25s}
-.menu button:hover{color:var(--ink);background:rgba(31,78,140,.04)}
-.menu button.on{color:var(--blue-deep);background:rgba(31,78,140,.07);font-weight:500}
+.menu button:hover{color:var(--ink);background:rgba(var(--line-rgb),.04)}
+.menu button.on{color:var(--gold-deep);background:rgba(var(--line-rgb),.07);font-weight:500}
 .menu button span{font-family:var(--mono);font-size:.62rem;color:var(--ink-35);padding-top:.2rem}
 .tools{display:flex;gap:.7rem;flex-wrap:wrap;margin-bottom:1.6rem}
-.search{flex:1;min-width:12rem;background:var(--white);border:var(--hair);border-radius:3rem;padding:.7rem 1.2rem;
+.chips{display:flex;gap:.4rem;flex-wrap:wrap;flex-basis:100%}
+.chip span{font-family:var(--mono);font-size:.58rem;color:var(--ink-35);margin-left:.35rem}
+.search{flex:1;min-width:12rem;background:var(--white);border:var(--hairline);border-radius:3rem;padding:.7rem 1.2rem;
 font-family:var(--sans);font-size:.85rem;outline:none}
-.search:focus{border-color:var(--blue)}
-.chip{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-60);border:var(--hair);
+.search:focus{border-color:var(--gold)}
+.chip{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-60);border:var(--hairline);
 padding:.6rem 1.1rem;border-radius:3rem;background:var(--white);transition:all .25s}
-.chip.on{border-color:var(--blue);color:var(--blue-deep);background:rgba(31,78,140,.06)}
+.chip.on{border-color:var(--gold);color:var(--gold-deep);background:rgba(var(--line-rgb),.05)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.3rem}
-.card{background:rgba(255,255,255,.65);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.8);
-border-radius:1.3rem;overflow:hidden;cursor:pointer;box-shadow:0 6px 24px rgba(20,22,26,.05);
+.card{background:rgba(var(--surface-rgb),.65);backdrop-filter:blur(16px);border:1px solid rgba(var(--surface-rgb),.8);
+border-radius:1.3rem;overflow:hidden;cursor:pointer;box-shadow:0 6px 24px rgba(var(--shadow-rgb),.05);
 transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
-.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(20,22,26,.1)}
-.card .im{aspect-ratio:1/1;overflow:hidden;background:linear-gradient(170deg,#F1F3F6,#E3E7EC)}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(var(--shadow-rgb),.1)}
+.card .im{aspect-ratio:1/1;overflow:hidden;background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
 .card .im img{width:100%;height:100%;object-fit:cover;filter:saturate(.94);transition:transform .7s var(--ease)}
 .card:hover .im img{transform:scale(1.04)}
 .card .in{padding:.9rem 1.1rem 1.1rem}
 .card .b{font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-35)}
 .card .m{font-family:var(--serif);font-size:1.02rem;margin-top:.2rem}
-.card .r{font-family:var(--mono);font-size:.6rem;color:var(--blue-deep);margin-top:.45rem}
+.card .r{font-family:var(--mono);font-size:.6rem;color:var(--gold-deep);margin-top:.45rem}
 .empty{padding:6vh 0;text-align:center;color:var(--ink-60);font-size:.85rem;display:none}
-.ficha{position:fixed;inset:0;z-index:100;display:none;background:rgba(20,22,26,.42);backdrop-filter:blur(8px)}
+.ficha{position:fixed;inset:0;z-index:100;display:none;background:rgba(var(--shadow-rgb),.45);backdrop-filter:blur(8px)}
 .ficha.open{display:flex}
 .panel{margin:auto;width:min(980px,94vw);max-height:92svh;background:var(--white);border-radius:1.2rem;
-display:grid;grid-template-columns:6fr 5fr;overflow:hidden;box-shadow:0 40px 120px rgba(10,12,16,.4)}
-.gal{background:linear-gradient(165deg,#F2F4F7,#E4E8ED);display:flex;flex-direction:column;position:relative}
+display:grid;grid-template-columns:6fr 5fr;overflow:hidden;box-shadow:0 40px 120px rgba(var(--shadow-rgb),.45)}
+.gal{background:linear-gradient(165deg,var(--ph-a),var(--ph-b));display:flex;flex-direction:column;position:relative}
 .gal .main{flex:1;display:flex;align-items:center;justify-content:center;padding:2.4rem}
 .gal .main img{max-width:100%;max-height:52svh;object-fit:contain}
 .thumbs{display:flex;gap:.5rem;padding:0 1.5rem 1.5rem;justify-content:center;overflow-x:auto}
 .thumbs img{width:52px;aspect-ratio:1;object-fit:cover;border-radius:.4rem;border:1px solid transparent;cursor:pointer;opacity:.55}
-.thumbs img.on{border-color:var(--blue);opacity:1}
+.thumbs img.on{border-color:var(--gold);opacity:1}
 .info{padding:2.6rem 2.2rem;overflow-y:auto}
-.lote{font-family:var(--mono);font-size:.6rem;letter-spacing:.24em;color:var(--blue);text-transform:uppercase}
+.lote{font-family:var(--mono);font-size:.6rem;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
 .brand{font-family:var(--serif);font-weight:300;font-size:2.2rem;margin-top:.7rem;line-height:1.05}
 .model{font-family:var(--serif);font-style:italic;color:var(--ink-60);font-size:1.2rem;margin-top:.2rem}
-.specs{margin-top:1.8rem;border-top:var(--hair)}
-.row{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:var(--hair);
+.specs{margin-top:1.8rem;border-top:var(--hairline)}
+.row{display:flex;justify-content:space-between;padding:.7rem 0;border-bottom:var(--hairline);
 font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase}
 .row .k{color:var(--ink-35)}
-.range{margin-top:1.6rem;font-family:var(--mono);font-size:.68rem;color:var(--blue-deep)}
+.range{margin-top:1.6rem;font-family:var(--mono);font-size:.68rem;color:var(--gold-deep)}
 .ctas{margin-top:1.8rem;display:flex;flex-direction:column;gap:.7rem}
 .btn{text-align:center;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;padding:.95rem 1.4rem;border-radius:3rem}
-.btn-b{background:var(--blue);color:#fff}.btn-b:hover{background:var(--ink)}
-.btn-l{border:1px solid rgba(20,22,26,.22)}.btn-l:hover{border-color:var(--blue);color:var(--blue-deep)}
+.btn-b{background:var(--gold);color:var(--white)}.btn-b:hover{background:var(--ink)}
+.btn-l{border:1px solid rgba(var(--line-rgb),.22)}.btn-l:hover{border-color:var(--gold);color:var(--gold-deep)}
 .close{position:absolute;top:1rem;right:1rem;z-index:5;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
-color:var(--ink-60);background:rgba(252,253,254,.92);border-radius:2rem;padding:.5rem 1rem}
+color:var(--ink-60);background:rgba(var(--chip-rgb),.92);border-radius:2rem;padding:.5rem 1rem}
 @media(max-width:900px){
   .shop{grid-template-columns:1fr}
   .menu{position:static;display:flex;flex-wrap:wrap;gap:.3rem;padding:.8rem;border-radius:1rem}
   .menu .t{display:none}
-  .menu button{width:auto;border:var(--hair);border-radius:2rem;padding:.5rem .9rem;font-size:.72rem}
+  .menu button{width:auto;border:var(--hairline);border-radius:2rem;padding:.5rem .9rem;font-size:.72rem}
   .menu button span{display:none}
   .panel{grid-template-columns:1fr;display:block;overflow-y:auto}
   .gal .main img{max-height:40svh}
@@ -99,7 +104,12 @@ color:var(--ink-60);background:rgba(252,253,254,.92);border-radius:2rem;padding:
 <header class="top">
   <a class="top-back" href="index.html">← Inicio</a>
   <a class="top-brand" href="index.html">BRACK<small>EL CATÁLOGO</small></a>
-  <a class="top-wa" href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20consultar%20por%20una%20pieza%20del%20cat%C3%A1logo." target="_blank" rel="noopener">WhatsApp</a>
+  <div class="top-right">
+    <button class="nite" id="niteBtn" type="button" aria-pressed="false" aria-label="Modo noche">
+      <span class="nite-dot" aria-hidden="true"></span><span class="nite-txt">Noche</span>
+    </button>
+    <a class="top-wa" href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20consultar%20por%20una%20prenda%20del%20cat%C3%A1logo." target="_blank" rel="noopener">WhatsApp</a>
+  </div>
 </header>
 <div class="head"><h1>La Colección</h1><span class="count" id="count"></span></div>
 <div class="shop">
@@ -107,13 +117,11 @@ color:var(--ink-60);background:rgba(252,253,254,.92);border-radius:2rem;padding:
   <main>
     <div class="tools">
       <input class="search" id="q" type="text" placeholder="Buscar marca o modelo…">
-      <button class="chip on" data-v="">Todas</button>
-      <button class="chip" data-v="Nuevo">Nuevo</button>
-      <button class="chip" data-v="Como nuevo">Como nuevo</button>
-      <button class="chip" data-v="Usado">Usado</button>
+      <div class="chips" id="chips"></div>
+      <!-- se llenan desde el catálogo: las categorías reales, con su conteo -->
     </div>
     <div class="grid" id="grid"></div>
-    <div class="empty" id="empty">No hay piezas con ese criterio. El stock rota a diario — consulte por WhatsApp.</div>
+    <div class="empty" id="empty">No hay nada con ese criterio. El stock rota todos los días — escribinos por WhatsApp y te decimos qué quedó.</div>
   </main>
 </div>
 <div class="ficha" id="ficha">
@@ -130,7 +138,7 @@ color:var(--ink-60);background:rgba(252,253,254,.92);border-radius:2rem;padding:
       <div class="specs" id="fSpecs"></div>
       <p class="range" id="fRange"></p>
       <div class="ctas">
-        <a class="btn btn-b" id="fWA" target="_blank" rel="noopener">Consultar por esta pieza</a>
+        <a class="btn btn-b" id="fWA" target="_blank" rel="noopener">Consultar por esta prenda</a>
         <a class="btn btn-l" href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada." target="_blank" rel="noopener">Agendar visita privada</a>
       </div>
     </div>
@@ -153,7 +161,7 @@ const mkBtn=(label,val,n)=>{
   b.addEventListener('click',()=>{st.brand=val;menu.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');render();});
   return b;
 };
-const all=mkBtn('Todas las casas','',DATA.length);all.classList.add('on');menu.appendChild(all);
+const all=mkBtn('Todas las marcas','',DATA.length);all.classList.add('on');menu.appendChild(all);
 Object.keys(counts).sort().forEach(br=>menu.appendChild(mkBtn(br,br,counts[br])));
 /* el precio lo formatea BRACK.precio (assets/formato.js), en un solo lugar */
 function rl(r){return BRACK.precio(r)}
@@ -164,15 +172,32 @@ function render(){
     if(st.q&&!(d.brand+' '+d.model).toLowerCase().includes(st.q.toLowerCase()))return false;
     return true;
   });
-  document.getElementById('count').textContent=list.length+' de '+DATA.length+' piezas';
+  document.getElementById('count').textContent=list.length+' de '+DATA.length+' productos';
   document.getElementById('empty').style.display=list.length?'none':'block';
   grid.innerHTML=list.map(d=>'<article class="card" data-id="'+d.id+'"><div class="im"><img loading="lazy" src="fotos/'+d.photos[0]+'" alt="'+d.brand+' '+d.model+'"></div><div class="in"><div class="b">'+d.brand+'</div><div class="m">'+d.model+'</div><div class="r">'+rl(d.range)+'</div></div></article>').join('');
 }
 render();
 document.getElementById('q').addEventListener('input',e=>{st.q=e.target.value.trim();render();});
-document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
-  document.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));c.classList.add('on');st.cond=c.dataset.v;render();
-}));
+/* Los chips salen del catálogo, no de una lista escrita a mano. Los que había
+   —"Nuevo / Como nuevo / Usado"— filtraban por d.cond creyendo que era una
+   condición de reventa; en Brack ese campo guarda la CATEGORÍA, así que
+   ninguno de los tres valores existía y clickear cualquiera vaciaba la grilla. */
+const chips = document.getElementById('chips');
+const porCat = {};
+DATA.forEach(d=>{ if(d.cond) porCat[d.cond]=(porCat[d.cond]||0)+1; });
+const mkChip=(label,val,n)=>{
+  const b=document.createElement('button');
+  b.className='chip';
+  b.dataset.v=val;
+  b.innerHTML=label+(n!=null?'<span>'+n+'</span>':'');
+  b.addEventListener('click',()=>{
+    chips.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');st.cond=val;render();
+  });
+  return b;
+};
+const todas=mkChip('Todas','',DATA.length);todas.classList.add('on');chips.appendChild(todas);
+Object.keys(porCat).sort().forEach(c=>chips.appendChild(mkChip(c,c,porCat[c])));
 const ficha=document.getElementById('ficha');
 grid.addEventListener('click',e=>{
   const c=e.target.closest('.card');if(!c)return;
@@ -181,9 +206,9 @@ grid.addEventListener('click',e=>{
   document.getElementById('fLote').textContent='Referencia '+idx;
   document.getElementById('fBrand').textContent=d.brand;
   document.getElementById('fModel').textContent=d.model;
-  document.getElementById('fSpecs').innerHTML=[['Condición',d.cond],['Era',d.era],['Caja',d.mm?d.mm+' mm':null],['Material',d.material],['Color',d.color],['Género',d.gender]].filter(s=>s[1]).map(s=>'<div class="row"><span class="k">'+s[0]+'</span><span>'+s[1]+'</span></div>').join('');
+  document.getElementById('fSpecs').innerHTML=BRACK.specs(d).map(s=>'<div class="row"><span class="k">'+s[0]+'</span><span>'+s[1]+'</span></div>').join('');
   document.getElementById('fRange').textContent=BRACK.precioCompleto(d.range);
-  document.getElementById('fWA').href='https://wa.me/5492954517938?text='+encodeURIComponent('Hola, vi la pieza '+d.brand+' '+d.model+' (Ref '+idx+') en el catálogo y quisiera consultar por ella.');
+  document.getElementById('fWA').href='https://wa.me/5492954517938?text='+encodeURIComponent('Hola, vi '+d.brand+' '+d.model+' (Ref '+idx+') en el catálogo y quisiera consultar por ella.');
   const main=document.getElementById('fImg'),th=document.getElementById('fThumbs');
   main.src='fotos/'+d.photos[0];
   th.innerHTML=d.photos.map((p,i)=>'<img src="fotos/'+p+'" class="'+(i===0?'on':'')+'" data-p="'+p+'">').join('');

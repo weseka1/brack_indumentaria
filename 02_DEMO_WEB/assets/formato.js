@@ -27,7 +27,9 @@
      y ante cualquier otra cosa devuelve el texto de fallback en vez de romper
      la pantalla entera. Un precio que falta no puede vaciar el catálogo. */
   B.precio = function (r, fallback) {
-    fallback = fallback || "A consultar";
+    /* con === undefined, no con ||: precioCompleto pasa null a propósito para
+       distinguir "sin precio" y quedarse con SU frase, no con esta */
+    if (fallback === undefined) fallback = "A consultar";
     if (typeof r === "number" && isFinite(r) && r > 0) return B.pesos(r);
     if (typeof r === "string" && r.trim()) return r.indexOf("-") >= 0 ? r.replace("-", " – ") : r;
     return fallback;
@@ -45,5 +47,43 @@
     if (!p) return "Precio a consultar por WhatsApp";
     var ef = B.efectivo(r);
     return ef ? p + " · " + ef + " en efectivo" : p;
+  };
+
+  /* ---- las specs de la ficha ----
+     También compartidas, porque index y coleccion tenían el mismo array
+     duplicado y los dos venían de relojería: pedían "Era", "Caja … mm" y
+     "Color", campos que en ropa no existen. En el catálogo real de Brack:
+       cond     = la CATEGORÍA (Zapatillas, Camperas…), no una condición
+       mm       = el primer talle disponible
+       material = la lista completa de talles ("35, 36, 37…") o "Talle único"
+       color    = vacío en los 119 → no se muestra
+       era      = "Temporada 2026" en los 119 → no dice nada, no se muestra
+     Regla: si no hay dato real, la fila no se dibuja. Nada de placeholders. */
+  B.specs = function (d) {
+    var filas = [["Categoría", d.cond]];
+
+    var talles = d.material || d.mm;
+    if (talles === "Talle único" || talles === "Único") filas.push(["Talle", "Único"]);
+    else if (talles && String(talles).indexOf(",") >= 0) filas.push(["Talles", talles]);
+    else if (talles) filas.push(["Talle", talles]);
+
+    /* La tabla en centímetros la publican 3 productos. Cuando está, es lo que
+       más despeja la duda de comprar ropa sin probársela: va entera. */
+    if (d.medidas && d.medidas.length) {
+      filas.push([
+        "Medidas",
+        d.medidas
+          .map(function (m) {
+            return m.talle + ": " + m.cm;
+          })
+          .join(" · "),
+      ]);
+    }
+
+    if (d.gender) filas.push(["Género", d.gender]);
+
+    return filas.filter(function (f) {
+      return f[1];
+    });
   };
 })();
