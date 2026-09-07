@@ -673,8 +673,14 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(max-width:640px){.local-hora{margin-bottom:1.2rem}}
 </style>
 <script>
+/* Este script quedó ARRIBA del reloj cuando el reloj se mudó del hero a la
+   sección "El local": al ejecutarse durante el parseo, los elementos todavía no
+   existían y tick() reventaba contra null en el primer frame. Espera al DOM y
+   además comprueba que estén, así no vuelve a pasar si el reloj se mueve otra vez. */
 (function(){
+  function arrancar(){
   var h = document.getElementById('hrH'), m = document.getElementById('hrM'), s = document.getElementById('hrS');
+  if (!h || !m || !s) return;
   function tick(){
     var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
     var sec = now.getSeconds() + now.getMilliseconds() / 1000;
@@ -686,6 +692,9 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
     requestAnimationFrame(tick);
   }
   tick();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arrancar);
+  else arrancar();
 })();
 </script>
 
