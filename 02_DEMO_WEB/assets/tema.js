@@ -87,6 +87,49 @@
     });
   }
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", enchufar);
-  else enchufar();
+  /* ---- la luz sin mouse ----
+     Con puntero fino la jerarquía la resuelve :hover en CSS. En un teléfono no
+     hay cursor, así que la pieza iluminada es la que quedó CENTRADA en la
+     pantalla. Un IntersectionObserver con una banda estrecha en el medio: no
+     escucha scroll, no calcula posiciones, lo hace el navegador.
+
+     No entra el catálogo de 119: ahí no hay una "pieza mirada", y observar cien
+     y pico de elementos para un efecto que casi no se ve no se paga. */
+  function luzEnFoco() {
+    if (!window.IntersectionObserver || !window.matchMedia) return;
+    if (window.matchMedia("(hover:hover)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    document.querySelectorAll(".carr-rail, .puesto-grid, .unis-grid").forEach(function (grupo) {
+      var hijos = Array.prototype.slice.call(grupo.children);
+      if (hijos.length < 2) return;
+      /* el carrusel scrollea adentro suyo: la banda se mide contra el riel.
+         Las grillas van contra el viewport. */
+      var horizontal = grupo.classList.contains("carr-rail");
+      var io = new IntersectionObserver(
+        function (entradas) {
+          entradas.forEach(function (e) {
+            e.target.classList.toggle("is-lit", e.isIntersecting);
+          });
+          grupo.classList.toggle("tiene-luz", !!grupo.querySelector(".is-lit"));
+        },
+        {
+          root: horizontal ? grupo : null,
+          rootMargin: horizontal ? "0px -42% 0px -42%" : "-44% 0px -44% 0px",
+          threshold: 0,
+        }
+      );
+      hijos.forEach(function (h) {
+        io.observe(h);
+      });
+    });
+  }
+
+  function arrancar() {
+    enchufar();
+    luzEnFoco();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", arrancar);
+  else arrancar();
 })();

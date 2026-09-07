@@ -61,6 +61,21 @@
   --accent-dark:#FFA457;       /* sobre bloque oscuro: el ámbar del local, día y noche */
   --online:#2E8B57;            /* el verde de "estamos atendiendo" (semáforo, no marca) */
   --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23111214'/%3E%3C/svg%3E");
+
+  /* ---- LA LUZ (etapa 2) — de día está toda apagada ----
+     El apagado NO es `none`: dentro de una lista de box-shadow, `none` invalida
+     la declaración entera y la card se quedaría sin su sombra normal. El
+     apagado es una sombra de radio 0 y alpha 0, que el navegador no pinta. */
+  --halo:0 0 0 0 rgba(255,164,87,0);       /* halo de reposo */
+  --halo-on:0 0 0 0 rgba(255,164,87,0);    /* la pieza que mira el cliente */
+  --halo-off:0 0 0 0 rgba(255,164,87,0);   /* sus vecinas, casi a oscuras */
+  --halo-cat:0 0 0 0 rgba(255,164,87,0);   /* el catálogo largo, más liviano */
+  --vecina:1;                              /* opacidad de las vecinas */
+  --vineta:transparent;                    /* los bordes del viewport */
+  /* el fondo de las cards del carrusel. Estaba escrito a mano en el JS con un
+     gradiente claro fijo, así que de noche quedaban cajas BLANCAS con el texto
+     blanco encima: ilegibles. Ahora es del tema, como todo lo demás. */
+  --tint-card:linear-gradient(165deg,#EDEFF2,#D9DDE3);
 }
 
 /* ============ MODO NOCHE — el local con las luces bajas ============
@@ -90,6 +105,26 @@
   --accent-dark:#FFA457;       /* sobre bloque oscuro no cambia: ya era la luz encendida */
   --online:#4FBF7F;            /* el verde sube de tono para leerse sobre el vidrio oscuro */
   --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23EDEEF0'/%3E%3C/svg%3E");
+
+  /* ---- LA LUZ (etapa 2) — el local con los reflectores puestos ----
+     La luz cae de arriba: el desenfoque va desplazado hacia abajo y con
+     spread negativo, así el resplandor se abre bajo la pieza en vez de
+     rodearla como un neón. Ámbar del local (255,164,87) a alpha bajo.
+     Ojo con el orden: primero el halo, y la sombra negra de la card DESPUÉS,
+     para que el ámbar no se coma el contorno. */
+  --halo:0 18px 46px -22px rgba(255,164,87,.34),0 2px 20px -14px rgba(255,164,87,.16);
+  --halo-on:0 26px 62px -20px rgba(255,164,87,.50),0 4px 28px -12px rgba(255,164,87,.22);
+  --halo-off:0 10px 26px -24px rgba(255,164,87,.10);
+  --halo-cat:0 12px 32px -22px rgba(255,164,87,.26);
+  --vecina:.62;
+  /* Casi imperceptible a propósito: no se tiene que leer como un efecto, sino
+     como que el centro de la pantalla está iluminado. El tramo transparente
+     llega hasta el 72% MEDIDO, no a ojo: con la curva anterior el centro del
+     viewport recibía un delta de 3-4/255 y eso ya oscurecía las prendas.
+     Ahora la zona donde vive el producto queda intacta, bit a bit. */
+  --vineta:radial-gradient(150% 125% at 50% 42%,
+    transparent 0%,transparent 72%,rgba(0,0,0,.34) 100%);
+  --tint-card:linear-gradient(165deg,#16181C,#101215);
 }
 
 /* ---- el interruptor, igual en las dos páginas ---- */
@@ -114,4 +149,64 @@ html.is-theming *{
   transition-duration:.52s!important;
   transition-timing-function:var(--ease)!important;
   transition-delay:var(--tdelay,0ms)!important;
+}
+
+
+/* ============ ETAPA 2 — LA LUZ ============
+   Solo de noche. De día todas las variables de arriba están apagadas, así que
+   estas mismas reglas no pintan nada y el modo día queda intacto.
+
+   Regla que no se negocia: la luz va ALREDEDOR de la foto, nunca encima. Las
+   fotos de producto no llevan ni un filter nuevo, ni brightness, ni opacidad.
+   Se midió qué le hace un filter:brightness() a las fotos reales del catálogo
+   y hasta un 1.03 clipea el 2,96% de los píxeles de una campera negra —color
+   que se pierde y no vuelve—. Así que la pieza activa "sube su luminosidad"
+   subiendo la de su ENTORNO (el fondo de la card y el halo), no la de la prenda. */
+
+/* ---- 1. el halo de reposo ----
+   Va como segunda sombra en la regla base de cada card (index.html y
+   coleccion.html), para no duplicar la sombra normal en un selector de noche. */
+
+/* ---- 2. jerarquía por luz ----
+   Solo con puntero fino y sin reduced-motion: es un realce animado, y quien
+   pidió menos movimiento se queda con los halos quietos. */
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  :root[data-theme="night"] .ccard:hover,
+  :root[data-theme="night"] .uni:hover,
+  :root[data-theme="night"] .piece:hover{--halo:var(--halo-on)}
+
+  /* las vecinas del MISMO contenedor bajan y su halo casi se apaga */
+  :root[data-theme="night"] .carr-rail:has(.ccard:hover) .ccard:not(:hover),
+  :root[data-theme="night"] .puesto-grid:has(.ccard:hover) .ccard:not(:hover),
+  :root[data-theme="night"] .unis-grid:has(.uni:hover) .uni:not(:hover),
+  :root[data-theme="night"] .cat-grid:has(.piece:hover) .piece:not(:hover){
+    opacity:var(--vecina);--halo:var(--halo-off)}
+
+  /* el catálogo son 119 cards: a las vecinas se les toca SOLO la opacidad.
+     Repintar 119 sombras en cada movimiento del mouse pone el scroll pesado,
+     y la opacidad se compone en GPU. El halo de la activa sí se intensifica. */
+  :root[data-theme="night"] .grid:has(.card:hover) .card:not(:hover){opacity:var(--vecina)}
+  :root[data-theme="night"] .grid .card:hover{--halo-cat:var(--halo-on)}
+}
+
+/* la misma jerarquía sin mouse: la pieza que quedó centrada en la pantalla es
+   la iluminada. La marca assets/tema.js con un IntersectionObserver. */
+:root[data-theme="night"] .is-lit{--halo:var(--halo-on)}
+:root[data-theme="night"] .tiene-luz > *:not(.is-lit){opacity:var(--vecina);--halo:var(--halo-off)}
+
+/* la pieza activa se aclara un punto, pero en su FONDO, no en la foto */
+:root[data-theme="night"] .ccard:hover,
+:root[data-theme="night"] .ccard.is-lit{--tint-card:linear-gradient(165deg,#1C1F24,#141619)}
+
+/* ---- 3. viñeta de ambiente ----
+   z-index 90: por encima del contenido y por debajo del nav (100), del grano
+   (200) y de la ficha (250), que no tienen por qué oscurecerse. */
+body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;
+  background:var(--vineta)}
+
+@media (prefers-reduced-motion:reduce){
+  /* halos estáticos: ni intensificación ni atenuación, y sin transición */
+  :root[data-theme="night"] .ccard,:root[data-theme="night"] .uni,
+  :root[data-theme="night"] .piece,:root[data-theme="night"] .card{transition:none!important}
+  :root[data-theme="night"] .tiene-luz > *:not(.is-lit){opacity:1;--halo:var(--halo)}
 }
