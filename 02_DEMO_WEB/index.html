@@ -2435,5 +2435,47 @@ form.addEventListener('submit', function(e){
 });
 })();
 </script>
+
+<!-- ===== ÚLTIMOS AJUSTES MÓVILES =====
+     Van al final del documento a propósito: los estilos del asistente y de la
+     ficha se declaran más abajo que el bloque móvil general, así que allá arriba
+     estas reglas perdían por orden de cascada. Ya pasó antes con el mismo
+     patrón: un @media no suma especificidad. -->
+<style>
+@media(max-width:900px){
+  /* El campo del asistente quedaba en 14px y iOS hace ZOOM automático al enfocar
+     cualquier campo de menos de 16px: la página salta de escala y el visitante
+     tiene que volver a acomodarla a mano. */
+  .mt-input input{font-size:16px}
+  .mt-input button{width:44px;height:44px}
+  /* cerrar la ficha medía 31px de alto */
+  .ficha-close{min-height:44px;display:inline-flex;align-items:center;font-size:.7rem}
+  /* la etiqueta sobre la foto caía a 9,3px: es el nombre del producto y el precio */
+  .foto-tag{font-size:.66rem}
+  .foto-tag b{font-size:.68rem}
+}
+
+/* ===== ZONAS SEGURAS DEL TELÉFONO =====
+   El viewport se declara con viewport-fit=cover, que extiende la página por
+   debajo del notch y de la barra de gestos, pero nunca se usaban las variables
+   de zona segura: en un iPhone con notch, el botón del asistente quedaba pisado
+   por la barra de inicio, y en horizontal los paneles se metían bajo el notch.
+   max() mantiene el valor de siempre cuando el aparato no tiene recortes. */
+@supports (padding: max(0px)) {
+  .mt-fab{bottom:max(1.6rem, calc(env(safe-area-inset-bottom) + .6rem));
+          right:max(1.6rem, calc(env(safe-area-inset-right) + .6rem))}
+  .mt-chat{bottom:max(5.6rem, calc(env(safe-area-inset-bottom) + 4.6rem));
+           right:max(1.6rem, calc(env(safe-area-inset-right) + .6rem))}
+  .nav{padding-left:max(2.4vw, env(safe-area-inset-left));
+       padding-right:max(2.4vw, env(safe-area-inset-right))}
+  /* los paneles respetan el recorte lateral, que en horizontal es el notch */
+  .hero,.marcas,.estrella,.blq,.carrusel,.puesto,.cortes,.reels,.bleed,
+  .colecciones,.historia,.reviews,.franja,.showroom,.registro{
+    margin-left:max(var(--panel-x), env(safe-area-inset-left));
+    margin-right:max(var(--panel-x), env(safe-area-inset-right))}
+  .footer{padding-bottom:max(3vh, env(safe-area-inset-bottom))}
+}
+</style>
+
 </body>
 </html>
