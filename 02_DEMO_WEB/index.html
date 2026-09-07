@@ -38,7 +38,10 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 /* preloader claro */
 .preloader{position:fixed;inset:0;z-index:400;background:var(--white);display:flex;align-items:center;justify-content:center}
 .pre-mark{text-align:center}
-.pre-name{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,4.4vw,3rem);letter-spacing:.28em;display:flex;overflow:hidden;justify-content:center}
+/* Mismo patrón de máscara que el titular del hero. Hoy dice BRACK, en
+   mayúsculas y sin descendentes, así que no se corta nada; lleva el mismo aire
+   igual para que el día que ese texto cambie no reaparezca el bug. */
+.pre-name{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,4.4vw,3rem);letter-spacing:.28em;display:flex;overflow:hidden;justify-content:center;padding-bottom:.26em;margin-bottom:-.26em}
 .pre-name span{display:inline-block;transform:translateY(120%)}
 .pre-sub{margin-top:1rem;font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;color:var(--ink-35);opacity:0}
 .pre-count{position:absolute;right:5vw;bottom:5vh;font-family:var(--mono);font-size:.75rem;color:var(--gold)}
@@ -94,16 +97,33 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .hero.has-video .hero-video{opacity:1}
 .hero.has-video .hero-media{opacity:0}
 .hero-media{filter:saturate(.92) contrast(1.02);transform:scale(1.04)}
-.hero-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(var(--scrim-rgb),.94) 0%,rgba(var(--scrim-rgb),.30) 46%,rgba(var(--scrim-rgb),.50) 100%),linear-gradient(to right,rgba(var(--scrim-rgb),.92) 0%,rgba(var(--scrim-rgb),.58) 44%,rgba(var(--scrim-rgb),.06) 80%)}
-.hero-copy{position:absolute;left:5vw;bottom:9vh;z-index:5;color:var(--ink);max-width:36rem}
+/* El velo sale de una variable porque el trabajo que hace cambia por tema:
+   de día tapa una foto clara para que la tinta oscura se lea; de noche estaba
+   apagando la prenda —la primera imagen del sitio— sin necesitarlo, porque el
+   texto ya es claro. Ver assets/tema.css. */
+.hero-scrim{position:absolute;inset:0;background:var(--hero-velo)}
+/* sube para dejarle el pie de la columna al "Bajá", que ahora cuelga de la
+   misma línea vertical: con bottom:9vh se le montaba encima al CTA */
+.hero-copy{position:absolute;left:5vw;bottom:16vh;z-index:5;color:var(--ink);max-width:36rem}
 .hero-kicker{font-size:.68rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem}
 .hero-title{font-family:var(--serif);font-weight:300;font-size:clamp(2.4rem,5.2vw,4.6rem);line-height:1.06;letter-spacing:-.01em}
-.hero-title .l{display:block;overflow:hidden}
+/* La máscara de la animación de entrada recortaba las colas: la "y" de "hay,"
+   y las "q" de "que" y "queda" caen por debajo de la caja de línea, que con
+   line-height 1.06 no les da lugar.
+   Se le da aire ABAJO a la máscara y se descuenta con un margen negativo del
+   mismo tamaño, así el interlineado del bloque no se mueve ni un píxel. Subir
+   el line-height habría separado las líneas y cambiado el titular entero.
+   La animación no se toca: el translateY(115%) del span se calcula sobre la
+   altura del span, no sobre la de esta caja. */
+.hero-title .l{display:block;overflow:hidden;padding-bottom:.26em;margin-bottom:-.26em}
 .hero-title .l span{display:inline-block;transform:translateY(115%)}
 .hero-sub{margin-top:1.4rem;font-size:1rem;color:var(--ink-60);opacity:0;max-width:30rem}
 .hero-cta{margin-top:2.2rem;opacity:0}
-.hero-down{position:absolute;left:50%;bottom:3.4vh;transform:translateX(-50%);z-index:5;color:rgba(var(--line-rgb),.55);
-  font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+/* Estaba clavado en el centro exacto del viewport, sin relación con nada: ni
+   con el titular, que arranca a 5vw, ni con la foto. Ahora cuelga de la misma
+   columna que el texto. */
+.hero-down{position:absolute;left:5vw;bottom:3.4vh;z-index:5;color:rgba(var(--line-rgb),.55);
+  font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;display:flex;flex-direction:column;align-items:flex-start;gap:.7rem}
 .hero-down::after{content:"";width:1px;height:3rem;background:linear-gradient(to bottom,var(--accent),transparent);animation:drip 2.2s var(--ease) infinite}
 @keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
@@ -132,9 +152,19 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .estrella-arrow:hover{color:var(--gold-deep)}
 .estrella-arrow.prev{left:5vw}
 .estrella-arrow.prev:hover{transform:translateY(-50%) translateX(-.3rem)}
-.estrella-arrow.next{right:5vw}
+.estrella-arrow.next{right:7vw}   /* fuera del carril del botón del asistente */
 .estrella-arrow.next:hover{transform:translateY(-50%) translateX(.3rem)}
-@media(max-width:700px){.estrella-arrow.prev{left:.5rem}.estrella-arrow.next{right:.5rem}}
+/* .5rem dejaba la flecha a 8px del borde en un teléfono: se leía como si
+   estuviera cortada contra el canto de la pantalla. Y el padding lateral ancho
+   la empujaba todavía más afuera. */
+@media(max-width:700px){
+  /* el padding chico la despega del borde, pero la superficie de toque tiene
+     que seguir siendo de 44px */
+  .estrella-arrow{padding:1rem .7rem;font-size:2.4rem;min-width:44px;min-height:44px;
+    display:flex;align-items:center;justify-content:center}
+  .estrella-arrow.prev{left:1.1rem}
+  .estrella-arrow.next{right:1.1rem}
+}
 .estrella-kicker{position:absolute;top:9vh;left:0;right:0;text-align:center;z-index:3;
   font-size:.66rem;letter-spacing:.46em;text-transform:uppercase;color:var(--accent)}
 /* cortina orgánica: el oscuro del hero se derrite alrededor de la pieza */
@@ -593,7 +623,9 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    tema, y como abajo hay una FOTO y el contraste depende de la imagen, el disco
    y la etiqueta llevan su propia chapa de legibilidad: el mismo patrón que ya
    usan .map-tag, .sv-label y .piece-idx. */
-.hero-hora{position:absolute;right:5vw;bottom:5vh;z-index:6;display:flex;align-items:center;gap:1rem;color:var(--ink-60)}
+/* El botón del asistente es fixed y vive en el mismo rincón: con right:5vw la
+   etiqueta del reloj le quedaba justo debajo. Se le cede ese carril. */
+.hero-hora{position:absolute;right:calc(5vw + 4.8rem);bottom:5vh;z-index:6;display:flex;align-items:center;gap:1rem;color:var(--ink-60)}
 .hr-face{position:relative;width:64px;height:64px;border-radius:50%;
   border:1px solid rgba(var(--line-rgb),.55);
   background:rgba(var(--chip-rgb),var(--vidrio-op-chip));backdrop-filter:blur(10px) saturate(var(--vidrio-sat));

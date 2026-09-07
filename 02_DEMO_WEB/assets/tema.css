@@ -76,6 +76,10 @@
      gradiente claro fijo, así que de noche quedaban cajas BLANCAS con el texto
      blanco encima: ilegibles. Ahora es del tema, como todo lo demás. */
   --tint-card:linear-gradient(165deg,#EDEFF2,#D9DDE3);
+  /* El velo del hero. De día queda EXACTAMENTE como estaba: sobre foto clara,
+     la tinta oscura del titular necesita esta densidad para leerse. */
+  --hero-velo:linear-gradient(to top,rgba(var(--scrim-rgb),.94) 0%,rgba(var(--scrim-rgb),.30) 46%,rgba(var(--scrim-rgb),.50) 100%),
+              linear-gradient(to right,rgba(var(--scrim-rgb),.92) 0%,rgba(var(--scrim-rgb),.58) 44%,rgba(var(--scrim-rgb),.06) 80%);
   /* velo de la franja de video: de día alcanza con velar lo justo para que el
      texto se lea sobre cualquier fotograma */
   --velo-franja:linear-gradient(to top,rgba(8,9,11,.82) 0%,rgba(8,9,11,.30) 52%,rgba(8,9,11,.42) 100%);
@@ -153,6 +157,13 @@
   --vineta:radial-gradient(150% 125% at 50% 42%,
     transparent 0%,transparent 72%,rgba(0,0,0,.34) 100%);
   --tint-card:linear-gradient(165deg,#16181C,#101215);
+  /* De noche el texto ya es claro y no necesita que se apague la foto: el velo
+     baja y se vuelve DIRECCIONAL. Denso a la izquierda, donde vive el titular;
+     casi nulo a la derecha, que es donde está la prenda —la primera imagen del
+     sitio, y se estaba viendo gris en vez de negra—. El barrido de abajo queda
+     apenas para asentar el CTA y el reloj. */
+  --hero-velo:linear-gradient(to right,rgba(var(--scrim-rgb),.90) 0%,rgba(var(--scrim-rgb),.72) 26%,rgba(var(--scrim-rgb),.28) 58%,rgba(var(--scrim-rgb),.04) 82%,rgba(var(--scrim-rgb),0) 100%),
+              linear-gradient(to top,rgba(var(--scrim-rgb),.62) 0%,rgba(var(--scrim-rgb),.06) 38%,rgba(var(--scrim-rgb),.22) 100%);
   /* de noche una ventana de video brillante en una página apagada encandila:
      el velo baja un escalón más y la franja se integra al local a media luz */
   --velo-franja:linear-gradient(to top,rgba(4,5,6,.90) 0%,rgba(4,5,6,.52) 52%,rgba(4,5,6,.62) 100%);
