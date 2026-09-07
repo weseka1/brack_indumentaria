@@ -99,7 +99,7 @@ color:var(--ink-60);background:rgba(252,253,254,.92);border-radius:2rem;padding:
 <header class="top">
   <a class="top-back" href="index.html">← Inicio</a>
   <a class="top-brand" href="index.html">BRACK<small>EL CATÁLOGO</small></a>
-  <a class="top-wa" href="https://wa.me/5491139372131?text=Hola%2C%20quisiera%20consultar%20por%20una%20pieza%20del%20cat%C3%A1logo." target="_blank" rel="noopener">WhatsApp</a>
+  <a class="top-wa" href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20consultar%20por%20una%20pieza%20del%20cat%C3%A1logo." target="_blank" rel="noopener">WhatsApp</a>
 </header>
 <div class="head"><h1>La Colección</h1><span class="count" id="count"></span></div>
 <div class="shop">
@@ -131,7 +131,7 @@ color:var(--ink-60);background:rgba(252,253,254,.92);border-radius:2rem;padding:
       <p class="range" id="fRange"></p>
       <div class="ctas">
         <a class="btn btn-b" id="fWA" target="_blank" rel="noopener">Consultar por esta pieza</a>
-        <a class="btn btn-l" href="https://wa.me/5491139372131?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada." target="_blank" rel="noopener">Agendar visita privada</a>
+        <a class="btn btn-l" href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada." target="_blank" rel="noopener">Agendar visita privada</a>
       </div>
     </div>
   </div>
@@ -181,7 +181,7 @@ grid.addEventListener('click',e=>{
   document.getElementById('fModel').textContent=d.model;
   document.getElementById('fSpecs').innerHTML=[['Condición',d.cond],['Era',d.era],['Caja',d.mm?d.mm+' mm':null],['Material',d.material],['Color',d.color],['Género',d.gender]].filter(s=>s[1]).map(s=>'<div class="row"><span class="k">'+s[0]+'</span><span>'+s[1]+'</span></div>').join('');
   document.getElementById('fRange').textContent=d.range?'Rango estimado — USD '+d.range.replace('-',' – '):'Valor a consultar en privado';
-  document.getElementById('fWA').href='https://wa.me/5491139372131?text='+encodeURIComponent('Hola, vi la pieza '+d.brand+' '+d.model+' (Ref '+idx+') en el catálogo y quisiera consultar por ella.');
+  document.getElementById('fWA').href='https://wa.me/5492954517938?text='+encodeURIComponent('Hola, vi la pieza '+d.brand+' '+d.model+' (Ref '+idx+') en el catálogo y quisiera consultar por ella.');
   const main=document.getElementById('fImg'),th=document.getElementById('fThumbs');
   main.src='fotos/'+d.photos[0];
   th.innerHTML=d.photos.map((p,i)=>'<img src="fotos/'+p+'" class="'+(i===0?'on':'')+'" data-p="'+p+'">').join('');

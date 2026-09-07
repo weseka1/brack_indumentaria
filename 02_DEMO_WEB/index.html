@@ -360,9 +360,23 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .show-title{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4.2vw,3.6rem);line-height:1.1;letter-spacing:-.01em}
 .show-title em{font-style:italic;color:var(--gold-deep)}
 .show-addr{margin-top:2rem;color:var(--ink-60);max-width:26rem}
-.show-facts{border-top:var(--hairline);margin-top:1.8rem;max-width:30rem}
+.show-info-media{display:flex;gap:2rem;align-items:flex-start;margin-top:1.8rem;flex-wrap:wrap}
+.show-facts{border-top:var(--hairline);max-width:30rem;flex:1 1 15rem}
 .fact{display:flex;justify-content:space-between;gap:2rem;padding:.9rem 0;border-bottom:var(--hairline);font-size:.78rem}
 .fact .k{color:var(--ink-35);letter-spacing:.14em;text-transform:uppercase;font-size:.66rem;padding-top:.15rem}
+.show-video{position:relative;flex:0 0 auto;width:min(180px,40vw);aspect-ratio:9/16;border-radius:1.2rem;
+  overflow:hidden;background:var(--dark);box-shadow:0 10px 34px rgba(20,22,26,.14);isolation:isolate}
+.sv-clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0}
+.sv-clip.is-on{opacity:1}
+.sv-label{position:absolute;left:.7rem;bottom:.7rem;z-index:2;font-family:var(--mono);font-size:.5rem;
+  letter-spacing:.14em;text-transform:uppercase;color:#F6F7F8;background:rgba(11,12,13,.4);
+  backdrop-filter:blur(6px);padding:.35rem .6rem;border-radius:1rem;pointer-events:none}
+.sv-play{position:absolute;inset:0;z-index:3;width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:rgba(11,12,13,.28);cursor:pointer}
+.sv-play[hidden]{display:none}
+.sv-play-tri{width:0;height:0;border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #F6F7F8;
+  margin-left:3px}
+@media(max-width:640px){.show-info-media{flex-direction:column}.show-video{width:min(220px,60vw)}}
 .show-cta{display:flex;flex-direction:column;gap:.9rem;align-items:flex-start}
 .map-card{position:relative;width:100%;aspect-ratio:4/3;border-radius:1.4rem;overflow:hidden;
   border:1px solid rgba(255,255,255,.8);box-shadow:0 10px 34px rgba(20,22,26,.08);margin-bottom:1rem}
@@ -410,7 +424,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 <div class="preloader">
   <div class="pre-mark">
     <div class="pre-name" aria-hidden="true"></div>
-    <div class="pre-sub">Buenos Aires — Est. El talle</div>
+    <div class="pre-sub">Santa Rosa — Est. El talle</div>
   </div>
   <div class="pre-count">000</div>
 </div>
@@ -457,7 +471,14 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
     <div class="hero-cta"><a class="pill pill-gold" data-hover data-magnetic href="#estrella">Ver el catálogo</a></div>
   </div>
   <div class="hero-down">Bajá</div>
-  <span class="hr-label">Buenos Aires — GMT-3</span>
+  <div class="hero-hora">
+    <div class="hr-face">
+      <span class="hr-h" id="hrH"></span>
+      <span class="hr-m" id="hrM"></span>
+      <span class="hr-s" id="hrS"></span>
+      <span class="hr-pin"></span>
+    </div>
+    <span class="hr-label">Santa Rosa — GMT-3</span>
   </div>
 </section>
 <style>
@@ -565,6 +586,73 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   <p class="carr-hint">Deslizá — cada prenda abre su ficha</p>
 </section>
 
+<!-- CÓMO SE VE PUESTO — 4 prendas, las únicas con las dos fotos reales -->
+<section class="puesto" id="puesto">
+  <div class="carr-head">
+    <div>
+      <p class="kicker">Perchero y puesto</p>
+      <h2 class="h2">Cómo se ve puesto</h2>
+    </div>
+    <p class="head-note">Las mismas cuatro prendas, tal como están hoy: dobladas en el piso y puestas en el cuerpo. Pasá el mouse o tocá para girarlas.</p>
+  </div>
+  <div class="puesto-grid">
+    <article class="ccard puesto-card" tabindex="0" role="button" aria-pressed="false">
+      <div class="ccard-img">
+        <img class="puesto-img is-on" src="fotos/jean-mom-celeste-an-4ghnl-2.webp" alt="Jean mom celeste AN doblado sobre el piso de madera, visto desde arriba">
+        <img class="puesto-img" src="fotos/jean-mom-celeste-an-4ghnl-0.webp" alt="Jean mom celeste AN puesto, de la cintura a las zapatillas" aria-hidden="true">
+      </div>
+      <span class="puesto-label">PERCHERO</span>
+      <div class="ccard-info">
+        <div><div class="ccard-brand">Brack</div><div class="ccard-model">Jean mom celeste AN</div></div>
+      </div>
+    </article>
+    <article class="ccard puesto-card" tabindex="0" role="button" aria-pressed="false">
+      <div class="ccard-img">
+        <img class="puesto-img is-on" src="fotos/baggy-tribal-an-2.webp" alt="Baggy Tribal AN doblado sobre el piso de madera, visto desde arriba">
+        <img class="puesto-img" src="fotos/baggy-tribal-an-0.webp" alt="Baggy Tribal AN puesto, con el estampado tribal en las piernas" aria-hidden="true">
+      </div>
+      <span class="puesto-label">PERCHERO</span>
+      <div class="ccard-info">
+        <div><div class="ccard-brand">Brack</div><div class="ccard-model">Baggy Tribal AN</div></div>
+      </div>
+    </article>
+    <article class="ccard puesto-card" tabindex="0" role="button" aria-pressed="false">
+      <div class="ccard-img">
+        <img class="puesto-img is-on" src="fotos/camisa-lino-tejido-crudo-vcp-jm7lz-0.webp" alt="Camisa Lino Tejido Crudo VCP doblada sobre el piso de madera">
+        <img class="puesto-img" src="fotos/camisa-lino-tejido-crudo-vcp-jm7lz-1.webp" alt="Camisa Lino Tejido Crudo VCP puesta, vista de espaldas" aria-hidden="true">
+      </div>
+      <span class="puesto-label">PERCHERO</span>
+      <div class="ccard-info">
+        <div><div class="ccard-brand">Brack</div><div class="ccard-model">Camisa Lino Tejido Crudo VCP</div></div>
+      </div>
+    </article>
+    <article class="ccard puesto-card" tabindex="0" role="button" aria-pressed="false">
+      <div class="ccard-img">
+        <img class="puesto-img is-on" src="fotos/camisa-con-cierre-kiech-6ly7d-0.webp" alt="Camisa con cierre Kiech doblada sobre el piso de madera">
+        <img class="puesto-img" src="fotos/camisa-con-cierre-kiech-6ly7d-3.webp" alt="Camisa con cierre Kiech puesta, de frente" aria-hidden="true">
+      </div>
+      <span class="puesto-label">PERCHERO</span>
+      <div class="ccard-info">
+        <div><div class="ccard-brand">Kiech</div><div class="ccard-model">Camisa con cierre Kiech</div></div>
+      </div>
+    </article>
+  </div>
+</section>
+<style>
+.puesto{padding:14vh 0 12vh;background:var(--white)}
+.puesto-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6rem;padding:0 6vw}
+.puesto-grid .ccard{margin-top:0;cursor:pointer}
+.puesto-card .ccard-img{position:relative}
+.puesto-img{position:absolute;top:5%;left:5%;opacity:0}
+.puesto-img.is-on{opacity:1}
+.puesto-label{position:absolute;top:.9rem;left:1rem;z-index:2;font-family:var(--mono);font-size:.56rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-60);background:rgba(252,253,254,.85);
+  backdrop-filter:blur(6px);padding:.32rem .6rem;border-radius:2rem}
+.puesto-card:focus-visible{outline:2px solid var(--gold-deep);outline-offset:3px;border-radius:1.4rem}
+@media(max-width:1000px){.puesto-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.puesto-grid{grid-template-columns:1fr}}
+</style>
+
 <!-- RECIÉN LLEGADOS — macro sangrando fuera del canvas -->
 <section class="bleed">
   <div class="bleed-stage" aria-hidden="true">
@@ -596,32 +684,32 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   </div>
   <div class="unis-grid">
     <a class="uni" href="coleccion.html" data-hover>
-      <div class="uni-media">
-        <img src="fotos/buzos-nfl-importados-0.webp" alt="Indumentaria" loading="lazy">
+      <div class="uni-media" data-material="madera">
+        <img src="fotos/camisa-lino-importada-kb-3auwd-0.webp" alt="Indumentaria" loading="lazy">
       </div>
       <span class="uni-num">01</span>
-      <div class="uni-bar"><h3>Indumentaria</h3><p>Explorar catálogo — 119 productos</p></div>
+      <div class="uni-bar"><h3>Indumentaria</h3><p>119 productos</p></div>
     </a>
     <a class="uni" href="#showroom" data-hover>
       <div class="uni-media">
         <img src="fotos/vans-hylane-brown-wqfk7-0.webp" alt="Zapatillas" loading="lazy">
       </div>
       <span class="uni-num">02</span>
-      <div class="uni-bar"><h3>Zapatillas</h3><p>12 pares disponibles</p></div>
+      <div class="uni-bar"><h3>Zapatillas</h3><p>12 pares</p></div>
     </a>
     <a class="uni" href="#showroom" data-hover>
-      <div class="uni-media">
+      <div class="uni-media" data-material="cemento">
         <img src="fotos/gorra-curva-cerrada-g5-7-3-8-4nuod-0.webp" alt="Gorras y accesorios" loading="lazy">
       </div>
       <span class="uni-num">03</span>
-      <div class="uni-bar"><h3>Gorras y accesorios</h3><p>25 modelos en catálogo</p></div>
+      <div class="uni-bar"><h3>Gorras y accesorios</h3><p>25 modelos</p></div>
     </a>
     <a class="uni" href="#showroom" data-hover>
-      <div class="uni-media">
+      <div class="uni-media" data-material="estudio">
         <img src="fotos/perfume-9pm-night-out-mi4b6-0.webp" alt="Perfumería importada" loading="lazy">
       </div>
       <span class="uni-num">04</span>
-      <div class="uni-bar"><h3>Perfumería importada</h3><p>12 fragancias importadas</p></div>
+      <div class="uni-bar"><h3>Perfumería importada</h3><p>12 fragancias</p></div>
     </a>
   </div>
 </section>
@@ -654,7 +742,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .uni-num{position:absolute;top:1rem;left:1.1rem;z-index:2;font-family:var(--mono);font-size:.54rem;
   letter-spacing:.26em;text-transform:uppercase;color:var(--gold-deep);
   background:rgba(252,253,254,.85);backdrop-filter:blur(6px);padding:.35rem .7rem;border-radius:2rem}
-.uni-bar{padding:1.2rem 1.4rem 1.4rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.uni-bar{padding:1.2rem 1.4rem 1.4rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;min-height:6.1rem;box-sizing:border-box}
 .uni-bar h3{font-family:var(--serif);font-weight:400;font-size:1.3rem;line-height:1.15}
 .uni-bar p{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;margin-top:.5rem;color:var(--ink-35)}
 .uni-bar::after{content:"→";font-family:var(--serif);font-size:1.1rem;color:var(--gold-deep);transition:transform .4s var(--ease)}
@@ -766,11 +854,22 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
     <p class="kicker">El local</p>
     <h2 class="show-title" style="margin-top:1rem">Vení al local, <em>25 de Mayo 772.</em></h2>
     <p class="show-addr">25 de Mayo 772, Santa Rosa, La Pampa. Todo lo publicado está acá: venís, te lo probás y te lo llevás.</p>
-    <div class="show-facts">
-      <div class="fact"><span class="k">Lunes a viernes</span><span>10:00 — 19:00</span></div>
-      <div class="fact"><span class="k">Sábado</span><span>10:00 — 15:00</span></div>
-      <div class="fact"><span class="k">WhatsApp</span><span>2954 51-7938</span></div>
-      <div class="fact"><span class="k">Cómo comprás</span><span>20% — más de 800 clientes</span></div>
+    <div class="show-info-media">
+      <div class="show-facts">
+        <div class="fact"><span class="k">Lunes a viernes</span><span>10:00 — 19:00</span></div>
+        <div class="fact"><span class="k">Sábado</span><span>10:00 — 15:00</span></div>
+        <div class="fact"><span class="k">WhatsApp</span><span>2954 51-7938</span></div>
+        <div class="fact"><span class="k">Cómo comprás</span><span>20% — más de 800 clientes</span></div>
+      </div>
+      <!-- VIDEO PLACEHOLDER — capturas de historias de Instagram, reemplazar por material filmado en el local -->
+      <div class="show-video" id="showVideo">
+        <video class="sv-clip is-on" src="video/IMG_2376-web.mp4" poster="video/poster-local-1.webp" muted playsinline preload="metadata"></video>
+        <video class="sv-clip" src="video/IMG_2377-web.mp4" poster="video/poster-local-2.webp" muted playsinline preload="metadata"></video>
+        <button class="sv-play" id="svPlay" aria-label="Reproducir video del local" hidden>
+          <span class="sv-play-tri"></span>
+        </button>
+        <span class="sv-label">25 de Mayo 772 — en vivo</span>
+      </div>
     </div>
   </div>
   <div class="show-cta">
@@ -780,7 +879,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
     </div>
     <p data-fade>Pasá por el local o escribinos: te decimos qué talles quedan y coordinamos el envío.</p>
     <a class="pill pill-gold" data-hover data-magnetic href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada%20al%20showroom." target="_blank" rel="noopener">Agendar visita privada</a>
-    <a class="pill pill-line" data-hover href="https://maps.google.com/?q=Tte.+Gral.+Juan+Domingo+Per%C3%B3n+1111+CABA" target="_blank" rel="noopener">Cómo llegar</a>
+    <a class="pill pill-line" data-hover href="https://maps.google.com/?q=25+de+Mayo+772,+Santa+Rosa,+La+Pampa" target="_blank" rel="noopener">Cómo llegar</a>
   </div>
 </section>
 
@@ -828,7 +927,7 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
       <a href="#historia" data-hover>Historia</a><a href="#estrella" data-hover>Lo que sale</a><a href="#showroom" data-hover>El local</a></div>
     <div class="foot-col"><div class="t">Atención</div>
       <a href="https://wa.me/5492954517938" target="_blank" rel="noopener" data-hover>WhatsApp</a>
-      <a href="https://maps.google.com/?q=Tte.+Gral.+Juan+Domingo+Per%C3%B3n+1111+CABA" target="_blank" rel="noopener" data-hover>Cómo llegar</a></div>
+      <a href="https://maps.google.com/?q=25+de+Mayo+772,+Santa+Rosa,+La+Pampa" target="_blank" rel="noopener" data-hover>Cómo llegar</a></div>
     <div class="foot-col"><div class="t">Redes</div>
       <a href="https://www.instagram.com/brack.indumentaria" target="_blank" rel="noopener" data-hover>@brack.indumentaria</a>
       <a href="https://wa.me/5492954517938" target="_blank" rel="noopener" data-hover>WhatsApp</a>
@@ -906,6 +1005,47 @@ document.querySelectorAll('.hero, .blq, .uni, .bleed').forEach(sec => {
   v.addEventListener('error', () => sec.classList.remove('has-video'));
 });
 
+/* ---------- video del local: loop continuo encadenando los clips con crossfade ---------- */
+(function(){
+  var wrap = document.getElementById('showVideo');
+  if (!wrap) return;
+  var clips = Array.prototype.slice.call(wrap.querySelectorAll('.sv-clip'));
+  var playBtn = document.getElementById('svPlay');
+  var idx = 0;
+
+  function goTo(next){
+    var cur = clips[idx], nxt = clips[next];
+    if (cur === nxt) { cur.currentTime = 0; cur.play().catch(function(){}); return; }
+    nxt.currentTime = 0;
+    nxt.play().catch(function(){});
+    if (window.gsap) {
+      gsap.to(cur, { opacity: 0, duration: .4, ease: 'power1.out' });
+      gsap.to(nxt, { opacity: 1, duration: .4, ease: 'power1.out', onStart: function(){ nxt.classList.add('is-on'); },
+        onComplete: function(){ cur.pause(); cur.classList.remove('is-on'); } });
+    } else {
+      cur.classList.remove('is-on'); cur.pause();
+      nxt.classList.add('is-on');
+    }
+    idx = next;
+  }
+
+  clips.forEach(function(clip, i){
+    clip.addEventListener('ended', function(){ goTo((i + 1) % clips.length); });
+  });
+
+  if (reduced) {
+    if (playBtn) {
+      playBtn.hidden = false;
+      playBtn.addEventListener('click', function(){
+        playBtn.hidden = true;
+        clips[idx].play().catch(function(){});
+      });
+    }
+  } else {
+    clips[idx].play().catch(function(){});
+  }
+})();
+
 /* ---------- preloader ---------- */
 const pre = document.querySelector('.preloader');
 const nameWrap = pre.querySelector('.pre-name');
@@ -961,6 +1101,19 @@ const ioFade = new IntersectionObserver(entries => {
   });
 }, { threshold: .2 });
 document.querySelectorAll('[data-fade]').forEach(el => ioFade.observe(el));
+
+/* ---------- colecciones: cada universo revela su material real al entrar ---------- */
+if (!reduced) {
+  document.querySelectorAll('.uni-media[data-material] img').forEach(img => {
+    gsap.set(img, { clipPath: 'circle(0% at 50% 100%)' });
+    gsap.to(img, {
+      clipPath: 'circle(150% at 50% 100%)',
+      duration: 1.1,
+      ease: 'power3.out',
+      scrollTrigger: { trigger: img.closest('.uni'), start: 'top 88%', once: true }
+    });
+  });
+}
 
 /* ---------- LO QUE SALE ---------- */
 const STARS = [
@@ -1220,6 +1373,69 @@ function closeFicha(){
 document.getElementById('fichaClose').addEventListener('click', closeFicha);
 ficha.addEventListener('click', e => { if (e.target === ficha) closeFicha(); });
 window.addEventListener('keydown', e => { if (e.key === 'Escape' && ficha.classList.contains('is-open')) closeFicha(); });
+
+/* ---------- "Cómo se ve puesto": perchero <-> puesto, 4 prendas con las dos fotos reales ---------- */
+document.querySelectorAll('.puesto-card').forEach(card => {
+  const imgs = card.querySelectorAll('.puesto-img');
+  const label = card.querySelector('.puesto-label');
+  const perchero = imgs[0], puesto = imgs[1];
+  let on = false;
+
+  function apply(next){
+    if (on === next) return;
+    on = next;
+    card.setAttribute('aria-pressed', String(on));
+    const hideEl = on ? perchero : puesto;
+    const showEl = on ? puesto : perchero;
+    hideEl.classList.remove('is-on'); hideEl.setAttribute('aria-hidden', 'true');
+    showEl.classList.add('is-on'); showEl.removeAttribute('aria-hidden');
+    if (reduced || !window.gsap) {
+      label.textContent = on ? 'PUESTO' : 'PERCHERO';
+      return;
+    }
+    gsap.killTweensOf([perchero, puesto, label]);
+    gsap.set(showEl, { opacity: 0, scale: 1.03 });
+    gsap.to(hideEl, { opacity: 0, scale: .97, duration: .22, ease: 'power2.out' });
+    gsap.to(showEl, { opacity: 1, scale: 1, duration: .22, ease: 'power2.out' });
+    gsap.to(label, { opacity: 0, duration: .1, onComplete: () => {
+      label.textContent = on ? 'PUESTO' : 'PERCHERO';
+      gsap.to(label, { opacity: 1, duration: .12 });
+    }});
+  }
+
+  if (fine) {
+    card.addEventListener('mouseenter', () => apply(true));
+    card.addEventListener('mouseleave', () => apply(false));
+  } else {
+    card.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse') return;
+      const startX = e.clientX, startY = e.clientY;
+      let live = true;
+      const timer = setTimeout(() => { if (live) apply(true); }, 60);
+      function onMove(ev){
+        if (Math.hypot(ev.clientX - startX, ev.clientY - startY) > 10) { onEnd(); }
+      }
+      function onEnd(){
+        if (!live) return;
+        live = false;
+        clearTimeout(timer);
+        apply(false);
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onEnd);
+        window.removeEventListener('pointercancel', onEnd);
+      }
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onEnd);
+      window.addEventListener('pointercancel', onEnd);
+    });
+  }
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      apply(!on);
+    }
+  });
+});
 
 })();
 </script>
