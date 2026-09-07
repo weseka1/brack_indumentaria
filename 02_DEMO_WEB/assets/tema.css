@@ -79,6 +79,31 @@
   /* velo de la franja de video: de día alcanza con velar lo justo para que el
      texto se lea sobre cualquier fotograma */
   --velo-franja:linear-gradient(to top,rgba(8,9,11,.82) 0%,rgba(8,9,11,.30) 52%,rgba(8,9,11,.42) 100%);
+
+  /* ---- SISTEMA DE VIDRIO ----
+     Los valores viven acá porque el vidrio no puede ser el mismo en los dos
+     temas: de día el fondo que se filtra es claro y alcanza con poca opacidad;
+     de noche, si la superficie queda demasiado transparente, lo que pasa por
+     detrás se mezcla con el texto y deja de leerse. Por eso la opacidad sube
+     de noche en vez de bajar.
+
+     --vidrio-sat es lo que hace que el vidrio se vea vivo y no gris: el blur
+     solo promedia colores y apaga; la saturación devuelve lo que el promedio
+     se comió. Es lo que hace iOS. */
+  --vidrio-sat:1.6;
+  --vidrio-op:.62;              /* opacidad de la superficie */
+  --vidrio-op-chip:.90;         /* las píldoras chicas necesitan más cuerpo */
+  /* el canto: la luz cae de arriba, así que el borde superior se aclara y el
+     inferior se hunde. No es un borde plano: es un gradiente de un canto al otro */
+  --canto-luz:rgba(255,255,255,.85);
+  --canto-sombra:rgba(20,22,26,.12);
+  /* dos sombras en vez de una: una pegada al borde que da el apoyo físico, y
+     otra amplia y difusa que es la luz del ambiente. Una sola sombra media
+     siempre parece un sticker */
+  --sombra-contacto:0 1px 2px rgba(var(--shadow-rgb),.11);
+  --sombra-ambiente:0 20px 44px -14px rgba(var(--shadow-rgb),.16);
+  --sombra-contacto-alta:0 2px 4px rgba(var(--shadow-rgb),.13);
+  --sombra-ambiente-alta:0 34px 70px -18px rgba(var(--shadow-rgb),.22);
 }
 
 /* ============ MODO NOCHE — el local con las luces bajas ============
@@ -131,6 +156,19 @@
   /* de noche una ventana de video brillante en una página apagada encandila:
      el velo baja un escalón más y la franja se integra al local a media luz */
   --velo-franja:linear-gradient(to top,rgba(4,5,6,.90) 0%,rgba(4,5,6,.52) 52%,rgba(4,5,6,.62) 100%);
+
+  /* ---- el vidrio, de noche ----
+     Más opacidad, no menos: sobre fondo oscuro lo que se cuela por detrás
+     compite con el texto. Y el canto se invierte —la luz que lo dibuja es
+     tenue, y la sombra de abajo es mucho más profunda porque el fondo es negro. */
+  --vidrio-op:.80;
+  --vidrio-op-chip:.94;
+  --canto-luz:rgba(255,255,255,.16);
+  --canto-sombra:rgba(0,0,0,.55);
+  --sombra-contacto:0 1px 2px rgba(0,0,0,.55);
+  --sombra-ambiente:0 22px 48px -14px rgba(0,0,0,.6);
+  --sombra-contacto-alta:0 2px 5px rgba(0,0,0,.6);
+  --sombra-ambiente-alta:0 36px 74px -18px rgba(0,0,0,.7);
 }
 
 /* ---- el interruptor, igual en las dos páginas ---- */
@@ -219,3 +257,40 @@ body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;
   :root[data-theme="night"] .corte{transition:none!important}
   :root[data-theme="night"] .tiene-luz > *:not(.is-lit){opacity:1;--halo:var(--halo)}
 }
+
+/* ============ EL CANTO DEL VIDRIO ============
+   Un canto de vidrio real no tiene un borde parejo: la luz le pega arriba y se
+   apaga hacia abajo. Por eso no es un `border`, que sería igual en los cuatro
+   lados, sino un gradiente de un canto al otro.
+
+   El truco: un pseudo-elemento del tamaño del elemento, con 1px de padding y
+   una máscara que recorta el centro (mask-composite). Queda un marco de 1px
+   relleno con el gradiente, sin tapar el contenido ni comerse un click.
+
+   Va SOLO en las superficies que ya usaban backdrop-filter. Ninguna nueva. */
+.nav::before,.mmenu::before,.mt-chat::before,
+.uni::before,.corte::before,.rev-card::before,.bleed-cards a::before,.piece::before,
+.top::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(180deg,var(--canto-luz) 0%,transparent 42%,var(--canto-sombra) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;z-index:4}
+/* el pseudo-elemento necesita un ancestro posicionado; estos no lo tenían */
+.rev-card,.bleed-cards a{position:relative}
+
+/* El catálogo son 119 cards a la vez. Ahí el mismo canto se hace con dos
+   sombras internas —arriba clara, abajo oscura— en vez de un pseudo-elemento
+   con máscara: es el mismo efecto de luz sobre el borde sin sumar 119 nodos ni
+   119 capas de composición. Medido: el scroll se mantiene en 60fps. */
+.grid .card{
+  box-shadow:var(--halo-cat),
+             inset 0 1px 0 var(--canto-luz),
+             inset 0 -1px 0 var(--canto-sombra),
+             var(--sombra-contacto),var(--sombra-ambiente)}
+.grid .card:hover{
+  box-shadow:var(--halo-cat),
+             inset 0 1px 0 var(--canto-luz),
+             inset 0 -1px 0 var(--canto-sombra),
+             var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
