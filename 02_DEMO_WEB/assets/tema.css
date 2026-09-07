@@ -61,6 +61,9 @@
   --accent-dark:#FFA457;       /* sobre bloque oscuro: el ámbar del local, día y noche */
   --online:#2E8B57;            /* el verde de "estamos atendiendo" (semáforo, no marca) */
   --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23111214'/%3E%3C/svg%3E");
+  /* el mapa de día: gris, como estaba */
+  --mapa-filtro:grayscale(1) contrast(1.06) brightness(1.02);
+  --mapa-filtro-hover:grayscale(.2) contrast(1.02);
 
   /* ---- LA LUZ (etapa 2) — de día está toda apagada ----
      El apagado NO es `none`: dentro de una lista de box-shadow, `none` invalida
@@ -157,6 +160,13 @@
   --accent-dark:#FFA457;       /* sobre bloque oscuro no cambia: ya era la luz encendida */
   --online:#4FBF7F;            /* el verde sube de tono para leerse sobre el vidrio oscuro */
   --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23EDEEF0'/%3E%3C/svg%3E");
+  /* El iframe de Google Maps es blanco siempre y no se puede estilar por dentro:
+     de noche quedaba una mancha de brillo 211 sobre un panel de 20-30, y en un
+     teléfono ocupa media pantalla. Se invierte y se rota el tono 180°, que es la
+     forma de oscurecer un mapa sin tocar su interior: el papel se vuelve oscuro,
+     las calles claras, y el tono vuelve a su lugar en vez de quedar en negativo. */
+  --mapa-filtro:invert(.94) hue-rotate(180deg) grayscale(.75) contrast(.9) brightness(.92);
+  --mapa-filtro-hover:invert(.94) hue-rotate(180deg) grayscale(.45) contrast(.95) brightness(1);
 
   /* ---- LA LUZ (etapa 2) — el local con los reflectores puestos ----
      La luz cae de arriba: el desenfoque va desplazado hacia abajo y con
