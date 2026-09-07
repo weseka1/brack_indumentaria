@@ -136,6 +136,7 @@ color:var(--ink-60);background:rgba(252,253,254,.92);border-radius:2rem;padding:
     </div>
   </div>
 </div>
+<script src="assets/formato.js"></script>
 <script src="data/catalogo.js"></script>
 <script>
 (function(){
@@ -154,7 +155,8 @@ const mkBtn=(label,val,n)=>{
 };
 const all=mkBtn('Todas las casas','',DATA.length);all.classList.add('on');menu.appendChild(all);
 Object.keys(counts).sort().forEach(br=>menu.appendChild(mkBtn(br,br,counts[br])));
-function rl(r){return r?'USD '+r.replace('-',' – '):'A consultar'}
+/* el precio lo formatea BRACK.precio (assets/formato.js), en un solo lugar */
+function rl(r){return BRACK.precio(r)}
 function render(){
   const list=DATA.filter(d=>{
     if(st.brand&&d.brand!==st.brand)return false;
@@ -180,7 +182,7 @@ grid.addEventListener('click',e=>{
   document.getElementById('fBrand').textContent=d.brand;
   document.getElementById('fModel').textContent=d.model;
   document.getElementById('fSpecs').innerHTML=[['Condición',d.cond],['Era',d.era],['Caja',d.mm?d.mm+' mm':null],['Material',d.material],['Color',d.color],['Género',d.gender]].filter(s=>s[1]).map(s=>'<div class="row"><span class="k">'+s[0]+'</span><span>'+s[1]+'</span></div>').join('');
-  document.getElementById('fRange').textContent=d.range?'Rango estimado — USD '+d.range.replace('-',' – '):'Valor a consultar en privado';
+  document.getElementById('fRange').textContent=BRACK.precioCompleto(d.range);
   document.getElementById('fWA').href='https://wa.me/5492954517938?text='+encodeURIComponent('Hola, vi la pieza '+d.brand+' '+d.model+' (Ref '+idx+') en el catálogo y quisiera consultar por ella.');
   const main=document.getElementById('fImg'),th=document.getElementById('fThumbs');
   main.src='fotos/'+d.photos[0];
