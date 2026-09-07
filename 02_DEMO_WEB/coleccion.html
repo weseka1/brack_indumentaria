@@ -229,6 +229,16 @@ function render(){
    sigue abriendo la foto grande. */
 grid.innerHTML=list.map(d=>'<article class="card" data-id="'+d.id+'"><div class="im"><img loading="lazy" decoding="async" src="fotos/thumb/'+d.photos[0]+'" alt="'+d.brand+' '+d.model+'"></div><div class="in"><div class="b">'+d.brand+'</div><div class="m">'+d.model+'</div><div class="r">'+rl(d.range)+'</div></div></article>').join('');
 }
+/* Un ?q= en la URL entra como búsqueda: así el glosario de cortes puede
+   linkear "Ver los baggy" y el catálogo abre ya filtrado. Sirve para cualquier
+   link que se quiera armar después, no solo para esa sección. */
+(function(){
+  var q = new URLSearchParams(location.search).get('q');
+  if (!q) return;
+  st.q = q.trim();
+  var caja = document.getElementById('q');
+  if (caja) caja.value = st.q;
+})();
 render();
 document.getElementById('q').addEventListener('input',e=>{st.q=e.target.value.trim();render();});
 /* Los chips salen del catálogo, no de una lista escrita a mano. Los que había

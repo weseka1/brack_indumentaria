@@ -736,6 +736,104 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(max-width:560px){.puesto-grid{grid-template-columns:1fr}}
 </style>
 
+<!-- GLOSARIO DE CORTES — tres pantalones REALES del catálogo, con la misma
+     toma (760x1064, misma pose, mismo fondo), para que la diferencia que se ve
+     sea la del corte y no la de la foto.
+     Sin medidas ni centímetros: el catálogo no publica esos datos y no se
+     inventan. Lo que se describe es lo que se ve en la foto. -->
+<section class="cortes" id="cortes">
+  <div class="carr-head">
+    <div>
+      <p class="kicker">Glosario de cortes</p>
+      <h2 class="h2">Baggy, mom y lino: <em style="font-style:italic">cómo cae cada uno.</em></h2>
+    </div>
+    <p class="head-note">Tres palabras que usamos en todo el catálogo. Acá están puestas, en tres
+      pantalones que hoy podés comprar y fotografiados igual: misma pose, misma distancia.
+      Lo que cambia de una foto a la otra es el corte.</p>
+  </div>
+  <div class="cortes-grid">
+
+    <article class="corte">
+      <a class="corte-foto" href="coleccion.html?q=baggy" data-hover>
+        <img loading="lazy" decoding="async" src="fotos/baggy-tribal-an-0.webp"
+             alt="Baggy Tribal AN puesto: la pierna cae ancha desde la cadera y el ruedo se apila sobre la zapatilla">
+      </a>
+      <div class="corte-txt">
+        <h3 class="corte-nombre">Baggy</h3>
+        <p class="corte-cae">La pierna sale ancha desde la cadera y no afina en ningún momento:
+          el ruedo se apila sobre la zapatilla y le tapa el empeine.</p>
+        <a class="corte-link" href="coleccion.html?q=baggy" data-hover>Ver los baggy</a>
+      </div>
+    </article>
+
+    <article class="corte">
+      <a class="corte-foto" href="coleccion.html?q=mom" data-hover>
+        <img loading="lazy" decoding="async" src="fotos/jean-mom-celeste-an-4ghnl-0.webp"
+             alt="Jean mom celeste AN puesto: cae recto desde la cadera y el ruedo apoya sobre la zapatilla">
+      </a>
+      <div class="corte-txt">
+        <h3 class="corte-nombre">Mom</h3>
+        <p class="corte-cae">Cae recto desde la cadera, con bastante menos tela que el baggy:
+          el ruedo apoya sobre la zapatilla y ahí se queda, sin amontonarse.</p>
+        <a class="corte-link" href="coleccion.html?q=mom" data-hover>Ver los mom</a>
+      </div>
+    </article>
+
+    <article class="corte">
+      <a class="corte-foto" href="coleccion.html?q=lino" data-hover>
+        <img loading="lazy" decoding="async" src="fotos/pantalon-de-lino-cuarto-20xrt-0.webp"
+             alt="Pantalón de Lino Cuarto puesto: la tela cae lisa y el ruedo corta donde empieza la zapatilla">
+      </a>
+      <div class="corte-txt">
+        <h3 class="corte-nombre">Lino</h3>
+        <p class="corte-cae">Sin volumen: la tela cae lisa y sigue la pierna, y el ruedo corta
+          justo donde empieza la zapatilla.</p>
+        <a class="corte-link" href="coleccion.html?q=lino" data-hover>Ver los de lino</a>
+      </div>
+    </article>
+
+  </div>
+  <p class="cortes-pie">¿Dudás entre dos? Escribinos por
+    <a href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20una%20mano%20para%20elegir%20el%20corte." target="_blank" rel="noopener">WhatsApp</a>
+    y te decimos cuál te va.</p>
+</section>
+<style>
+/* MÓVIL PRIMERO: los tres bloques van apilados y a lo ancho, que es donde la
+   foto de cuerpo entero se lee. Recién en pantalla grande pasan a tres
+   columnas. Al revés —una grilla apretada que se estira— la prenda queda del
+   tamaño de una estampilla justo en la sección que existe para mirarla. */
+.cortes{padding:14vh 0 12vh;background:var(--paper)}
+.cortes-grid{display:grid;grid-template-columns:1fr;gap:2.4rem;padding:0 6vw}
+.corte{background:rgba(var(--surface-rgb),.6);backdrop-filter:blur(16px);
+  border:1px solid rgba(var(--surface-rgb),.75);border-radius:1.4rem;overflow:hidden;
+  box-shadow:var(--halo),0 8px 30px rgba(var(--shadow-rgb),.06);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
+.corte:hover{transform:translateY(-4px);box-shadow:var(--halo),0 22px 48px rgba(var(--shadow-rgb),.1)}
+.corte-foto{display:block;position:relative;aspect-ratio:760/1064;overflow:hidden;
+  background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
+.corte-foto img{width:100%;height:100%;object-fit:cover;object-position:center 62%;
+  transition:transform 1s var(--ease)}
+.corte:hover .corte-foto img{transform:scale(1.035)}
+.corte-txt{padding:1.5rem 1.6rem 1.8rem}
+.corte-nombre{font-family:var(--serif);font-weight:400;font-size:1.7rem;letter-spacing:.01em}
+.corte-cae{margin-top:.7rem;color:var(--ink-60);font-size:.95rem;max-width:34rem}
+.corte-link{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);
+  border-bottom:1px solid rgba(var(--line-rgb),.25);padding-bottom:.45rem;min-height:44px;
+  transition:border-color .3s,gap .3s var(--ease)}
+.corte-link::after{content:"→";font-family:var(--serif);font-size:1rem}
+.corte-link:hover{border-color:var(--gold-deep);gap:.8rem}
+.cortes-pie{margin-top:3rem;padding:0 6vw;font-size:.9rem;color:var(--ink-60)}
+.cortes-pie a{border-bottom:1px solid rgba(var(--line-rgb),.3);padding-bottom:.1rem;
+  display:inline-block;min-height:44px;line-height:44px}
+.cortes-pie a:hover{color:var(--gold-deep);border-color:var(--gold-deep)}
+@media(min-width:760px){
+  .cortes-grid{grid-template-columns:repeat(3,1fr);gap:1.6rem}
+  .corte-cae{font-size:.9rem}
+}
+@media(min-width:1200px){.cortes-grid{gap:2rem}}
+</style>
+
 <!-- RECIÉN LLEGADOS — macro sangrando fuera del canvas -->
 <section class="bleed">
   <div class="bleed-stage" aria-hidden="true">

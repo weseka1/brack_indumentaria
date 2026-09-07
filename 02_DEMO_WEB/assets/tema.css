@@ -179,13 +179,15 @@ html.is-theming *{
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
   :root[data-theme="night"] .ccard:hover,
   :root[data-theme="night"] .uni:hover,
+  :root[data-theme="night"] .corte:hover,
   :root[data-theme="night"] .piece:hover{--halo:var(--halo-on)}
 
   /* las vecinas del MISMO contenedor bajan y su halo casi se apaga */
   :root[data-theme="night"] .carr-rail:has(.ccard:hover) .ccard:not(:hover),
   :root[data-theme="night"] .puesto-grid:has(.ccard:hover) .ccard:not(:hover),
   :root[data-theme="night"] .unis-grid:has(.uni:hover) .uni:not(:hover),
-  :root[data-theme="night"] .cat-grid:has(.piece:hover) .piece:not(:hover){
+  :root[data-theme="night"] .cat-grid:has(.piece:hover) .piece:not(:hover),
+  :root[data-theme="night"] .cortes-grid:has(.corte:hover) .corte:not(:hover){
     opacity:var(--vecina);--halo:var(--halo-off)}
 
   /* el catálogo son 119 cards: a las vecinas se les toca SOLO la opacidad.
@@ -213,6 +215,7 @@ body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;
 @media (prefers-reduced-motion:reduce){
   /* halos estáticos: ni intensificación ni atenuación, y sin transición */
   :root[data-theme="night"] .ccard,:root[data-theme="night"] .uni,
-  :root[data-theme="night"] .piece,:root[data-theme="night"] .card{transition:none!important}
+  :root[data-theme="night"] .piece,:root[data-theme="night"] .card,
+  :root[data-theme="night"] .corte{transition:none!important}
   :root[data-theme="night"] .tiene-luz > *:not(.is-lit){opacity:1;--halo:var(--halo)}
 }
