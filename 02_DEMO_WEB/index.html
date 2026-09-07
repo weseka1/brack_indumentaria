@@ -78,10 +78,12 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(max-width:900px){
   .nav-left{display:none}
   .nav{grid-template-columns:auto 1fr auto;padding:.8rem 3vw;align-items:center}
-  .nav-burger{display:flex}
+  .nav-burger{display:flex;width:44px;height:44px;padding:10px}
   .nav-brand{text-align:center;font-size:.82rem;letter-spacing:.2em;white-space:nowrap}
-  .nav-brand .mono-mark{font-size:.45rem;letter-spacing:.32em}
-  .nav-right .pill{padding:.5rem .85rem;font-size:.58rem;letter-spacing:.08em}
+  /* la bajada del logo iba en 7,2px: ilegible en un teléfono. En la barra chica
+     no aporta —la dirección está en el pie y en #showroom— así que se retira */
+  .nav-brand .mono-mark{display:none}
+  .nav-right .pill{padding:.62rem .95rem;letter-spacing:.06em}
   .nav-reg{display:none}
 }
 
@@ -414,6 +416,60 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .no-anim [data-fade],.no-anim .hero-sub,.no-anim .hero-cta{opacity:1!important;transform:none!important}
 .no-anim .hero-title .l span,.no-anim .pre-name span{transform:none!important}
 .no-anim .estrella-id{opacity:1!important}
+
+/* ===== MÓVIL: superficie de toque y tamaño de letra =====
+   Va al FINAL de la hoja a propósito: un @media no suma especificidad, así que
+   si este bloque se pone antes que las reglas base, la base gana por orden de
+   cascada y estos ajustes no se aplican (ya pasó una vez).
+
+   Los valores salen de auditar la página en 390, 360 y 430: el interruptor de
+   noche medía 23x26 px, el burger 40x40 y varios enlaces quedaban en 18-21 px
+   de alto; Apple y Android piden 44. Y el texto de 7 a 10 px que en un monitor
+   se lee, en la mano no. Los kickers en mayúscula con mucho tracking se dejan
+   por debajo de 12 px a propósito: ahí el tamaño es recurso tipográfico y se
+   leen igual; lo que sube es lo que LLEVA INFORMACIÓN (precios, nombres, CTAs). */
+@media(max-width:900px){
+  .nite{padding:.7rem;min-width:44px;min-height:44px;justify-content:center}
+  .nite-dot{width:9px;height:9px}
+  .nav-brand{min-height:44px;display:flex;flex-direction:column;justify-content:center}
+  .nav-right .pill{min-height:44px;font-size:.7rem}
+  .pill{min-height:44px}
+
+  /* la vitrina: el precio y el CTA son lo que el cliente vino a leer */
+  .estrella-id small{font-size:.8rem;letter-spacing:.18em}
+  .estrella-cta{padding:.9rem 0;min-height:44px;display:inline-flex;align-items:center;font-size:.72rem}
+  .estrella-hint{font-size:.64rem}
+  /* instrucciones de uso: si no se leen, el cliente no sabe que puede deslizar */
+  .carr-hint{font-size:.68rem;letter-spacing:.2em}
+  .estrella-kicker{font-size:.7rem}
+
+  /* las cards: marca y precio */
+  .ccard-brand{font-size:.74rem}
+  .ccard-model{font-size:1.24rem}
+  .piece-name small{font-size:.7rem}
+  .ccard-tags span,.piece-idx,.uni-num,.puesto-label{font-size:.62rem}
+  .uni-bar p{font-size:.66rem}
+
+  .hero-kicker{font-size:.72rem;letter-spacing:.3em}
+  .hero-sub{font-size:1.02rem}
+  .blq-kicker,.kicker,.franja-kicker{font-size:.7rem;letter-spacing:.3em}
+
+  /* el pie: enlaces reales que hay que poder tocar */
+  .foot-col a{padding:.6rem 0;min-height:44px;display:flex;align-items:center;font-size:.92rem}
+  .foot-col .t{font-size:.68rem}
+  .foot-base{font-size:.68rem;line-height:1.8}
+
+  /* el formulario: 16px o menos hace que iOS haga zoom al enfocar el campo */
+  #leadForm input,#leadForm select,#leadForm button{min-height:48px;font-size:16px}
+
+  .rev-card .top,.rev-card .who small{font-size:.64rem}
+  .fact{font-size:.86rem}
+  .fact .k{font-size:.72rem}
+  .show-addr,.bleed-p,.head-note{font-size:.95rem}
+  .mt-fab{width:56px;height:56px}
+  .mt-input input{font-size:16px}
+}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
   [data-fade],.hero-sub,.hero-cta{opacity:1!important;transform:none!important}
@@ -567,10 +623,10 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   <div class="estrella-light"></div>
   <div class="estrella-stage">
     <div class="estrella-shadow"></div>
-    <img class="estrella-img" id="starImg" src="fotos/stars/buzos-nfl-importados-star.png" alt="Pieza estrella">
+    <img class="estrella-img" id="starImg" src="fotos/stars/buzos-nfl-importados-star.webp" alt="Pieza estrella">
   </div>
-  <img class="estrella-side l" id="starSideL" src="fotos/stars/buzo-shato-frizado-2kek1-star.png" alt="Pieza anterior" data-hover>
-  <img class="estrella-side r" id="starSideR" src="fotos/stars/perfume-9pm-night-out-mi4b6-star.png" alt="Pieza siguiente" data-hover>
+  <img class="estrella-side l" id="starSideL" src="fotos/stars/buzo-shato-frizado-2kek1-star.webp" alt="Pieza anterior" data-hover>
+  <img class="estrella-side r" id="starSideR" src="fotos/stars/perfume-9pm-night-out-mi4b6-star.webp" alt="Pieza siguiente" data-hover>
   <button class="estrella-arrow prev" id="starPrev" aria-label="Pieza anterior" data-hover>‹</button>
   <button class="estrella-arrow next" id="starNext" aria-label="Pieza siguiente" data-hover>›</button>
   <div class="estrella-meta">
@@ -880,9 +936,11 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 <!-- VIDEO PLACEHOLDER — capturas de historias de Instagram, reemplazar por material filmado en el local -->
 <section class="franja" id="franja">
   <div class="franja-media" id="franjaMedia">
-    <video class="fr-clip is-on" src="video/IMG_2376-web.mp4" poster="video/poster-local-1.webp"
+    <!-- el src lo elige el script segun el ancho: -mob.mp4 pesa 2,6 MB contra
+         6 MB de la version de escritorio -->
+    <video class="fr-clip is-on" data-base="video/IMG_2376" poster="video/poster-local-1.webp"
            muted playsinline preload="none" aria-hidden="true"></video>
-    <video class="fr-clip" src="video/IMG_2377-web.mp4" poster="video/poster-local-2.webp"
+    <video class="fr-clip" data-base="video/IMG_2377" poster="video/poster-local-2.webp"
            muted playsinline preload="none" aria-hidden="true"></video>
   </div>
   <div class="franja-velo" aria-hidden="true"></div>
@@ -1057,6 +1115,16 @@ document.querySelectorAll('.hero, .blq, .uni, .bleed').forEach(sec => {
   if (!wrap) return;
   var clips = Array.prototype.slice.call(wrap.querySelectorAll('.fr-clip'));
   var playBtn = document.getElementById('franjaPlay');
+
+  /* Qué copia se pide depende de la pantalla y de si el visitante pidió ahorrar
+     datos: en un teléfono la franja mide 390x422 y no tiene sentido bajar el
+     master de 1080px. -mob pesa 2,6 MB contra 6 MB. */
+  var chico = window.matchMedia('(max-width:900px)').matches;
+  var ahorra = navigator.connection && (navigator.connection.saveData ||
+               /^(slow-)?2g$/.test(navigator.connection.effectiveType || ''));
+  clips.forEach(function(v){
+    v.src = v.dataset.base + ((chico || ahorra) ? '-mob.mp4' : '-web.mp4');
+  });
   var franja = document.getElementById('franja');
   var idx = 0, arrancado = false, aLaVista = false;
 
@@ -1080,15 +1148,15 @@ document.querySelectorAll('.hero, .blq, .uni, .bleed').forEach(sec => {
   });
 
   function encender(){
-    if (reduced) return;
+    if (reduced || ahorra) return;   /* con Ahorro de datos, solo el póster */
     clips.forEach(function(c){ if (c.preload === 'none') c.preload = 'auto'; });
     arrancado = true;
     reproducir(clips[idx]);
   }
   function apagar(){ clips.forEach(function(c){ c.pause(); }); }
 
-  if (reduced) {
-    /* sin movimiento: se queda en el póster y arranca solo si lo piden */
+  if (reduced || ahorra) {
+    /* sin movimiento o con ahorro de datos: póster, y arranca solo si lo piden */
     playBtn.hidden = false;
     playBtn.addEventListener('click', function(){
       playBtn.hidden = true;
@@ -1189,14 +1257,14 @@ if (!reduced) {
 
 /* ---------- LO QUE SALE ---------- */
 const STARS = [
-    { img: 'fotos/stars/buzos-nfl-importados-star.png', name: "Buzos NFL Importados", brand: "Camisetas — $136.500 · XL", wa: "Buzos NFL Importados" },
-    { img: 'fotos/stars/perfume-9pm-night-out-mi4b6-star.png', name: "Perfume 9pm Night Out", brand: "Perfumes importados — $136.500 · Talle único", wa: "Perfume 9pm Night Out" },
-    { img: 'fotos/stars/vans-hylane-brown-wqfk7-star.png', name: "VANS HYLANE BROWN", brand: "Zapatillas — $106.500 · 44", wa: "VANS HYLANE BROWN" },
-    { img: 'fotos/stars/campera-over-kbrkrv-sgssp-star.png', name: "Campera OVER KBRKRV", brand: "Camperas — $99.000 · Talle único", wa: "Campera OVER KBRKRV" },
-    { img: 'fotos/stars/camiseta-nfl-importada4-star.png', name: "Camiseta NFL Importada", brand: "Camisetas — $86.500 · L", wa: "Camiseta NFL Importada" },
-    { img: 'fotos/stars/perfume-arabe-importado-honor-glory-nmgyc-star.png', name: "Perfume Árabe Importado Honor & Glory", brand: "Perfumes importados — $86.500 · Talle único", wa: "Perfume Árabe Importado Honor & Glory" },
-    { img: 'fotos/stars/buzo-shato-ikvj7-star.png', name: "Buzo Shato Frizado", brand: "Buzos y sweaters — $86.500 · S", wa: "Buzo Shato Frizado" },
-    { img: 'fotos/stars/buzo-shato-frizado-2kek1-star.png', name: "Buzo Shato Frizado", brand: "Buzos y sweaters — $86.500 · S", wa: "Buzo Shato Frizado" }
+    { img: 'fotos/stars/buzos-nfl-importados-star.webp', name: "Buzos NFL Importados", brand: "Camisetas — $136.500 · XL", wa: "Buzos NFL Importados" },
+    { img: 'fotos/stars/perfume-9pm-night-out-mi4b6-star.webp', name: "Perfume 9pm Night Out", brand: "Perfumes importados — $136.500 · Talle único", wa: "Perfume 9pm Night Out" },
+    { img: 'fotos/stars/vans-hylane-brown-wqfk7-star.webp', name: "VANS HYLANE BROWN", brand: "Zapatillas — $106.500 · 44", wa: "VANS HYLANE BROWN" },
+    { img: 'fotos/stars/campera-over-kbrkrv-sgssp-star.webp', name: "Campera OVER KBRKRV", brand: "Camperas — $99.000 · Talle único", wa: "Campera OVER KBRKRV" },
+    { img: 'fotos/stars/camiseta-nfl-importada4-star.webp', name: "Camiseta NFL Importada", brand: "Camisetas — $86.500 · L", wa: "Camiseta NFL Importada" },
+    { img: 'fotos/stars/perfume-arabe-importado-honor-glory-nmgyc-star.webp', name: "Perfume Árabe Importado Honor & Glory", brand: "Perfumes importados — $86.500 · Talle único", wa: "Perfume Árabe Importado Honor & Glory" },
+    { img: 'fotos/stars/buzo-shato-ikvj7-star.webp', name: "Buzo Shato Frizado", brand: "Buzos y sweaters — $86.500 · S", wa: "Buzo Shato Frizado" },
+    { img: 'fotos/stars/buzo-shato-frizado-2kek1-star.webp', name: "Buzo Shato Frizado", brand: "Buzos y sweaters — $86.500 · S", wa: "Buzo Shato Frizado" }
   ];
 const starImg = document.getElementById('starImg');
 const starName = document.getElementById('starName');
@@ -1257,12 +1325,22 @@ function setStar(i, dir){
     starBusy = false;
   }});
 }
-STARS.forEach(function(st){ var im = new Image(); im.src = st.img; });
+/* Precarga SOLO las vecinas, no las ocho. Se pedían las 8 de una: con los PNG
+   eran 5,3 MB en el primer segundo. La vitrina avanza de a una pieza, así que
+   alcanza con tener listas la anterior y la siguiente. */
+function precargarVecinas(){
+  var n = STARS.length;
+  [(starIdx - 1 + n) % n, (starIdx + 1) % n].forEach(function(i){
+    var im = new Image(); im.src = STARS[i].img;
+  });
+}
+precargarVecinas();
 var sideL = document.getElementById('starSideL'), sideR = document.getElementById('starSideR');
 function updateSides(){
   var n = STARS.length;
   sideL.src = STARS[(starIdx - 1 + n) % n].img;
   sideR.src = STARS[(starIdx + 1) % n].img;
+  precargarVecinas();
 }
 updateSides();
 sideL.addEventListener('click', function(){ setStar(starIdx - 1, -1); startAuto(); });

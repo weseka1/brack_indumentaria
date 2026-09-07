@@ -90,13 +90,62 @@ font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppe
 .close{position:absolute;top:1rem;right:1rem;z-index:5;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
 color:var(--ink-60);background:rgba(var(--chip-rgb),.92);border-radius:2rem;padding:.5rem 1rem}
 @media(max-width:900px){
-  .shop{grid-template-columns:1fr}
-  .menu{position:static;display:flex;flex-wrap:wrap;gap:.3rem;padding:.8rem;border-radius:1rem}
+  /* min-width:0 en los hijos: sin eso, el menú en nowrap le impone su ancho
+     mínimo de contenido a la columna del grid y la página entera se va a 2224px
+     de ancho —medido: 676px de desborde en un iPhone 12—. Un track 1fr no baja
+     de min-content salvo que se le diga. */
+  .shop{grid-template-columns:minmax(0,1fr)}
+  .shop > *{min-width:0}
+  /* el menú de marcas se vuelve una tira que se desliza, en vez de envolver en
+     varias filas de chips que empujan la grilla fuera de la primera pantalla */
+  .menu{position:static;display:flex;flex-wrap:nowrap;overflow-x:auto;gap:.4rem;padding:.7rem;
+    border-radius:1rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .menu::-webkit-scrollbar{display:none}
   .menu .t{display:none}
-  .menu button{width:auto;border:var(--hairline);border-radius:2rem;padding:.5rem .9rem;font-size:.72rem}
+  .menu button{width:auto;flex:0 0 auto;white-space:nowrap;border:var(--hairline);border-radius:2rem;
+    padding:.7rem 1rem;font-size:.8rem;min-height:44px}
   .menu button span{display:none}
   .panel{grid-template-columns:1fr;display:block;overflow-y:auto}
   .gal .main img{max-height:40svh}
+
+  /* ===== toque y tipografía, medidos en 390 / 360 / 430 ===== */
+  .top{padding:.7rem 3vw}
+  .top-back{min-height:44px;display:flex;align-items:center;font-size:.78rem}
+  .top-brand{font-size:.86rem;min-height:44px;display:flex;flex-direction:column;justify-content:center}
+  .top-brand small{display:none}      /* iba en 8px: ilegible en la mano */
+  .top-wa{min-height:44px;display:flex;align-items:center;font-size:.76rem;padding:.65rem 1.1rem}
+  .nite{padding:.7rem;min-width:44px;min-height:44px;justify-content:center}
+  .nite-dot{width:9px;height:9px}
+  .chips{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;padding-bottom:.2rem}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center;font-size:.74rem}
+  .chip span{font-size:.66rem}
+  .search{min-height:48px;font-size:16px}   /* 16px: menos de eso, iOS hace zoom al enfocar */
+  .head .count{font-size:.78rem}
+  .card .b{font-size:.74rem}
+  .menu button span{font-size:.7rem}
+  .card .m{font-size:1.06rem}
+  .card .r{font-size:.76rem}
+  .row{font-size:.7rem}
+  .lote{font-size:.68rem}
+  .btn{min-height:48px;display:flex;align-items:center;justify-content:center;font-size:.74rem}
+  .close{min-height:44px;display:flex;align-items:center;font-size:.68rem}
+  .thumbs img{width:60px}
+
+  /* Dos columnas. Con auto-fill y un mínimo de 230px, en 390px entraba UNA sola
+     card gigante: para recorrer 119 productos eso es un scroll eterno. De a dos
+     se ve el doble por pantalla y la foto sigue siendo grande. */
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}
+  .card{border-radius:1rem}
+  .card .in{padding:.7rem .8rem .9rem}
+  .card .m{font-size:.94rem;line-height:1.25}
+  /* la cabecera ocupaba media pantalla antes de la primera prenda */
+  .head{padding:3.4vh 3vw 2vh}
+  .tools{margin-bottom:1rem;gap:.5rem}
+}
+@media(max-width:400px){
+  .grid{gap:.55rem}
+  .card .m{font-size:.88rem}
 }
 </style>
 </head>
@@ -174,7 +223,11 @@ function render(){
   });
   document.getElementById('count').textContent=list.length+' de '+DATA.length+' productos';
   document.getElementById('empty').style.display=list.length?'none':'block';
-  grid.innerHTML=list.map(d=>'<article class="card" data-id="'+d.id+'"><div class="im"><img loading="lazy" src="fotos/'+d.photos[0]+'" alt="'+d.brand+' '+d.model+'"></div><div class="in"><div class="b">'+d.brand+'</div><div class="m">'+d.model+'</div><div class="r">'+rl(d.range)+'</div></div></article>').join('');
+  /* La grilla pide fotos/thumb/: son las mismas fotos a 380px, que es el tamaño
+   real al que se ven en la cuadrícula. Recorrer el catálogo entero en un
+   teléfono bajaba 9,94 MB de imágenes; con las miniaturas son 1,96 MB. La ficha
+   sigue abriendo la foto grande. */
+grid.innerHTML=list.map(d=>'<article class="card" data-id="'+d.id+'"><div class="im"><img loading="lazy" decoding="async" src="fotos/thumb/'+d.photos[0]+'" alt="'+d.brand+' '+d.model+'"></div><div class="in"><div class="b">'+d.brand+'</div><div class="m">'+d.model+'</div><div class="r">'+rl(d.range)+'</div></div></article>').join('');
 }
 render();
 document.getElementById('q').addEventListener('input',e=>{st.q=e.target.value.trim();render();});
