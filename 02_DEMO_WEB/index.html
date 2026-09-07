@@ -115,7 +115,11 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .hero-scrim{position:absolute;inset:0;background:var(--hero-velo)}
 /* sube para dejarle el pie de la columna al "Bajá", que ahora cuelga de la
    misma línea vertical: con bottom:9vh se le montaba encima al CTA */
-.hero-copy{position:absolute;left:5vw;bottom:16vh;z-index:5;color:var(--ink);max-width:36rem}
+/* right además de left: sin él, en un teléfono el bloque se estira hasta el
+   borde y el kicker —que es largo y va con mucho tracking— terminaba a 1px del
+   canto del panel y partido en dos líneas. Con los dos lados atados, el texto
+   respeta el mismo margen a izquierda y derecha en cualquier ancho. */
+.hero-copy{position:absolute;left:5vw;right:5vw;bottom:16vh;z-index:5;color:var(--ink);max-width:36rem}
 .hero-kicker{font-size:.68rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem}
 .hero-title{font-family:var(--serif);font-weight:300;font-size:clamp(2.4rem,5.2vw,4.6rem);line-height:1.06;letter-spacing:-.01em}
 /* La máscara de la animación de entrada recortaba las colas: la "y" de "hay,"
@@ -1028,9 +1032,21 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 /* El alto lo fija el marco, no el embed: así el hueco reserva exactamente el
    lugar que después ocupa el iframe y la página no pega un salto al cargar. */
 .reels{padding:14vh 0 12vh;background:var(--white)}
-.reels-rail{display:flex;gap:1.4rem;overflow-x:auto;padding:1rem 6vw 3rem;
+/* El riel vive en una caja de ancho acotado, no a lo ancho del panel. Dos
+   motivos, y el primero es funcional: con los cuatro reels estirados en una
+   pantalla grande entraban todos y NO QUEDABA NADA QUE ARRASTRAR —sobrante de
+   0px en 1920 y de 29px en 1440—, así que el carrusel no se movía por más que
+   se lo agarrara. Con la caja acotada siempre sobra, y el gesto funciona igual
+   en un monitor que en un teléfono.
+   El segundo es visual: cuatro rectángulos blancos a todo lo ancho golpean, y
+   más de noche. Acá quedan agrupados, y la máscara lateral los desvanece contra
+   el panel en vez de cortarlos en seco contra el borde. */
+.reels-rail{display:flex;gap:1.4rem;overflow-x:auto;
+  width:min(100%,1180px);margin:0 auto;padding:1rem 2.2rem 3rem;
   scrollbar-width:none;cursor:grab;align-items:flex-start;
-  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%)}
 .reels-rail::-webkit-scrollbar{display:none}
 .reels-rail.dragging{cursor:grabbing;scroll-snap-type:none}
 /* El embed de Instagram es blanco por dentro y no se puede tocar: en un sitio
@@ -1063,15 +1079,19 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 /* Capa que se queda con el arrastre. Sin esto el gesto muere apenas el puntero
    entra en el iframe: un documento de otro dominio se traga los eventos y la
    fila se frena en seco. Un clic sin arrastre abre el reel en Instagram. */
-.reel-capa{position:absolute;inset:var(--radio-aire);z-index:3;cursor:inherit;border-radius:var(--radio-interior)}
+.reel-capa{position:absolute;inset:var(--radio-aire);z-index:3;cursor:inherit;border-radius:var(--radio-interior);
+  -webkit-user-drag:none;user-select:none;-webkit-user-select:none}
 .reels-caido{padding:0 6vw;max-width:36rem}
+.reels .carr-head,.reels-pie{width:min(100%,1180px);margin-left:auto;margin-right:auto}
 .reels-caido p{color:var(--ink-60);margin-bottom:1.2rem}
-.reels-pie{padding:1.5rem 6vw 0}
+.reels-pie{padding:1.5rem 2.2rem 0}
 .reels-pie a{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);
   border-bottom:1px solid rgba(var(--line-rgb),.25);padding-bottom:.45rem;
   display:inline-block;min-height:44px;line-height:44px}
 .reels-pie a:hover{border-color:var(--gold-deep)}
 @media(max-width:900px){
+  .reels-rail{padding-left:5vw;padding-right:5vw}
+  .reels-pie{padding-left:5vw;padding-right:5vw}
   .reel-cargando{font-size:.64rem}
   .reels-caido p{font-size:.95rem}
 }
@@ -1916,6 +1936,8 @@ window.BRACK_arrastrable = hacerArrastrable;
   var pedido = false;
 
   hacerArrastrable(riel);
+  /* el arrastre nativo de enlaces e imágenes cancela el gesto del carrusel */
+  riel.addEventListener('dragstart', function(e){ e.preventDefault(); });
 
   function rendirse(){
     riel.hidden = true;
@@ -1946,6 +1968,7 @@ window.BRACK_arrastrable = hacerArrastrable;
     capa.target = '_blank';
     capa.rel = 'noopener';
     capa.setAttribute('aria-label', 'Ver este reel en Instagram');
+    capa.draggable = false;
     t.appendChild(capa);
     if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process();
   }
