@@ -2453,6 +2453,19 @@ form.addEventListener('submit', function(e){
   /* la etiqueta sobre la foto caía a 9,3px: es el nombre del producto y el precio */
   .foto-tag{font-size:.66rem}
   .foto-tag b{font-size:.68rem}
+
+  /* ---- los CTA, por encima de 14px ----
+     Doce de trece botones de la home estaban entre 10,9 y 11,5px. Eso funciona
+     en un kicker, que es un rótulo decorativo y se lee por su posición, pero no
+     en algo que hay que leer para decidir si tocarlo. Se les baja también el
+     tracking: a este cuerpo, el espaciado ancho los volvía larguísimos y los
+     hacía desbordar en 360. */
+  .pill{font-size:.92rem;letter-spacing:.06em}
+  .nav-right .pill{font-size:.9rem;letter-spacing:.03em;padding:.62rem .8rem}
+  .estrella-cta{font-size:.9rem;letter-spacing:.08em}
+  .corte-link{font-size:.9rem;letter-spacing:.08em}
+  .reels-pie a{font-size:.9rem;letter-spacing:.08em}
+  .foot-col a{font-size:.95rem}
 }
 
 /* ===== ZONAS SEGURAS DEL TELÉFONO =====
