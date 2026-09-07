@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script>if(location.pathname.endsWith('/demos/brack')){location.replace(location.pathname+'/'+location.search+location.hash);}</script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<link rel="icon" href="data:,">
+<meta name="robots" content="noindex, nofollow">
+<title>Brack Indumentaria — Streetwear, zapatillas y perfumería · Santa Rosa, La Pampa</title>
+<meta name="description" content="Streetwear, zapatillas y perfumería importada en Santa Rosa, La Pampa. Los drops de la temporada, con talles reales y envío a todo el país. 20% off en efectivo y 6 cuotas sin interés.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ BRACK v2 — esqueleto de Islas Group rebrandeado — paleta blanca iPhone ============ */
+:root{
+  /* BRACK — blanco estudio, estilo iPhone.
+     La vara de la casa es CLARA, monocroma y con aire (Estandar Web WESEKA):
+     el mismo blanco frío de Brack. Se probó una variante en carbón y se
+     descartó: el fondo oscuro tapa la ropa en vez de mostrarla, y las prendas
+     recortadas —que son casi todas negras— se empastaban contra el fondo.
+     Sobre blanco, la prenda es lo único que tiene color y se recorta sola.
+     Fondos nunca puros: blanco frío, no #fff; tinta casi negra, no #000. */
+  --paper:#F6F7F8;          /* blanco estudio */
+  --paper-2:#ECEEF0;
+  --white:#FCFCFD;          /* superficie de cards */
+  --ink:#111214;            /* tinta: casi negro, con temperatura */
+  --ink-60:rgba(17,18,20,.58);
+  --ink-35:rgba(17,18,20,.32);
+  --gold:#111214;           /* el "acento" es la propia tinta: monocromo total.
+                               En una tienda de ropa el color lo pone la prenda,
+                               no la interfaz. */
+  --gold-deep:#000000;
+  --dark:#0B0C0D;           /* bloques a sangre y pie */
+  --dark-ink:#F6F7F8;
+  --hairline:1px solid rgba(17,18,20,.10);
+  --sans:"Archivo",system-ui,sans-serif;
+  --serif:"Fraunces",Georgia,serif;
+  --mono:"IBM Plex Mono",monospace;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--gold);color:var(--white)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font-family:inherit;background:none;border:none;color:inherit;cursor:pointer}
+
+/* grano finísimo (sello casa) */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:200;opacity:.028;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 8s steps(10) infinite}
+@keyframes grain{0%,100%{transform:translate(0,0)}10%{transform:translate(-3%,-2%)}30%{transform:translate(2%,3%)}50%{transform:translate(-2%,1%)}70%{transform:translate(3%,-3%)}90%{transform:translate(-1%,2%)}}
+
+/* preloader claro */
+.preloader{position:fixed;inset:0;z-index:400;background:var(--white);display:flex;align-items:center;justify-content:center}
+.pre-mark{text-align:center}
+.pre-name{font-family:var(--serif);font-weight:400;font-size:clamp(1.6rem,4.4vw,3rem);letter-spacing:.28em;display:flex;overflow:hidden;justify-content:center}
+.pre-name span{display:inline-block;transform:translateY(120%)}
+.pre-sub{margin-top:1rem;font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;color:var(--ink-35);opacity:0}
+.pre-count{position:absolute;right:5vw;bottom:5vh;font-family:var(--mono);font-size:.75rem;color:var(--gold)}
+
+/* ===== nav: barra blanca, marca centrada ===== */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;padding:1.05rem 2.4vw;background:rgba(251,250,248,.92);backdrop-filter:blur(14px);
+  border-bottom:var(--hairline);transition:transform .5s var(--ease)}
+.nav.is-hidden{transform:translateY(-100%)}
+.nav-left{display:flex;gap:1.8rem;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-60)}
+.nav-left a{transition:color .3s}
+.nav-left a:hover{color:var(--ink)}
+.nav-brand{text-align:center;font-family:var(--serif);font-weight:500;font-size:1.05rem;letter-spacing:.3em}
+.nav-brand .mono-mark{display:block;font-size:.52rem;letter-spacing:.5em;color:var(--gold);margin-top:.15rem}
+.nav-right{display:flex;justify-content:flex-end;gap:.6rem}
+@media(max-width:700px){.nav-reg{display:none}}
+.pill{display:inline-flex;align-items:center;gap:.6rem;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:.72rem 1.5rem;border-radius:3rem;transition:all .4s var(--ease);will-change:transform}
+.pill-gold{background:var(--gold);color:var(--white)}
+.pill-gold:hover{background:var(--ink)}
+.pill-line{border:1px solid rgba(28,26,22,.25)}
+.pill-line:hover{border-color:var(--gold);color:var(--gold-deep)}
+.nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:40px;height:40px;padding:8px}
+.nav-burger span{display:block;height:1.5px;background:var(--ink);transition:transform .3s var(--ease),opacity .3s}
+.nav-burger.on span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-burger.on span:nth-child(2){opacity:0}
+.nav-burger.on span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mmenu{position:fixed;inset:0;z-index:150;background:rgba(251,250,248,.98);backdrop-filter:blur(20px);
+  display:none;flex-direction:column;justify-content:center;padding:0 8vw;gap:.2rem}
+.mmenu.on{display:flex}
+.mmenu a{font-family:var(--serif);font-weight:300;font-size:clamp(1.8rem,7vw,2.6rem);padding:.55rem 0;
+  border-bottom:1px solid rgba(20,22,26,.08);display:flex;justify-content:space-between;align-items:center}
+.mmenu a::after{content:"→";font-size:1.2rem;color:var(--gold-deep)}
+.mmenu .mm-cta{margin-top:2rem;display:flex;gap:.8rem;flex-wrap:wrap}
+.mmenu .mm-cta .pill{font-size:.7rem}
+.mmenu .mm-foot{position:absolute;bottom:4vh;left:8vw;font-family:var(--mono);font-size:.56rem;letter-spacing:.3em;color:var(--ink-35);text-transform:uppercase}
+@media(max-width:900px){
+  .nav-left{display:none}
+  .nav{grid-template-columns:auto 1fr auto;padding:.8rem 3vw;align-items:center}
+  .nav-burger{display:flex}
+  .nav-brand{text-align:center;font-size:.82rem;letter-spacing:.2em;white-space:nowrap}
+  .nav-brand .mono-mark{font-size:.45rem;letter-spacing:.32em}
+  .nav-right .pill{padding:.5rem .85rem;font-size:.58rem;letter-spacing:.08em}
+  .nav-reg{display:none}
+}
+
+/* ===== hero: video full-bleed (slot) con fallback foto ===== */
+.hero{position:relative;height:100svh;overflow:hidden;background:var(--dark)}
+.hero-media,.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-video{opacity:0;transition:opacity 1s;object-position:center 42%}
+.hero.has-video .hero-video{opacity:1}
+.hero.has-video .hero-media{opacity:0}
+.hero-media{filter:saturate(.92) contrast(1.02);transform:scale(1.04)}
+.hero-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(246,247,248,.94) 0%,rgba(246,247,248,.30) 46%,rgba(246,247,248,.50) 100%),linear-gradient(to right,rgba(246,247,248,.92) 0%,rgba(246,247,248,.58) 44%,rgba(246,247,248,.06) 80%)}
+.hero-copy{position:absolute;left:5vw;bottom:9vh;z-index:5;color:var(--ink);max-width:36rem}
+.hero-kicker{font-size:.68rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem}
+.hero-title{font-family:var(--serif);font-weight:300;font-size:clamp(2.4rem,5.2vw,4.6rem);line-height:1.06;letter-spacing:-.01em}
+.hero-title .l{display:block;overflow:hidden}
+.hero-title .l span{display:inline-block;transform:translateY(115%)}
+.hero-sub{margin-top:1.4rem;font-size:1rem;color:var(--ink-60);opacity:0;max-width:30rem}
+.hero-cta{margin-top:2.2rem;opacity:0}
+.hero-down{position:absolute;left:50%;bottom:3.4vh;transform:translateX(-50%);z-index:5;color:rgba(17,18,20,.55);
+  font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:.7rem}
+.hero-down::after{content:"";width:1px;height:3rem;background:linear-gradient(to bottom,#9DBFE8,transparent);animation:drip 2.2s var(--ease) infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ===== sección VITRINA: la prenda flota bajo el reflector ===== */
+.estrella{position:relative;min-height:100svh;background:radial-gradient(120% 90% at 50% 30%,#FFFFFF 0%,var(--paper) 55%,var(--paper-2) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:16vh 0 10vh}
+.estrella-light{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.85) 46%,rgba(255,255,255,0) 60%);
+  width:160%;left:-30%;mix-blend-mode:soft-light;animation:sweep 7.5s var(--ease) infinite}
+@keyframes sweep{0%{transform:translateX(-38%)}55%{transform:translateX(38%)}100%{transform:translateX(38%)}}
+.estrella-stage{position:relative;width:min(520px,74vw);z-index:2;margin-top:13vh}
+.estrella-img{width:auto;max-width:100%;max-height:54vh;margin:0 auto;display:block;object-fit:contain;
+  filter:drop-shadow(0 34px 44px rgba(20,22,26,.3)) saturate(.98);will-change:transform,opacity}
+.estrella-shadow{position:absolute;left:16%;right:16%;bottom:5%;height:7%;
+  background:radial-gradient(ellipse at center,rgba(20,22,26,.18),transparent 70%);filter:blur(6px)}
+.estrella-side{position:absolute;top:46%;transform:translateY(-50%) scale(.92);width:min(190px,17vw);z-index:1;
+  opacity:.28;filter:blur(4px) saturate(.85);cursor:pointer;transition:opacity .45s var(--ease),filter .45s var(--ease),transform .45s var(--ease)}
+.estrella-side:hover{opacity:.55;filter:blur(1.5px) saturate(.95);transform:translateY(-50%) scale(1)}
+.estrella-side.no-t{transition:none!important}
+.estrella-side.l{left:11vw}
+.estrella-side.r{right:11vw}
+@media(max-width:900px){.estrella-side{display:none}}
+.estrella-arrow{position:absolute;top:52%;transform:translateY(-50%);z-index:6;font-family:var(--serif);
+  font-weight:300;font-size:2.8rem;line-height:1;color:var(--ink-35);padding:1rem 1.6rem;
+  transition:color .3s,transform .3s var(--ease)}
+.estrella-arrow:hover{color:var(--gold-deep)}
+.estrella-arrow.prev{left:5vw}
+.estrella-arrow.prev:hover{transform:translateY(-50%) translateX(-.3rem)}
+.estrella-arrow.next{right:5vw}
+.estrella-arrow.next:hover{transform:translateY(-50%) translateX(.3rem)}
+@media(max-width:700px){.estrella-arrow.prev{left:.5rem}.estrella-arrow.next{right:.5rem}}
+.estrella-kicker{position:absolute;top:9vh;left:0;right:0;text-align:center;z-index:3;
+  font-size:.66rem;letter-spacing:.46em;text-transform:uppercase;color:#9DBFE8}
+/* cortina orgánica: el oscuro del hero se derrite alrededor de la pieza */
+.estrella-curtain{position:absolute;top:-2px;left:0;width:100%;height:min(36vh,340px);z-index:1;display:block;pointer-events:none}
+@media(max-width:700px){.estrella-curtain{display:none}.estrella{background:linear-gradient(180deg,var(--dark) 0%,var(--paper) 18%,var(--paper-2) 100%)}.estrella-kicker{color:var(--gold-deep)}}
+.estrella-curtain path{fill:var(--dark)}
+/* identificación editorial — sin caja, deslizable */
+.estrella-stage{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.estrella-stage.dragging{cursor:grabbing}
+.estrella-stage img{pointer-events:none}
+.estrella-meta{position:relative;z-index:5;margin-top:.6rem;display:grid;
+  grid-template-columns:1fr auto 1fr;align-items:end;gap:2.5rem;width:min(920px,88vw)}
+.estrella-count{font-family:var(--mono);font-size:.68rem;letter-spacing:.3em;color:var(--ink-35);padding-bottom:.7rem}
+.estrella-id{text-align:center}
+.estrella-id small{display:block;font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:.55rem}
+.estrella-id span{font-family:var(--serif);font-style:italic;font-weight:300;font-size:clamp(1.7rem,3.2vw,2.7rem);line-height:1.1}
+.estrella-cta{justify-self:end;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-60);
+  border-bottom:1px solid rgba(31,78,140,.45);padding:0 0 .5rem;transition:color .3s,border-color .3s}
+.estrella-cta:hover{color:var(--gold-deep);border-color:var(--gold-deep)}
+.estrella-hint{position:relative;z-index:5;margin-top:2.4rem;font-size:.56rem;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--ink-35);display:flex;align-items:center;gap:1.1rem}
+.estrella-hint::before,.estrella-hint::after{content:"";width:3.2rem;height:1px;background:rgba(28,26,22,.16)}
+@media(max-width:700px){
+  .estrella-meta{grid-template-columns:1fr;gap:.9rem;text-align:center}
+  .estrella-count{display:none}
+  .estrella-cta{justify-self:center}
+}
+
+/* ===== bloques campaña full-bleed ===== */
+.blq{position:relative;height:92svh;overflow:hidden;background:var(--dark)}
+.blq-media,.blq-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.blq-video{opacity:0;transition:opacity 1s}
+.blq.has-video .blq-video{opacity:1}
+.blq.has-video .blq-media{opacity:0}
+.blq-media{filter:saturate(.92);transform:scale(1.06)}
+.blq-scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,14,12,.66),rgba(15,14,12,.08) 55%)}
+.blq-copy{position:absolute;left:0;right:0;bottom:8vh;text-align:center;color:var(--dark-ink);z-index:4;padding:0 6vw}
+.blq-kicker{font-size:.64rem;letter-spacing:.44em;text-transform:uppercase;color:#9DBFE8}
+.blq-title{font-family:var(--serif);font-weight:300;font-size:clamp(1.9rem,3.8vw,3.3rem);margin-top:1rem;letter-spacing:-.008em}
+.blq-title em{font-style:italic}
+.blq-cta{margin-top:1.8rem;display:inline-flex}
+.pill-ghost{border:1px solid rgba(17,18,20,.4);color:var(--dark-ink)}
+.pill-ghost:hover{background:var(--dark-ink);color:var(--dark)}
+
+/* recién llegados — macro que sangra fuera del canvas (organico, no cuadrado) */
+.bleed{position:relative;background:var(--white);min-height:94svh;display:flex;align-items:center;overflow:hidden}
+.bleed-stage{position:absolute;inset:-6% 0;margin:0}
+.bleed-stage img{width:100%;height:100%;max-width:none;object-fit:cover;filter:saturate(.96)}
+.bleed-scrim{position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(252,253,254,.94) 0%,rgba(252,253,254,.82) 30%,rgba(252,253,254,.2) 62%,rgba(252,253,254,.05) 100%)}
+.bleed-copy{position:relative;z-index:3;padding:12vh 6vw;max-width:46rem}
+.bleed-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s}
+.bleed.has-video .bleed-stage video{opacity:1}
+.bleed.has-video .bleed-stage img{opacity:0}
+.bleed-p{margin-top:1.2rem;color:var(--ink-60);max-width:30rem}
+.bleed.has-video .bleed-scrim{background:linear-gradient(90deg,rgba(5,7,11,.9) 0%,rgba(5,7,11,.74) 36%,rgba(5,7,11,.28) 68%,rgba(5,7,11,.12) 100%)}
+.bleed.has-video .h2{color:#E9EDF2}
+.bleed.has-video .h2 em{color:#D9C27A}
+.bleed.has-video .kicker{color:#D9C27A}
+.bleed.has-video .bleed-p{color:rgba(233,237,242,.75)}
+.bleed.has-video .bleed-stage video{-webkit-mask-image:none;mask-image:none}
+@media(max-width:860px){.bleed.has-video .bleed-scrim{background:linear-gradient(180deg,rgba(5,7,11,.9) 0%,rgba(5,7,11,.6) 55%,rgba(5,7,11,.35) 100%)}}
+.bleed-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:3rem;max-width:38rem}
+.bleed-cards a{display:block;background:rgba(255,255,255,.65);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.8);border-radius:1.4rem;overflow:hidden;
+  box-shadow:0 6px 24px rgba(20,22,26,.05);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.bleed-cards a:hover{transform:translateY(-5px);box-shadow:0 20px 44px rgba(20,22,26,.1)}
+.bleed-cards .bc-im{aspect-ratio:16/11;overflow:hidden;background:linear-gradient(170deg,#F1F3F6,#E3E7EC)}
+.bleed-cards img{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;filter:saturate(.92);transition:transform .8s var(--ease)}
+.bleed-cards a:hover img{transform:scale(1.045)}
+.bleed-cards span{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem;padding:.9rem 1.1rem 1.1rem;
+  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-60);transition:color .3s}
+.bleed-cards span::after{content:"→";font-family:var(--serif);font-size:1rem;color:var(--gold-deep)}
+.bleed-cards a:hover span{color:var(--gold-deep)}
+@media(max-width:860px){
+  .bleed{min-height:78svh}
+  .bleed-scrim{background:linear-gradient(180deg,rgba(252,253,254,.94) 0%,rgba(252,253,254,.75) 55%,rgba(252,253,254,.25) 100%)}
+}
+
+/* ===== carrusel colección (cards con fondos tintados) ===== */
+.carrusel{padding:14vh 0 10vh;background:var(--white)}
+.carr-head{display:flex;align-items:baseline;justify-content:space-between;gap:2rem;flex-wrap:wrap;
+  margin-bottom:7vh;padding:0 6vw}
+.kicker{font-size:.66rem;letter-spacing:.44em;text-transform:uppercase;color:var(--gold-deep)}
+.h2{font-family:var(--serif);font-weight:300;font-size:clamp(1.9rem,3.6vw,3.1rem);margin-top:1rem;letter-spacing:-.008em}
+.head-note{max-width:24rem;font-size:.88rem;color:var(--ink-60);padding-bottom:.4rem}
+.carr-rail{display:flex;gap:1.6rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:1rem 6vw 3.5rem;
+  scrollbar-width:none;cursor:grab;align-items:flex-start;user-select:none;-webkit-user-select:none;touch-action:pan-x pan-y}
+.carr-rail::-webkit-scrollbar{display:none}
+.carr-rail.dragging{cursor:grabbing;scroll-snap-type:none}
+.ccard{flex:0 0 min(310px,74vw);scroll-snap-align:center;overflow:hidden;border-radius:1.4rem;border:1px solid rgba(255,255,255,.75);box-shadow:0 8px 30px rgba(20,22,26,.06);
+  background:var(--tint,linear-gradient(165deg,#EDEFF2,#D9DDE3));position:relative}
+.ccard:nth-child(even){margin-top:3.2rem}
+.ccard:nth-child(3n){flex-basis:min(360px,78vw)}
+.carr-rail img{-webkit-user-drag:none;pointer-events:none}
+.ccard{user-select:none;-webkit-user-select:none}
+.ccard-tags{position:absolute;top:.9rem;left:1rem;z-index:2;display:flex;gap:.35rem}
+.ccard-tags span{font-family:var(--mono);font-size:.52rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-60);background:rgba(252,253,254,.85);backdrop-filter:blur(6px);padding:.32rem .6rem;border-radius:2rem}
+.ccard-num{position:absolute;top:.9rem;right:1.1rem;z-index:2;font-family:var(--serif);font-style:italic;
+  font-weight:300;font-size:1.5rem;color:rgba(28,26,22,.22)}
+.ccard-img{aspect-ratio:3/3.3;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ccard-img img{width:90%;height:90%;object-fit:cover;filter:saturate(.95);
+  transition:transform 1s var(--ease);
+  -webkit-mask-image:radial-gradient(ellipse 75% 72% at 50% 50%,#000 60%,transparent 92%);
+  mask-image:radial-gradient(ellipse 75% 72% at 50% 50%,#000 60%,transparent 92%)}
+.ccard:hover .ccard-img img{transform:scale(1.045)}
+.ccard-info{padding:.2rem 1.3rem 1.4rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.ccard-brand{font-size:.6rem;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-60)}
+.ccard-model{font-family:var(--serif);font-weight:400;font-size:1.2rem;margin-top:.25rem}
+.ccard-arrow{font-family:var(--serif);font-size:1.1rem;color:var(--gold-deep);transition:transform .4s var(--ease)}
+.ccard:hover .ccard-arrow{transform:translateX(.4rem)}
+.carr-hint{padding:0 6vw;font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-35)}
+
+/* ===== bloque historia (contraste oscuro, calmo) ===== */
+.historia{background:var(--dark);color:var(--dark-ink);padding:16vh 6vw}
+.historia-head{max-width:52rem;margin:0 0 10vh}
+.historia-head .h2 em{font-style:italic;color:#9DBFE8}
+.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(246,247,248,.16);max-width:1240px;margin:0 auto;padding-bottom:3rem}
+.hito{padding:2.6rem 1.6rem 0;border-left:1px solid rgba(246,247,248,.16)}
+.hito:first-child{border-left:none}
+@media(min-width:1001px){.hito:nth-child(even){transform:translateY(2.6rem)}}
+.hito .n{font-family:var(--serif);font-weight:300;font-size:clamp(2.6rem,4.6vw,4.4rem);color:#9DBFE8;line-height:1}
+.hito .k{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(246,247,248,.55);margin-top:.9rem}
+.hito p{font-size:.86rem;color:rgba(246,247,248,.78);margin-top:.7rem}
+@media(max-width:1000px){.hitos{grid-template-columns:1fr 1fr}.hito{border-top:1px solid rgba(246,247,248,.16);padding-bottom:2rem}.hito:first-child{border-top:none}}
+@media(max-width:560px){.hitos{grid-template-columns:1fr}.hito{border-left:none;padding-left:0}}
+
+/* ===== catálogo claro ===== */
+.catalogo{padding:14vh 0 12vh;background:var(--paper)}
+.cat-head{display:flex;align-items:baseline;justify-content:space-between;gap:2rem;flex-wrap:wrap;margin-bottom:5vh;padding:0 5vw}
+.cat-toolbar{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;padding:0 5vw;margin-bottom:1.4rem}
+.cat-count{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-deep);flex-basis:100%;margin-bottom:.6rem}
+.cat-search{background:var(--white);border:var(--hairline);color:var(--ink);font-family:var(--sans);font-size:.85rem;
+  padding:.7rem 1.2rem;min-width:15rem;outline:none;border-radius:3rem}
+.cat-search::placeholder{color:var(--ink-35)}
+.cat-search:focus{border-color:var(--gold)}
+.cat-select{appearance:none;background:var(--white);border:var(--hairline);color:var(--ink-60);font-size:.74rem;
+  letter-spacing:.06em;padding:.7rem 2.3rem .7rem 1.2rem;border-radius:3rem;outline:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23A98524'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 1rem center}
+.cat-chips{display:flex;gap:.4rem;padding:0 5vw;margin-bottom:5vh;flex-wrap:wrap}
+.chip{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-60);
+  border:1px solid transparent;padding:.55rem 1.1rem;border-radius:2rem;transition:all .3s}
+.chip:hover{color:var(--ink)}
+.chip.is-on{border-color:var(--gold);color:var(--gold-deep);background:rgba(31,78,140,.06)}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2.6rem 1.8rem;padding:0 5vw}
+.piece{cursor:pointer;position:relative;background:rgba(255,255,255,.6);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.75);border-radius:1.4rem;overflow:hidden;box-shadow:0 8px 30px rgba(20,22,26,.06);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.piece:hover{transform:translateY(-4px);box-shadow:0 22px 48px rgba(20,22,26,.1)}
+.piece-imgwrap{position:relative;aspect-ratio:3/3.2;overflow:hidden;background:linear-gradient(170deg,#F1F3F6,#E2E6EB)}
+.piece.featured{grid-column:span 2}
+.piece.featured .piece-imgwrap{aspect-ratio:3/1.98}
+.piece-imgwrap img{width:100%;height:100%;object-fit:cover;filter:saturate(.94);transition:opacity .45s,transform .9s var(--ease)}
+.piece:hover .img-a{opacity:0}
+.piece .img-b{position:absolute;inset:0;opacity:0}
+.piece:hover .img-b{opacity:1;transform:scale(1.035)}
+.piece-idx{position:absolute;top:.9rem;left:.9rem;z-index:2;font-family:var(--mono);font-size:.56rem;
+  letter-spacing:.18em;color:var(--ink-60);background:rgba(251,250,248,.85);backdrop-filter:blur(4px);padding:.3rem .55rem}
+.piece-info{padding:1rem 1.25rem 1.25rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.piece-name{font-family:var(--serif);font-weight:400;font-size:1.04rem}
+.piece-name small{display:block;font-size:.6rem;letter-spacing:.16em;color:var(--ink-35);text-transform:uppercase;margin-top:.35rem;font-family:var(--sans)}
+.piece-range{font-family:var(--mono);font-size:.62rem;color:var(--gold-deep);white-space:nowrap}
+
+.cat-empty{padding:8vh 6vw;text-align:center;font-size:.8rem;letter-spacing:.1em;color:var(--ink-60);display:none}
+@media(max-width:1200px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:820px){.cat-grid{grid-template-columns:repeat(2,1fr);gap:.9rem}}
+@media(max-width:460px){.cat-grid{grid-template-columns:1fr}}
+
+/* ===== ficha modal clara ===== */
+.ficha{position:fixed;inset:0;z-index:250;display:none;background:rgba(28,26,22,.4);backdrop-filter:blur(8px)}
+.ficha.is-open{display:flex}
+.ficha-panel{margin:auto;width:min(1080px,94vw);max-height:92svh;background:var(--white);border-radius:.15rem;
+  display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);overflow:hidden;
+  box-shadow:0 40px 120px rgba(15,14,12,.4);transform:translateY(40px);opacity:0}
+.ficha-gal{background:linear-gradient(165deg,#F2F4F7,#E4E8ED);display:flex;flex-direction:column;min-height:0;position:relative}
+.ficha-main{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:3rem}
+.ficha-main img{max-width:100%;max-height:58svh;object-fit:contain;filter:saturate(.95);
+  -webkit-mask-image:radial-gradient(ellipse 78% 74% at 50% 50%,#000 58%,transparent 92%);
+  mask-image:radial-gradient(ellipse 78% 74% at 50% 50%,#000 58%,transparent 92%)}
+.ficha-thumbs{display:flex;gap:.5rem;padding:0 2rem 1.8rem;overflow-x:auto;justify-content:center}
+.ficha-thumbs img{width:56px;aspect-ratio:1;object-fit:cover;border-radius:.3rem;border:1px solid transparent;cursor:pointer;opacity:.55;transition:all .3s}
+.ficha-thumbs img.is-on{border-color:var(--gold);opacity:1}
+.ficha-info{padding:3.4rem 2.6rem 2.6rem;overflow-y:auto}
+.ficha-lote{font-family:var(--mono);font-size:.6rem;letter-spacing:.26em;color:var(--gold-deep);text-transform:uppercase}
+.ficha-brand{font-family:var(--serif);font-weight:300;font-size:clamp(1.8rem,3vw,2.6rem);margin-top:.8rem;line-height:1.05}
+.ficha-model{font-family:var(--serif);font-style:italic;font-weight:300;font-size:1.25rem;color:var(--ink-60);margin-top:.3rem}
+.ficha-specs{margin-top:2rem;border-top:var(--hairline)}
+.spec-row{display:flex;justify-content:space-between;padding:.75rem 0;border-bottom:var(--hairline);
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase}
+.spec-row .k{color:var(--ink-35)}
+.ficha-range{margin-top:1.8rem;font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--gold-deep)}
+.ficha-ctas{margin-top:2rem;display:flex;flex-direction:column;gap:.8rem}
+.ficha-note{margin-top:1.6rem;font-size:.78rem;color:var(--ink-35)}
+.ficha-close{position:absolute;top:1.2rem;right:1.2rem;z-index:5;font-size:.62rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-60);background:rgba(251,250,248,.9);border-radius:2rem;padding:.55rem 1.1rem;transition:color .3s}
+.ficha-close:hover{color:var(--gold-deep)}
+@media(max-width:900px){
+  .ficha-panel{grid-template-columns:1fr;display:block;overflow-y:auto}
+  .ficha-main{padding:3.4rem 1.6rem 1rem}.ficha-main img{max-height:44svh}
+  .ficha-info{padding:2rem 1.8rem 3rem}
+}
+
+/* ===== showroom ===== */
+.showroom{background:var(--white);padding:15vh 6vw;display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:6vw;align-items:center}
+.show-title{font-family:var(--serif);font-weight:300;font-size:clamp(2rem,4.2vw,3.6rem);line-height:1.1;letter-spacing:-.01em}
+.show-title em{font-style:italic;color:var(--gold-deep)}
+.show-addr{margin-top:2rem;color:var(--ink-60);max-width:26rem}
+.show-facts{border-top:var(--hairline);margin-top:1.8rem;max-width:30rem}
+.fact{display:flex;justify-content:space-between;gap:2rem;padding:.9rem 0;border-bottom:var(--hairline);font-size:.78rem}
+.fact .k{color:var(--ink-35);letter-spacing:.14em;text-transform:uppercase;font-size:.66rem;padding-top:.15rem}
+.show-cta{display:flex;flex-direction:column;gap:.9rem;align-items:flex-start}
+.map-card{position:relative;width:100%;aspect-ratio:4/3;border-radius:1.4rem;overflow:hidden;
+  border:1px solid rgba(255,255,255,.8);box-shadow:0 10px 34px rgba(20,22,26,.08);margin-bottom:1rem}
+.map-card iframe{width:100%;height:100%;border:0;filter:grayscale(1) contrast(1.06) brightness(1.02);
+  transition:filter .6s var(--ease)}
+.map-card:hover iframe{filter:grayscale(.2) contrast(1.02)}
+.map-tag{position:absolute;left:1rem;bottom:1rem;background:rgba(252,253,254,.92);backdrop-filter:blur(8px);
+  font-family:var(--mono);font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);
+  padding:.5rem .9rem;border-radius:2rem;pointer-events:none}
+.show-cta p{color:var(--ink-60);margin-bottom:.6rem}
+@media(max-width:900px){.showroom{grid-template-columns:1fr}}
+
+/* ===== footer + firma ===== */
+.footer{background:var(--paper);border-top:var(--hairline);padding:9vh 6vw 3vh}
+.foot-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;max-width:1200px;margin:0 auto 8vh}
+.foot-col .t{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-35);margin-bottom:1.1rem}
+.foot-col a{display:block;font-size:.85rem;color:var(--ink-60);padding:.3rem 0;transition:color .3s}
+.foot-col a:hover{color:var(--gold-deep)}
+.foot-giant{max-width:100%;overflow:hidden;font-family:var(--serif);font-weight:300;text-align:center;font-size:clamp(3.4rem,12vw,11rem);
+  line-height:.95;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(28,26,22,.25);white-space:nowrap}
+.foot-giant em{font-style:italic;color:var(--gold);-webkit-text-stroke:0}
+.foot-base{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:5vh;
+  font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-35)}
+@media(max-width:860px){.foot-cols{grid-template-columns:1fr 1fr}}
+
+/* videos: SIEMPRE full-bleed edge-to-edge — integración total, el scrim y el grano hacen el resto */
+@media(max-width:900px){.hero-down{display:none}}
+[data-fade]{opacity:0;transform:translateY(34px)}
+.no-anim [data-fade],.no-anim .hero-sub,.no-anim .hero-cta{opacity:1!important;transform:none!important}
+.no-anim .hero-title .l span,.no-anim .pre-name span{transform:none!important}
+.no-anim .estrella-id{opacity:1!important}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  [data-fade],.hero-sub,.hero-cta{opacity:1!important;transform:none!important}
+}
+</style>
+<noscript><style>.preloader{display:none!important}[data-fade]{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<!-- PRELOADER -->
+<script>setTimeout(function(){var p=document.querySelector('.preloader');if(p&&getComputedStyle(p).display!=='none'){p.style.display='none';if(!window.gsap){document.documentElement.classList.add('no-anim');}}},4600);</script>
+<div class="preloader">
+  <div class="pre-mark">
+    <div class="pre-name" aria-hidden="true"></div>
+    <div class="pre-sub">Buenos Aires — Est. El talle</div>
+  </div>
+  <div class="pre-count">000</div>
+</div>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <button class="nav-burger" id="navBurger" aria-label="Menú"><span></span><span></span><span></span></button>
+  <nav class="nav-left">
+    <a href="#estrella" data-hover>Lo que sale</a>
+    <a href="coleccion.html" data-hover>El catálogo</a>
+    <a href="#historia" data-hover>La marca</a>
+    <a href="#showroom" data-hover>El local</a>
+  </nav>
+  <a class="nav-brand" href="#top" data-hover>BRACK<span class="mono-mark">INDUMENTARIA — SANTA ROSA, LA PAMPA</span></a>
+  <div class="nav-right">
+    <a class="pill pill-line nav-reg" data-hover href="#registro">Registrarse</a>
+    <a class="pill pill-gold" data-hover href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada%20al%20showroom." target="_blank" rel="noopener">Escribinos</a>
+  </div>
+</header>
+<div class="mmenu" id="mmenu">
+  <a href="#estrella">Lo que sale</a>
+  <a href="coleccion.html">La Colección</a>
+  <a href="#colecciones">Universos</a>
+  <a href="#historia">La marca</a>
+  <a href="#showroom">El local</a>
+  <a href="#registro">Avisos de drops</a>
+  <div class="mm-cta">
+    <a class="pill pill-gold" style="border-bottom:none" href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada%20al%20showroom." target="_blank" rel="noopener">Escribinos</a>
+  </div>
+  <div class="mm-foot">Brack — 25 de Mayo 772, Santa Rosa</div>
+</div>
+
+<!-- HERO (slot de video: assets/hero.mp4 — fallback foto con Ken Burns) -->
+<section class="hero" id="top">
+  <img class="hero-media" src="fotos/hero_poster.webp" alt="Brack Indumentaria — drop de temporada">
+  <div class="hero-scrim"></div>
+  <div class="hero-copy">
+    <p class="hero-kicker">Indumentaria urbana · Santa Rosa, La Pampa</p>
+    <h1 class="hero-title">
+      <span class="l"><span>Lo que hay,</span></span>
+      <span class="l"><span>mientras queda tu talle.</span></span>
+    </h1>
+    <p class="hero-sub">Los drops salen por tanda y no se repiten. Todas las medidas publicadas talle por talle, 20% off en efectivo y envío gratis superando $200.000.</p>
+    <div class="hero-cta"><a class="pill pill-gold" data-hover data-magnetic href="#estrella">Ver el catálogo</a></div>
+  </div>
+  <div class="hero-down">Bajá</div>
+  <span class="hr-label">Buenos Aires — GMT-3</span>
+  </div>
+</section>
+<style>
+.hero-hora{position:absolute;right:5vw;bottom:5vh;z-index:6;display:flex;align-items:center;gap:1rem;color:rgba(233,237,242,.75)}
+.hr-face{position:relative;width:64px;height:64px;border-radius:50%;border:1px solid rgba(233,237,242,.35)}
+.hr-face span{position:absolute;left:50%;bottom:50%;transform-origin:bottom center;border-radius:2px}
+.hr-h{width:2px;height:15px;background:var(--dark-ink)}
+.hr-m{width:1.5px;height:22px;background:var(--dark-ink)}
+.hr-s{width:1px;height:26px;background:#9DBFE8}
+.hr-pin{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:#9DBFE8}
+.hr-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase}
+@media(max-width:900px){.hero-hora{display:none}}
+</style>
+<script>
+(function(){
+  var h = document.getElementById('hrH'), m = document.getElementById('hrM'), s = document.getElementById('hrS');
+  function tick(){
+    var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Argentina/Buenos_Aires' }));
+    var sec = now.getSeconds() + now.getMilliseconds() / 1000;
+    var min = now.getMinutes() + sec / 60;
+    var hr = (now.getHours() % 12) + min / 60;
+    s.style.transform = 'translateX(-50%) rotate(' + (sec * 6) + 'deg)';
+    m.style.transform = 'translateX(-50%) rotate(' + (min * 6) + 'deg)';
+    h.style.transform = 'translateX(-50%) rotate(' + (hr * 30) + 'deg)';
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+</script>
+
+<!-- MARCAS PASANDO (strip estilo página original) -->
+<section class="marcas" aria-hidden="true">
+  <div class="marcas-track">
+    <div class="marcas-set" id="marcasSet"></div>
+    <div class="marcas-set" id="marcasSet2"></div>
+  </div>
+</section>
+<style>
+.marcas{background:var(--white);border-top:var(--hairline);border-bottom:var(--hairline);overflow:hidden;padding:1.6rem 0}
+.marcas-track{display:flex;width:max-content;animation:marcas-mq 55s linear infinite}
+.marcas:hover .marcas-track{animation-play-state:paused}
+.marcas-set{display:flex;align-items:center;white-space:nowrap}
+.marcas-set span{font-family:var(--serif);font-style:italic;font-weight:300;font-size:1.35rem;
+  color:var(--ink-60);padding:0 1.6rem;letter-spacing:.02em;transition:color .3s}
+.marcas-set span:hover{color:var(--gold-deep)}
+.marcas-set i{font-style:normal;color:var(--gold);font-size:.6rem}
+@keyframes marcas-mq{to{transform:translateX(-50%)}}
+</style>
+<script>
+(function(){
+  var brands = ["Bharara", "NFL", "Amber Oud", "Brack", "Lionheart", "Hawas", "Vans", "Asad", "MLB", "Khamrah", "Shato", "Casaclan", "Straye", "NBA", "TNF", "Kiech", "Campus", "Rusty"];
+  var html = brands.map(function(b){ return '<span>' + b + '</span><i>◆</i>'; }).join('');
+  document.getElementById('marcasSet').innerHTML = html;
+  document.getElementById('marcasSet2').innerHTML = html;
+})();
+</script>
+
+<!-- VITRINA (la prenda recortada bajo la luz que barre + deslizable) -->
+<section class="estrella" id="estrella">
+  <svg class="estrella-curtain" viewBox="0 0 1440 700" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,0 H1440 V90 C1290,152 1180,112 1080,152 C990,188 962,300 900,398 C852,472 812,508 720,508 C628,508 588,472 540,398 C478,300 450,188 360,152 C260,112 150,152 0,90 Z"/>
+  </svg>
+  <p class="estrella-kicker">Lo que está saliendo</p>
+  <div class="estrella-light"></div>
+  <div class="estrella-stage">
+    <div class="estrella-shadow"></div>
+    <img class="estrella-img" id="starImg" src="fotos/stars/buzos-nfl-importados-star.png" alt="Pieza estrella">
+  </div>
+  <img class="estrella-side l" id="starSideL" src="fotos/stars/buzo-shato-frizado-2kek1-star.png" alt="Pieza anterior" data-hover>
+  <img class="estrella-side r" id="starSideR" src="fotos/stars/perfume-9pm-night-out-mi4b6-star.png" alt="Pieza siguiente" data-hover>
+  <button class="estrella-arrow prev" id="starPrev" aria-label="Pieza anterior" data-hover>‹</button>
+  <button class="estrella-arrow next" id="starNext" aria-label="Pieza siguiente" data-hover>›</button>
+  <div class="estrella-meta">
+    <div class="estrella-count"><span id="starIdxLbl">01</span> — 08</div>
+    <div class="estrella-id">
+      <small id="starBrand">Camisetas — $136.500</small>
+      <span id="starName">Buzos NFL Importados</span>
+    </div>
+    <button class="estrella-cta" id="starCta" data-hover>Consultar por esta prenda</button>
+  </div>
+  <div class="estrella-hint">Deslizá</div>
+</section>
+
+<!-- BLOQUE CAMPAÑA 1 (slot video: assets/campana1.mp4) -->
+<section class="blq">
+  <img class="blq-media" src="fotos/campera-over-kbrkrv-sgssp-0.webp" alt="">
+  <div class="blq-scrim"></div>
+  <div class="blq-copy">
+    <p class="blq-kicker">Talles y medidas</p>
+    <h2 class="blq-title">Todas las medidas publicadas, <em>talle por talle.</em></h2>
+    <a class="pill pill-ghost blq-cta" data-hover href="coleccion.html">Ver el catálogo</a>
+  </div>
+</section>
+
+<!-- CARRUSEL COLECCIÓN -->
+<section class="carrusel" id="carrusel">
+  <div class="carr-head">
+    <div>
+      <p class="kicker">Lo último que entró</p>
+      <h2 class="h2">Los drops de la temporada</h2>
+    </div>
+    <p class="head-note">Una selección corta, curada a mano. El resto de la colección vive más abajo — y el stock rota todos los días.</p>
+  </div>
+  <div class="carr-rail" id="carrRail"></div>
+  <p class="carr-hint">Deslizá — cada prenda abre su ficha</p>
+</section>
+
+<!-- RECIÉN LLEGADOS — macro sangrando fuera del canvas -->
+<section class="bleed">
+  <div class="bleed-stage" aria-hidden="true">
+    <img src="fotos/perfume-9pm-night-out-mi4b6-0.webp" alt="">
+  </div>
+  <div class="bleed-scrim" aria-hidden="true"></div>
+  <div class="bleed-copy">
+    <p class="kicker">Recién llegados</p>
+    <h2 class="h2">El catálogo no espera a nadie.</h2>
+    <p class="bleed-p">Las tandas no se repiten: lo que hoy está publicado, la semana que viene quizás ya no esté en tu talle. Esto es lo último que entró.</p>
+    <div class="bleed-cards">
+      <a href="coleccion.html" data-hover>
+        <div class="bc-im"><img loading="lazy" src="fotos/buzo-shato-ikvj7-0.webp" alt="Catálogo de Brack"></div>
+        <span>Catálogo — 119 productos</span>
+      </a>
+      <a href="#showroom" data-hover>
+        <div class="bc-im"><img loading="lazy" src="fotos/vans-hylane-brown-wqfk7-0.webp" alt="El local"></div>
+        <span>Zapatillas, en el local</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- COLECCIONES: 4 UNIVERSOS (hover estilo página original, mejorado) -->
+<section class="unis" id="colecciones">
+  <div class="cat-head" style="padding:0 5vw;margin-bottom:5vh">
+    <div><p class="kicker">Colecciones</p><h2 class="h2">Una casa, <em style="font-style:italic;color:#9DBFE8">cuatro mundos.</em></h2></div>
+    <a class="pill pill-line" data-hover href="coleccion.html">Ver todo el catálogo</a>
+  </div>
+  <div class="unis-grid">
+    <a class="uni" href="coleccion.html" data-hover>
+      <div class="uni-media">
+        <img src="fotos/buzos-nfl-importados-0.webp" alt="Indumentaria" loading="lazy">
+      </div>
+      <span class="uni-num">01</span>
+      <div class="uni-bar"><h3>Indumentaria</h3><p>Explorar catálogo — 119 productos</p></div>
+    </a>
+    <a class="uni" href="#showroom" data-hover>
+      <div class="uni-media">
+        <img src="fotos/vans-hylane-brown-wqfk7-0.webp" alt="Zapatillas" loading="lazy">
+      </div>
+      <span class="uni-num">02</span>
+      <div class="uni-bar"><h3>Zapatillas</h3><p>12 pares disponibles</p></div>
+    </a>
+    <a class="uni" href="#showroom" data-hover>
+      <div class="uni-media">
+        <img src="fotos/gorra-curva-cerrada-g5-7-3-8-4nuod-0.webp" alt="Gorras y accesorios" loading="lazy">
+      </div>
+      <span class="uni-num">03</span>
+      <div class="uni-bar"><h3>Gorras y accesorios</h3><p>25 modelos en catálogo</p></div>
+    </a>
+    <a class="uni" href="#showroom" data-hover>
+      <div class="uni-media">
+        <img src="fotos/perfume-9pm-night-out-mi4b6-0.webp" alt="Perfumería importada" loading="lazy">
+      </div>
+      <span class="uni-num">04</span>
+      <div class="uni-bar"><h3>Perfumería importada</h3><p>12 fragancias importadas</p></div>
+    </a>
+  </div>
+</section>
+<style>
+.unis{background:var(--white);padding:14vh 0 12vh}
+.unis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;padding:0 4vw}
+.uni{position:relative;display:block;background:rgba(255,255,255,.65);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.8);border-radius:1.4rem;overflow:hidden;
+  box-shadow:0 6px 24px rgba(20,22,26,.05);transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.uni:hover{transform:translateY(-6px);box-shadow:0 22px 48px rgba(20,22,26,.1)}
+.uni-media{position:relative;aspect-ratio:3/3.4;overflow:hidden;background:linear-gradient(170deg,#F1F3F6,#E3E7EC)}
+.uni-media img{width:100%;height:100%;object-fit:cover;filter:saturate(.92);transition:transform 1s var(--ease)}
+.uni:hover .uni-media img{transform:scale(1.05)}
+.uni-media video,.uni-tex video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s;z-index:1}
+.uni.has-video .uni-media video,.uni.has-video .uni-tex video{opacity:1}
+.uni-tex{position:relative;aspect-ratio:3/3.4;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(170deg,#F1F3F6 0%,#E4E9EF 60%,#DCE3EB 100%)}
+.uni-tex::before{content:"";position:absolute;width:58%;aspect-ratio:1;border-radius:50%;
+  border:1px solid rgba(31,78,140,.16);transition:border-color .8s;animation:uniring 6.5s ease-in-out infinite}
+.uni:hover .uni-tex::before{border-color:rgba(31,78,140,.32)}
+@keyframes uniring{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
+.uni-tex:not(:has(video))::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.8) 50%,transparent 65%);
+  transform:translateX(-130%);animation:unisheen 7.5s var(--ease) infinite}
+@keyframes unisheen{0%{transform:translateX(-130%)}55%,100%{transform:translateX(130%)}}
+.uni:nth-child(4) .uni-tex::after{animation-delay:3.6s}
+.uni-tex span{position:relative;font-family:var(--serif);font-style:italic;font-weight:300;font-size:6.5rem;line-height:1;
+  color:rgba(31,78,140,.22);transition:all .7s var(--ease)}
+.uni:hover .uni-tex span{color:rgba(31,78,140,.4);transform:translateY(-6px)}
+.uni-num{position:absolute;top:1rem;left:1.1rem;z-index:2;font-family:var(--mono);font-size:.54rem;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--gold-deep);
+  background:rgba(252,253,254,.85);backdrop-filter:blur(6px);padding:.35rem .7rem;border-radius:2rem}
+.uni-bar{padding:1.2rem 1.4rem 1.4rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem}
+.uni-bar h3{font-family:var(--serif);font-weight:400;font-size:1.3rem;line-height:1.15}
+.uni-bar p{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;margin-top:.5rem;color:var(--ink-35)}
+.uni-bar::after{content:"→";font-family:var(--serif);font-size:1.1rem;color:var(--gold-deep);transition:transform .4s var(--ease)}
+.uni:hover .uni-bar::after{transform:translateX(.4rem)}
+@media(max-width:1000px){.unis-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.unis-grid{grid-template-columns:1fr}}
+</style>
+
+<!-- HISTORIA -->
+<section class="historia" id="historia">
+  <div class="historia-head">
+    <p class="blq-kicker">La marca</p>
+    <h2 class="h2">No hace falta que vengas hasta el local <em>para saber si te entra.</em></h2>
+  </div>
+  <div class="hitos">
+    <div class="hito" data-fade><div class="n">20%</div><div class="k">En efectivo</div><p>Pagando en efectivo o por transferencia, sobre el precio publicado.</p></div>
+    <div class="hito" data-fade><div class="n">6</div><div class="k">Cuotas sin interés</div><p>Con tarjeta, sin recargo: la cuota sale del precio de lista.</p></div>
+    <div class="hito" data-fade><div class="n">$200k</div><div class="k">Envío gratis desde</div><p>A todo el país, con seguimiento. Debajo de eso, el costo del correo.</p></div>
+    <div class="hito" data-fade><div class="n">119</div><div class="k">En catálogo</div><p>Prendas, zapatillas y perfumería disponibles hoy, con talle y medidas publicadas.</p></div>
+    <div class="hito" data-fade><div class="n">13</div><div class="k">Categorías</div><p>Indumentaria, zapatillas, gorras, camisetas, perfumería y más.</p></div>
+  </div>
+</section>
+
+<!-- BLOQUE CAMPAÑA 2 — el local -->
+<section class="blq blq-alt">
+  <img class="blq-media" src="fotos/buzo-shato-frizado-2kek1-3.webp" alt="">
+  <div class="blq-scrim"></div>
+  <div class="blq-copy">
+    <p class="blq-kicker">Santa Rosa, La Pampa</p>
+    <h2 class="blq-title">La confianza <em>no se improvisa.</em></h2>
+    <p style="color:rgba(233,237,242,.72);max-width:34rem;margin:1rem auto 0">Todo lo que ves publicado está en el local: podés venir, probártelo y llevártelo. Y si sos del interior, te lo mandamos.</p>
+    <a class="pill pill-ghost blq-cta" data-hover href="https://wa.me/5492954517938?text=Hola%2C%20estoy%20buscando%20una%20pieza%20espec%C3%ADfica." target="_blank" rel="noopener">Consultar por WhatsApp</a>
+  </div>
+</section>
+
+<!-- FICHA MODAL -->
+<div class="ficha" id="ficha" role="dialog" aria-modal="true">
+  <div class="ficha-panel">
+    <div class="ficha-gal">
+      <button class="ficha-close" id="fichaClose" data-hover>Cerrar ✕</button>
+      <div class="ficha-main"><img id="fichaImg" src="" alt=""></div>
+      <div class="ficha-thumbs" id="fichaThumbs"></div>
+    </div>
+    <div class="ficha-info">
+      <span class="ficha-lote" id="fichaLote"></span>
+      <h3 class="ficha-brand" id="fichaBrand"></h3>
+      <p class="ficha-model" id="fichaModel"></p>
+      <div class="ficha-specs" id="fichaSpecs"></div>
+      <p class="ficha-range" id="fichaRange"></p>
+      <div class="ficha-ctas">
+        <a class="pill pill-gold" id="fichaWA" href="#" target="_blank" rel="noopener" data-hover>Consultar por esta prenda</a>
+        <a class="pill pill-line" href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada%20al%20showroom." target="_blank" rel="noopener" data-hover>Agendar visita privada</a>
+      </div>
+      <p class="ficha-note">Toda pieza se entrega autenticada, con garantía escrita. Los valores finales se conversan en privado.</p>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS CORRIENDO -->
+<section class="reviews">
+  <div class="rev-head">
+    <div class="rev-score"><span class="rev-num">20%</span><span class="rev-stars"></span></div>
+    <div><p class="kicker">Cómo comprás</p><p style="color:var(--ink-60);margin-top:.4rem">Sin sorpresas al pagar ni al recibir.</p></div>
+    <a class="pill pill-line" style="margin-left:auto" data-hover href="https://wa.me/5492954517938" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+  </div>
+  <div class="rev-track-wrap"><div class="rev-track" id="revTrack"></div></div>
+</section>
+<style>
+.reviews{background:var(--paper);padding:12vh 0;border-top:var(--hairline);overflow:hidden}
+.rev-head{display:flex;align-items:center;gap:2rem;flex-wrap:wrap;padding:0 6vw;margin-bottom:5vh}
+.rev-num{font-family:var(--serif);font-weight:300;font-size:3.4rem;line-height:1}
+.rev-stars{display:block;color:var(--gold);letter-spacing:.2em;font-size:.8rem}
+.rev-track-wrap{overflow:hidden}
+.rev-track{display:flex;gap:1.4rem;width:max-content;animation:rev-mq 40s linear infinite;padding:.5rem 0}
+.rev-track:hover{animation-play-state:paused}
+@keyframes rev-mq{to{transform:translateX(-50%)}}
+.rev-card{flex:0 0 340px;background:rgba(255,255,255,.65);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.8);
+  border-radius:1.3rem;padding:1.6rem 1.7rem;box-shadow:0 6px 24px rgba(20,22,26,.05)}
+.rev-card .top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.58rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-35)}
+.rev-card .st{color:var(--gold);letter-spacing:.15em;margin-top:.6rem;font-size:.72rem}
+.rev-card p.q{font-family:var(--serif);font-style:italic;font-size:1rem;line-height:1.5;margin-top:.8rem;color:var(--ink)}
+.rev-card .who{display:flex;align-items:center;gap:.7rem;margin-top:1.1rem;border-top:var(--hairline);padding-top:1rem}
+.rev-card .av{width:32px;height:32px;border-radius:50%;background:var(--gold);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-size:.62rem;font-weight:600}
+.rev-card .who small{display:block;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-35)}
+</style>
+<script>
+(function(){
+  var revs = [
+    { q: "Todas las medidas publicadas, talle por talle. Sabés si te entra antes de comprar.", n: "Talles", t: "Cómo compramos" },
+    { q: "20% off pagando en efectivo. Seis cuotas sin interés con tarjeta.", n: "Pagos", t: "Condiciones" },
+    { q: "Envío gratis a todo el país superando $200.000.", n: "Envíos", t: "Condiciones" },
+    { q: "Los drops salen por tanda y no se repiten: lo que queda, queda.", n: "Stock", t: "Cómo trabajamos" }
+  ];
+  var html = revs.map(function(r){
+    var ini = r.n.split(' ').map(function(w){ return w[0]; }).join('').replace('.','');
+    return '<article class="rev-card"><div class="top"><span>' + r.t + '</span></div>' +
+      '<p class="q">“' + r.q + '”</p>' +
+      '<div class="who"><span class="av">' + ini + '</span><span>' + r.n + '<small>Condición de la tienda</small></span></div></article>';
+  }).join('');
+  document.getElementById('revTrack').innerHTML = html + html;
+})();
+</script>
+
+<!-- EL LOCAL -->
+<section class="showroom" id="showroom">
+  <div>
+    <p class="kicker">El local</p>
+    <h2 class="show-title" style="margin-top:1rem">Vení al local, <em>25 de Mayo 772.</em></h2>
+    <p class="show-addr">25 de Mayo 772, Santa Rosa, La Pampa. Todo lo publicado está acá: venís, te lo probás y te lo llevás.</p>
+    <div class="show-facts">
+      <div class="fact"><span class="k">Lunes a viernes</span><span>10:00 — 19:00</span></div>
+      <div class="fact"><span class="k">Sábado</span><span>10:00 — 15:00</span></div>
+      <div class="fact"><span class="k">WhatsApp</span><span>2954 51-7938</span></div>
+      <div class="fact"><span class="k">Cómo comprás</span><span>20% — más de 800 clientes</span></div>
+    </div>
+  </div>
+  <div class="show-cta">
+    <div class="map-card">
+      <iframe src="https://www.google.com/maps?q=25+de+Mayo+772,+Santa+Rosa,+La+Pampa&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Brack — 25 de Mayo 772, Santa Rosa" allowfullscreen></iframe>
+      <span class="map-tag">25 de Mayo 772 — Santa Rosa, La Pampa</span>
+    </div>
+    <p data-fade>Pasá por el local o escribinos: te decimos qué talles quedan y coordinamos el envío.</p>
+    <a class="pill pill-gold" data-hover data-magnetic href="https://wa.me/5492954517938?text=Hola%2C%20quisiera%20coordinar%20una%20visita%20privada%20al%20showroom." target="_blank" rel="noopener">Agendar visita privada</a>
+    <a class="pill pill-line" data-hover href="https://maps.google.com/?q=Tte.+Gral.+Juan+Domingo+Per%C3%B3n+1111+CABA" target="_blank" rel="noopener">Cómo llegar</a>
+  </div>
+</section>
+
+<!-- REGISTRO / ACCESO PREFERENTE -->
+<section class="registro" id="registro" style="background:var(--dark);color:var(--dark-ink);padding:14vh 6vw;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,5fr);gap:5vw;align-items:center">
+  <div>
+    <p class="blq-kicker">Enterate de los drops antes que nadie</p>
+    <h2 class="h2" style="margin-top:1rem">Te avisamos cuando entra <em style="font-style:italic;color:#9DBFE8">tu talle.</em></h2>
+    <p style="color:rgba(233,237,242,.7);max-width:28rem;margin-top:1rem">Dejanos tu WhatsApp y te avisamos cuando entra el próximo drop y cuando vuelve tu talle. Sin spam: te escribimos solo cuando entra algo o cuando vuelve tu talle.</p>
+  </div>
+  <form id="leadForm" style="display:flex;flex-direction:column;gap:.9rem">
+    <input required name="nombre" placeholder="Nombre y apellido" style="background:rgba(252,253,254,.06);border:1px solid rgba(233,237,242,.2);border-radius:3rem;padding:.95rem 1.4rem;color:var(--dark-ink);font-family:var(--sans);outline:none">
+    <input required type="email" name="email" placeholder="Email" style="background:rgba(252,253,254,.06);border:1px solid rgba(233,237,242,.2);border-radius:3rem;padding:.95rem 1.4rem;color:var(--dark-ink);font-family:var(--sans);outline:none">
+    <input required type="tel" name="telefono" placeholder="WhatsApp (ej: 2954 51 7938)" style="background:rgba(252,253,254,.06);border:1px solid rgba(233,237,242,.2);border-radius:3rem;padding:.95rem 1.4rem;color:var(--dark-ink);font-family:var(--sans);outline:none">
+    <select name="interes" style="background:rgba(252,253,254,.06);border:1px solid rgba(233,237,242,.2);border-radius:3rem;padding:.95rem 1.4rem;color:var(--dark-ink);font-family:var(--sans);outline:none">
+      <option value="indumentaria" style="color:#0E0D0C">Interés: Indumentaria</option>
+      <option value="zapatillas" style="color:#14161A">Interés: Zapatillas</option>
+      <option value="gorras" style="color:#14161A">Interés: Gorras y accesorios</option>
+      <option value="perfumes" style="color:#14161A">Interés: Perfumería</option>
+    </select>
+    <button class="pill pill-gold" type="submit" data-hover style="justify-content:center">Avisame de los drops</button>
+    <p id="leadOk" style="display:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;color:#9DBFE8;text-transform:uppercase">✓ Listo — te escribimos por WhatsApp cuando entre el próximo drop</p>
+  </form>
+</section>
+<script>
+document.getElementById('leadForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var f = new FormData(this);
+  var leads = JSON.parse(localStorage.getItem('brack_leads') || '[]');
+  leads.push({ nombre: f.get('nombre'), email: f.get('email'), telefono: f.get('telefono'), interes: f.get('interes'), fecha: new Date().toISOString(), origen: 'web-registro' });
+  localStorage.setItem('brack_leads', JSON.stringify(leads));
+  this.querySelectorAll('input,select,button').forEach(function(el){ el.style.display = 'none'; });
+  document.getElementById('leadOk').style.display = 'block';
+});
+</script>
+<style>@media(max-width:860px){.registro{grid-template-columns:1fr!important}}</style>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="foot-cols">
+    <div class="foot-col"><div class="t">Colecciones</div>
+      <a href="coleccion.html" data-hover>Indumentaria</a><a href="#showroom" data-hover>Zapatillas</a>
+      <a href="#showroom" data-hover>Gorras y accesorios</a><a href="#showroom" data-hover>Perfumería importada</a></div>
+    <div class="foot-col"><div class="t">La marca</div>
+      <a href="#historia" data-hover>Historia</a><a href="#estrella" data-hover>Lo que sale</a><a href="#showroom" data-hover>El local</a></div>
+    <div class="foot-col"><div class="t">Atención</div>
+      <a href="https://wa.me/5492954517938" target="_blank" rel="noopener" data-hover>WhatsApp</a>
+      <a href="https://maps.google.com/?q=Tte.+Gral.+Juan+Domingo+Per%C3%B3n+1111+CABA" target="_blank" rel="noopener" data-hover>Cómo llegar</a></div>
+    <div class="foot-col"><div class="t">Redes</div>
+      <a href="https://www.instagram.com/brack.indumentaria" target="_blank" rel="noopener" data-hover>@brack.indumentaria</a>
+      <a href="https://wa.me/5492954517938" target="_blank" rel="noopener" data-hover>WhatsApp</a>
+      </div>
+  </div>
+  <div class="foot-giant">BRACK <em>indumentaria</em></div>
+  <div class="foot-base">
+    <span>© 2026 Brack Indumentaria — Santa Rosa, La Pampa</span>
+    <span>Sitio conceptual — WESEKA</span>
+  </div>
+</footer>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script src="assets/vendor/ScrollTrigger.min.js"></script>
+<script src="assets/vendor/lenis.min.js"></script>
+<script src="data/catalogo.js"></script>
+<script>
+(function(){
+"use strict";
+if (!window.gsap || !window.Lenis || !window.ScrollTrigger) {
+  document.documentElement.classList.add('no-anim');
+  var _p = document.querySelector('.preloader'); if (_p) _p.style.display = 'none';
+  return;
+}
+gsap.registerPlugin(ScrollTrigger);
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = window.matchMedia('(pointer:fine)').matches;
+
+/* ---------- Lenis ---------- */
+const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+lenis.on('scroll', ScrollTrigger.update);
+gsap.ticker.add(t => lenis.raf(t * 1000));
+gsap.ticker.lagSmoothing(0);
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); lenis.scrollTo(t, { duration: 1.3 }); }
+  });
+});
+
+/* ---------- menu movil ---------- */
+var burger = document.getElementById('navBurger'), mmenu = document.getElementById('mmenu');
+if (burger && mmenu) {
+  burger.addEventListener('click', function(){
+    var on = mmenu.classList.toggle('on');
+    burger.classList.toggle('on', on);
+    if (on) lenis.stop(); else lenis.start();
+  });
+  mmenu.addEventListener('click', function(e){
+    if (e.target.closest('a')) {
+      mmenu.classList.remove('on');
+      burger.classList.remove('on');
+      lenis.start();
+    }
+  });
+}
+
+/* ---------- magnetic ---------- */
+if (fine && !reduced) {
+  document.querySelectorAll('[data-magnetic]').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      gsap.to(el, { x: (e.clientX - r.left - r.width/2) * .22, y: (e.clientY - r.top - r.height/2) * .3, duration: .4 });
+    });
+    el.addEventListener('mouseleave', () => gsap.to(el, { x: 0, y: 0, duration: .6, ease: 'elastic.out(1,.4)' }));
+  });
+}
+
+/* ---------- slots de video (hero + campañas + universos) ---------- */
+document.querySelectorAll('.hero, .blq, .uni, .bleed').forEach(sec => {
+  const v = sec.querySelector('video'); if (!v) return;
+  v.preload = 'auto';
+  var evt = sec.classList.contains('hero') ? 'playing' : 'canplaythrough';
+  v.addEventListener(evt, () => sec.classList.add('has-video'), { once: true });
+  v.addEventListener('error', () => sec.classList.remove('has-video'));
+});
+
+/* ---------- preloader ---------- */
+const pre = document.querySelector('.preloader');
+const nameWrap = pre.querySelector('.pre-name');
+'BRACK'.split('').forEach(ch => {
+  const s = document.createElement('span');
+  s.innerHTML = ch === ' ' ? '&nbsp;' : ch;
+  nameWrap.appendChild(s);
+});
+const countEl = pre.querySelector('.pre-count');
+gsap.timeline({ onComplete: heroIn })
+  .to(nameWrap.querySelectorAll('span'), { y: 0, duration: .85, stagger: .035, ease: 'expo.out' }, .1)
+  .to('.pre-sub', { opacity: 1, duration: .7 }, .7)
+  .to({ v: 0 }, { v: 100, duration: 1.3, ease: 'power2.inOut',
+      onUpdate: function(){ countEl.textContent = String(Math.round(this.targets()[0].v)).padStart(3, '0'); } }, 0)
+  .to(pre, { clipPath: 'inset(0 0 100% 0)', duration: .9, ease: 'expo.inOut' }, '+=.15')
+  .set(pre, { display: 'none' });
+
+function heroIn(){
+  gsap.timeline()
+    .to('.hero-title .l span', { y: 0, duration: 1.15, stagger: .1, ease: 'expo.out' })
+    .to('.hero-sub', { opacity: 1, duration: .9 }, '-=.6')
+    .to('.hero-cta', { opacity: 1, duration: .9 }, '-=.7');
+}
+
+/* ---------- nav se esconde al bajar ---------- */
+let lastY = 0;
+ScrollTrigger.create({
+  onUpdate: self => {
+    const y = self.scroll();
+    const nav = document.getElementById('nav');
+    if (y > 140 && y > lastY + 4) nav.classList.add('is-hidden');
+    else if (y < lastY - 4) nav.classList.remove('is-hidden');
+    lastY = y;
+  }
+});
+
+/* ---------- Ken Burns + parallax en medias ---------- */
+if (!reduced) {
+  document.querySelectorAll('.hero-media, .blq-media').forEach(img => {
+    gsap.to(img, { scale: 1.0, yPercent: 4, ease: 'none',
+      scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: 1 } });
+  });
+  gsap.to('.bleed-stage', { yPercent: -5, ease: 'none',
+    scrollTrigger: { trigger: '.bleed', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+}
+
+/* ---------- fades (IO, inmune a pins) ---------- */
+const ioFade = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    ioFade.unobserve(en.target);
+    gsap.to(en.target, { opacity: 1, y: 0, duration: 1, ease: 'power3.out' });
+  });
+}, { threshold: .2 });
+document.querySelectorAll('[data-fade]').forEach(el => ioFade.observe(el));
+
+/* ---------- LO QUE SALE ---------- */
+const STARS = [
+    { img: 'fotos/stars/buzos-nfl-importados-star.png', name: "Buzos NFL Importados", brand: "Camisetas — $136.500 · XL", wa: "Buzos NFL Importados" },
+    { img: 'fotos/stars/perfume-9pm-night-out-mi4b6-star.png', name: "Perfume 9pm Night Out", brand: "Perfumes importados — $136.500 · Talle único", wa: "Perfume 9pm Night Out" },
+    { img: 'fotos/stars/vans-hylane-brown-wqfk7-star.png', name: "VANS HYLANE BROWN", brand: "Zapatillas — $106.500 · 44", wa: "VANS HYLANE BROWN" },
+    { img: 'fotos/stars/campera-over-kbrkrv-sgssp-star.png', name: "Campera OVER KBRKRV", brand: "Camperas — $99.000 · Talle único", wa: "Campera OVER KBRKRV" },
+    { img: 'fotos/stars/camiseta-nfl-importada4-star.png', name: "Camiseta NFL Importada", brand: "Camisetas — $86.500 · L", wa: "Camiseta NFL Importada" },
+    { img: 'fotos/stars/perfume-arabe-importado-honor-glory-nmgyc-star.png', name: "Perfume Árabe Importado Honor & Glory", brand: "Perfumes importados — $86.500 · Talle único", wa: "Perfume Árabe Importado Honor & Glory" },
+    { img: 'fotos/stars/buzo-shato-ikvj7-star.png', name: "Buzo Shato Frizado", brand: "Buzos y sweaters — $86.500 · S", wa: "Buzo Shato Frizado" },
+    { img: 'fotos/stars/buzo-shato-frizado-2kek1-star.png', name: "Buzo Shato Frizado", brand: "Buzos y sweaters — $86.500 · S", wa: "Buzo Shato Frizado" }
+  ];
+const starImg = document.getElementById('starImg');
+const starName = document.getElementById('starName');
+const starBrand = document.getElementById('starBrand');
+const starIdxLbl = document.getElementById('starIdxLbl');
+const stage = document.querySelector('.estrella-stage');
+let starIdx = 0, starBusy = false;
+function applyStar(s){
+  starImg.src = s.img;
+  starName.textContent = s.name;
+  starBrand.textContent = s.brand;
+  starIdxLbl.textContent = String(starIdx + 1).padStart(2, '0');
+  updateSides();
+}
+function setStar(i, dir){
+  const n = STARS.length;
+  const next = ((i % n) + n) % n;
+  if (next === starIdx || starBusy) return;
+  starBusy = true;
+  dir = dir || (next > starIdx ? 1 : -1);
+  const s = STARS[next];
+  const sidesOn = sideR.offsetWidth > 0;
+  if (!sidesOn) {
+    // mobile: slide simple
+    starIdx = next;
+    gsap.to(starImg, { x: -70 * dir, opacity: 0, duration: .28, ease: 'power2.in', onComplete: () => {
+      applyStar(s);
+      gsap.fromTo(starImg, { x: 70 * dir, opacity: 0 }, { x: 0, opacity: 1, duration: .6, ease: 'expo.out', onComplete: () => { starBusy = false; } });
+    }});
+    return;
+  }
+  // desktop: carrusel físico — la vecina viaja al centro, la actual viaja al costado
+  const rc = starImg.getBoundingClientRect();
+  const inEl = dir > 0 ? sideR : sideL;
+  const outEl = dir > 0 ? sideL : sideR;
+  const ri = inEl.getBoundingClientRect();
+  const ro = outEl.getBoundingClientRect();
+  const dxIn = (rc.left + rc.width / 2) - (ri.left + ri.width / 2);
+  const dxOut = (ro.left + ro.width / 2) - (rc.left + rc.width / 2);
+  const scIn = rc.width / ri.width;
+  sideL.classList.add('no-t'); sideR.classList.add('no-t');
+  gsap.set(inEl, { zIndex: 6 });
+  gsap.to('.estrella-id', { opacity: 0, y: 10, duration: .25, ease: 'power1.in' });
+  gsap.to(outEl, { opacity: 0, x: dxOut * .3, duration: .55, ease: 'power2.inOut' });
+  gsap.to(starImg, { x: dxOut * .92, rotation: 0, scale: .4, opacity: .15, duration: .7, ease: 'power2.inOut' });
+  gsap.to(inEl, { x: dxIn, scale: scIn * .95, opacity: 1, filter: 'blur(0px)', duration: .7, ease: 'power2.inOut', onComplete: () => {
+    starIdx = next;
+    // traspaso invisible: el centro adopta la misma pieza que la vecina dejó encima
+    starImg.src = s.img;
+    starName.textContent = s.name;
+    starBrand.textContent = s.brand;
+    starIdxLbl.textContent = String(starIdx + 1).padStart(2, '0');
+    gsap.set(starImg, { clearProps: 'transform,opacity,filter' });
+    updateSides();
+    gsap.set([sideL, sideR], { clearProps: 'all' });
+    requestAnimationFrame(() => { sideL.classList.remove('no-t'); sideR.classList.remove('no-t'); });
+    gsap.fromTo('.estrella-id', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out' });
+    starBusy = false;
+  }});
+}
+STARS.forEach(function(st){ var im = new Image(); im.src = st.img; });
+var sideL = document.getElementById('starSideL'), sideR = document.getElementById('starSideR');
+function updateSides(){
+  var n = STARS.length;
+  sideL.src = STARS[(starIdx - 1 + n) % n].img;
+  sideR.src = STARS[(starIdx + 1) % n].img;
+}
+updateSides();
+sideL.addEventListener('click', function(){ setStar(starIdx - 1, -1); startAuto(); });
+sideR.addEventListener('click', function(){ setStar(starIdx + 1, 1); startAuto(); });
+/* drag con mouse / swipe táctil */
+let sDown = false, sX = 0, sDX = 0;
+stage.addEventListener('pointerdown', e => {
+  sDown = true; sX = e.clientX; sDX = 0;
+  stage.classList.add('dragging'); stopAuto();
+});
+window.addEventListener('pointermove', e => {
+  if (!sDown) return;
+  sDX = e.clientX - sX;
+  gsap.set(starImg, { x: sDX * .5, rotation: sDX * .01 });
+});
+document.getElementById('starPrev').addEventListener('click', () => { setStar(starIdx - 1, -1); startAuto(); });
+document.getElementById('starNext').addEventListener('click', () => { setStar(starIdx + 1, 1); startAuto(); });
+window.addEventListener('pointerup', () => {
+  if (!sDown) return;
+  sDown = false; stage.classList.remove('dragging');
+  if (sDX < -55) setStar(starIdx + 1, 1);
+  else if (sDX > 55) setStar(starIdx - 1, -1);
+  else gsap.to(starImg, { x: 0, rotation: 0, duration: .55, ease: 'elastic.out(1,.55)' });
+  startAuto();
+});
+document.getElementById('starCta').addEventListener('click', () => {
+  const s = STARS[starIdx];
+  window.open('https://wa.me/5492954517938?text=' + encodeURIComponent('Hola, quisiera consultar por el ' + s.wa + ' que vi en la web.'), '_blank');
+});
+let autoT = null;
+function startAuto(){ stopAuto(); if (!reduced) autoT = setInterval(() => {
+  if (document.visibilityState === 'visible' && !sDown) setStar(starIdx + 1, 1);
+}, 6000); }
+function stopAuto(){ if (autoT) { clearInterval(autoT); autoT = null; } }
+startAuto();
+if (!reduced) {
+  gsap.to('.estrella-stage', { yPercent: -6, ease: 'none',
+    scrollTrigger: { trigger: '.estrella', start: 'top bottom', end: 'bottom top', scrub: 1 } });
+}
+
+/* ---------- catálogo ---------- */
+const DATA = (window.CATALOGO || []).slice().sort((a, b) => {
+  if (a.featured !== b.featured) return a.featured ? -1 : 1;
+  return a.brand.localeCompare(b.brand) || a.model.localeCompare(b.model);
+});
+const grid = document.getElementById('catGrid');
+const state = { q: '', brand: '', material: '', gender: '', cond: '' };
+function fillSelect(sel, values){
+  values.sort((a, b) => a.localeCompare(b)).forEach(v => {
+    const o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o);
+  });
+}
+if (grid) fillSelect(document.getElementById('fBrand'), [...new Set(DATA.map(d => d.brand))]);
+if (grid) fillSelect(document.getElementById('fMaterial'), [...new Set(DATA.map(d => d.material).filter(Boolean))]);
+if (grid) fillSelect(document.getElementById('fGender'), [...new Set(DATA.map(d => d.gender).filter(Boolean))]);
+function rangeLabel(r){ return r ? 'USD ' + r.replace('-', ' – ') : 'A consultar'; }
+function render(){
+  if (!grid) return;
+  const list = DATA.filter(d => {
+    if (state.brand && d.brand !== state.brand) return false;
+    if (state.material && d.material !== state.material) return false;
+    if (state.gender && d.gender !== state.gender) return false;
+    if (state.cond && d.cond !== state.cond) return false;
+    if (state.q && !(d.brand + ' ' + d.model).toLowerCase().includes(state.q.toLowerCase())) return false;
+    return true;
+  });
+  document.getElementById('catCount').textContent = list.length + ' de ' + DATA.length + ' piezas';
+  document.getElementById('catEmpty').style.display = list.length ? 'none' : 'block';
+  grid.innerHTML = list.map(d => {
+    const idx = String(DATA.indexOf(d) + 1).padStart(3, '0');
+    const imgB = d.photos[1] ? '<img class="img-b" loading="lazy" src="fotos/' + d.photos[1] + '" alt="">' : '';
+    return '<article class="piece' + (d.featured ? ' featured' : '') + '" data-id="' + d.id + '" data-hover>' +
+      '<div class="piece-imgwrap"><span class="piece-idx">REF ' + idx + '</span>' +
+      '<img class="img-a" loading="lazy" src="fotos/' + d.photos[0] + '" alt="' + d.brand + ' ' + d.model + '">' + imgB + '</div>' +
+      '<div class="piece-info"><h3 class="piece-name">' + d.brand + ' ' + d.model +
+      '<small>' + [d.cond, d.mm ? d.mm + ' mm' : null, d.material].filter(Boolean).join(' · ') + '</small></h3>' +
+      '<span class="piece-range">' + rangeLabel(d.range) + '</span></div></article>';
+  }).join('');
+  if (!reduced) gsap.fromTo('.piece', { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: .6, stagger: { each: .03, grid: 'auto' }, ease: 'power3.out', overwrite: true });
+  ScrollTrigger.refresh();
+}
+if (grid) render();
+if (grid) document.getElementById('catSearch').addEventListener('input', e => { state.q = e.target.value.trim(); render(); });
+if (grid) document.getElementById('fBrand').addEventListener('change', e => { state.brand = e.target.value; render(); });
+if (grid) document.getElementById('fMaterial').addEventListener('change', e => { state.material = e.target.value; render(); });
+if (grid) document.getElementById('fGender').addEventListener('change', e => { state.gender = e.target.value; render(); });
+if (grid) document.getElementById('fCond').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  document.querySelectorAll('#fCond .chip').forEach(c => c.classList.remove('is-on'));
+  b.classList.add('is-on'); state.cond = b.dataset.v; render();
+});
+
+/* ---------- carrusel destacados (tinte por color de pieza) ---------- */
+const TINTS = {
+  'Verde': 'linear-gradient(165deg,#E6EDE8,#CBD6CE)', 'Azul': 'linear-gradient(165deg,#E2E8F1,#C2D0E3)',
+  'Negro': 'linear-gradient(165deg,#E9EAED,#CED2D8)', 'Champagne': 'linear-gradient(165deg,#F0EFEB,#DBD8CF)',
+  'Dorado': 'linear-gradient(165deg,#EFEEE8,#DAD6C9)', 'Blanco': 'linear-gradient(165deg,#F3F5F7,#E0E4E9)',
+  'Naranja': 'linear-gradient(165deg,#F1EDE8,#DFD6CB)'
+};
+const rail = document.getElementById('carrRail');
+DATA.filter(d => d.featured).slice(0, 10).forEach((d, n) => {
+  const card = document.createElement('article');
+  card.className = 'ccard'; card.setAttribute('data-hover', ''); card.dataset.id = d.id;
+  card.style.setProperty('--tint', TINTS[d.color] || 'linear-gradient(165deg,#EDEFF2,#D9DDE3)');
+  var tags = [d.material, d.color].filter(Boolean).map(function(t){ return '<span>' + t + '</span>'; }).join('');
+  card.innerHTML = '<span class="ccard-num">' + String(n + 1).padStart(2, '0') + '</span>' +
+    '<div class="ccard-tags">' + tags + '</div>' +
+    '<div class="ccard-img"><img loading="lazy" src="fotos/' + d.photos[0] + '" alt="' + d.brand + ' ' + d.model + '"></div>' +
+    '<div class="ccard-info"><div><div class="ccard-brand">' + d.brand +
+      (d.range ? ' · $' + Math.round(d.range).toLocaleString('es-AR') : '') + '</div>' +
+    '<div class="ccard-model">' + d.model + '</div></div><span class="ccard-arrow">→</span></div>';
+  card.addEventListener('click', () => openFicha(d));
+  rail.appendChild(card);
+});
+/* drag del carrusel */
+if (fine) {
+  let down = false, sx = 0, sl = 0, moved = 0;
+  let captured = false;
+  rail.addEventListener('pointerdown', e => {
+    if (e.pointerType !== 'mouse') return;
+    down = true; moved = 0; captured = false; sx = e.clientX; sl = rail.scrollLeft;
+  });
+  rail.addEventListener('pointermove', e => {
+    if (!down) return;
+    const dx = e.clientX - sx;
+    moved = Math.max(moved, Math.abs(dx));
+    if (!captured && Math.abs(dx) > 6) {
+      captured = true;
+      rail.classList.add('dragging');
+      try { rail.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+    if (captured) rail.scrollLeft = sl - dx;
+  });
+  const endDrag = () => { if (!down) return; down = false; rail.classList.remove('dragging'); };
+  rail.addEventListener('pointerup', endDrag);
+  rail.addEventListener('pointercancel', endDrag);
+  rail.addEventListener('click', e => { if (moved > 8) { e.stopPropagation(); e.preventDefault(); } }, true);
+}
+
+/* ---------- ficha ---------- */
+const ficha = document.getElementById('ficha');
+const fichaPanel = ficha.querySelector('.ficha-panel');
+if (grid) grid.addEventListener('click', e => {
+  const card = e.target.closest('.piece'); if (!card) return;
+  openFicha(DATA.find(d => d.id === card.dataset.id));
+});
+function openFicha(d){
+  if (!d) return;
+  const idx = String(DATA.indexOf(d) + 1).padStart(3, '0');
+  document.getElementById('fichaLote').textContent = 'Referencia ' + idx + ' — Catálogo Brack';
+  document.getElementById('fichaBrand').textContent = d.brand;
+  document.getElementById('fichaModel').textContent = d.model;
+  const specs = [['Condición', d.cond], ['Era', d.era], ['Caja', d.mm ? d.mm + ' mm' : null],
+    ['Material', d.material], ['Color', d.color], ['Género', d.gender]];
+  document.getElementById('fichaSpecs').innerHTML = specs.filter(s => s[1])
+    .map(s => '<div class="spec-row"><span class="k">' + s[0] + '</span><span class="v">' + s[1] + '</span></div>').join('');
+  document.getElementById('fichaRange').textContent = d.range
+    ? 'Rango estimado — USD ' + d.range.replace('-', ' – ') : 'Valor a consultar en privado';
+  const msg = 'Hola, vi la pieza ' + d.brand + ' ' + d.model + ' (Ref ' + idx + ') en el catálogo y quisiera consultar por ella.';
+  document.getElementById('fichaWA').href = 'https://wa.me/5492954517938?text=' + encodeURIComponent(msg);
+  const main = document.getElementById('fichaImg');
+  const thumbs = document.getElementById('fichaThumbs');
+  main.src = 'fotos/' + d.photos[0];
+  thumbs.innerHTML = d.photos.map((p, i) =>
+    '<img src="fotos/' + p + '" class="' + (i === 0 ? 'is-on' : '') + '" data-p="' + p + '" alt="" data-hover>').join('');
+  thumbs.onclick = ev => {
+    const t = ev.target.closest('img[data-p]'); if (!t) return;
+    main.src = 'fotos/' + t.dataset.p;
+    thumbs.querySelectorAll('img').forEach(x => x.classList.remove('is-on'));
+    t.classList.add('is-on');
+  };
+  ficha.classList.add('is-open');
+  lenis.stop();
+  gsap.fromTo(fichaPanel, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .55, ease: 'expo.out' });
+}
+function closeFicha(){
+  gsap.to(fichaPanel, { y: 40, opacity: 0, duration: .3, ease: 'power2.in',
+    onComplete: () => { ficha.classList.remove('is-open'); lenis.start(); } });
+}
+document.getElementById('fichaClose').addEventListener('click', closeFicha);
+ficha.addEventListener('click', e => { if (e.target === ficha) closeFicha(); });
+window.addEventListener('keydown', e => { if (e.key === 'Escape' && ficha.classList.contains('is-open')) closeFicha(); });
+
+})();
+</script>
+<!-- ASISTENTE IA "MATÍAS" -->
+<button class="mt-fab" id="mtFab" aria-label="Escribinos">
+  <span class="mt-fab-m">B</span><span class="mt-fab-dot"></span>
+</button>
+<div class="mt-chat" id="mtChat">
+  <div class="mt-head">
+    <div class="mt-ava">B</div>
+    <div><div class="mt-name">Brack</div><div class="mt-sub">Talles · precios · envíos</div></div>
+    <button class="mt-close" id="mtClose">✕</button>
+  </div>
+  <div class="mt-msgs" id="mtMsgs"></div>
+  <form class="mt-input" id="mtForm">
+    <input id="mtText" type="text" placeholder="Preguntame por talles, precios, envíos…" autocomplete="off">
+    <button type="submit" data-hover>→</button>
+  </form>
+</div>
+<style>
+.mt-fab{position:fixed;right:1.6rem;bottom:1.6rem;z-index:260;width:60px;height:60px;border-radius:50%;
+  background:var(--dark);color:var(--dark-ink);box-shadow:0 14px 40px rgba(10,12,16,.35);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .4s var(--ease)}
+.mt-fab:hover{transform:translateY(-4px)}
+.mt-fab-m{font-family:var(--serif);font-style:italic;font-size:1.6rem}
+.mt-fab-dot{position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;background:#3FBF6F;border:2px solid var(--dark)}
+.mt-chat{position:fixed;right:1.6rem;bottom:5.6rem;z-index:265;width:min(390px,calc(100vw - 2rem));height:min(560px,72svh);
+  background:rgba(252,253,254,.92);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,.85);border-radius:1.5rem;
+  box-shadow:0 30px 80px rgba(10,12,16,.3);display:none;flex-direction:column;overflow:hidden}
+.mt-chat.open{display:flex}
+.mt-head{display:flex;align-items:center;gap:.8rem;padding:1rem 1.2rem;border-bottom:var(--hairline);background:rgba(255,255,255,.6)}
+.mt-ava{width:38px;height:38px;border-radius:50%;background:var(--dark);color:var(--dark-ink);
+  font-family:var(--serif);font-style:italic;display:flex;align-items:center;justify-content:center}
+.mt-name{font-family:var(--serif);font-size:1.05rem}
+.mt-sub{font-family:var(--mono);font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:#2E8B57}
+.mt-close{margin-left:auto;color:var(--ink-35);font-size:.85rem;padding:.4rem}
+.mt-close:hover{color:var(--ink)}
+.mt-msgs{flex:1;overflow-y:auto;padding:1.1rem;display:flex;flex-direction:column;gap:.7rem}
+.mt-b{max-width:82%;padding:.75rem 1rem;border-radius:1.1rem;font-size:.88rem;line-height:1.5;white-space:pre-line}
+.mt-b.bot{background:#fff;border:var(--hairline);border-bottom-left-radius:.3rem;box-shadow:0 3px 12px rgba(20,22,26,.05)}
+.mt-b.user{background:var(--gold);color:#fff;align-self:flex-end;border-bottom-right-radius:.3rem}
+.mt-b a{color:var(--gold-deep);text-decoration:underline}
+.mt-b.user a{color:#fff}
+.mt-typing{display:flex;gap:.25rem;padding:.8rem 1rem}
+.mt-typing i{width:6px;height:6px;border-radius:50%;background:var(--ink-35);animation:mtp 1s infinite}
+.mt-typing i:nth-child(2){animation-delay:.15s}.mt-typing i:nth-child(3){animation-delay:.3s}
+@keyframes mtp{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+.mt-input{display:flex;gap:.5rem;padding:.8rem;border-top:var(--hairline);background:rgba(255,255,255,.6)}
+.mt-input input{flex:1;border:var(--hairline);border-radius:2rem;padding:.7rem 1.1rem;font-family:var(--sans);font-size:.86rem;outline:none;background:#fff}
+.mt-input input:focus{border-color:var(--gold)}
+.mt-input button{width:42px;height:42px;border-radius:50%;background:var(--gold);color:#fff;font-size:1.1rem}
+.mt-input button:hover{background:var(--ink)}
+</style>
+<script>
+(function(){
+"use strict";
+var fab = document.getElementById('mtFab'), chat = document.getElementById('mtChat');
+var msgs = document.getElementById('mtMsgs'), form = document.getElementById('mtForm'), inp = document.getElementById('mtText');
+var CAT = window.CATALOGO || [];
+var opened = false, nMsg = 0;
+var CHISTES = [
+  'Te tiro un dato: lo que ves publicado es lo que hay. Cuando se va un talle, se fue.',
+  'Las tandas no se repiten. Es lo que tiene traer poco de cada cosa.',
+  'Pagando en efectivo te llevás 20% menos. No es promo de temporada, es siempre.',
+  'Si pasás los $200.000 el envío va gratis a cualquier punto del país.',
+  'Todo lo que subimos está en el local. No vendemos nada que no tengamos en la mano.'
+];
+var WA_NUM = '5492954517938', WA_TXT = '2954 51-7938';
+var DIREC = '25 de Mayo 772, Santa Rosa, La Pampa';
+
+function norm(s){ return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+function add(txt, who){
+  var d = document.createElement('div');
+  d.className = 'mt-b ' + who;
+  d.innerHTML = txt;
+  msgs.appendChild(d);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function typing(cb, delay){
+  var t = document.createElement('div');
+  t.className = 'mt-b bot mt-typing';
+  t.innerHTML = '<i></i><i></i><i></i>';
+  msgs.appendChild(t);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(function(){ t.remove(); cb(); }, delay || (600 + Math.random() * 700));
+}
+
+// El catalogo guarda el precio en pesos, como numero. El 20% off en efectivo
+// es real: esta en el banner de su tienda.
+function pesos(n){ return '$' + Math.round(n).toLocaleString('es-AR'); }
+function precio(d){
+  if (!d.range) return 'consultá el precio';
+  return pesos(d.range) + ' <span style="opacity:.55">(' + pesos(d.range * 0.8) + ' en efectivo)</span>';
+}
+function talleDe(d){ return (d.mm && d.mm !== 'Unico' && d.mm !== '\u00danico') ? ', talle ' + d.mm : ''; }
+function ficha(d){ return '\u00b7 <b>' + d.model + '</b>' + talleDe(d) + ' \u2014 ' + precio(d); }
+function lista(hits, n){ return hits.slice(0, n || 3).map(ficha).join('<br>'); }
+
+// Ningun numero de este asistente esta escrito a mano: los cuenta del catalogo.
+var MARCAS = [];
+CAT.forEach(function(d){ if (d.brand && MARCAS.indexOf(d.brand) < 0) MARCAS.push(d.brand); });
+function porCat(c){ return CAT.filter(function(d){ return d.cat === c; }); }
+function precios(){
+  var p = CAT.map(function(d){ return d.range; }).filter(Boolean).sort(function(a, b){ return a - b; });
+  return p.length ? { min: p[0], max: p[p.length - 1] } : { min: 0, max: 0 };
+}
+
+// Gana la categoria que aparece ANTES en la frase, no la primera de la lista.
+// Con .find() "gorra para el frio" contestaba camperas.
+var CATS = [
+  [/zapatilla|calzado|zapa|botin|championes|sneaker/, 'zapatillas'],
+  [/gorra|gorro|cap |visera|trucker/, 'gorras'],
+  [/perfume|fragancia|arabe|colonia|aroma/, 'perfumes'],
+  [/campera|abrigo|rompeviento|inflable|puffer/, 'camperas'],
+  [/buzo|hoodie|canguro|sweater|sueter|friza/, 'buzos'],
+  [/camiseta|futbol|nba|nfl|jersey|club/, 'camisetas'],
+  [/pantalon|jogging|jean|cargo/, 'pantalones'],
+  [/bermuda|short|malla|traje de bano/, 'bermudas'],
+  [/chomba|camisa|polo/, 'chombas'],
+  [/remera|playera|tee /, 'remeras'],
+  [/musculosa|tirantes|sin manga/, 'musculosas'],
+  [/rinonera|mochila|medias|accesorio|cinto/, 'accesorios']
+];
+function categoriaPedida(t){
+  var mejor = null;
+  CATS.forEach(function(par){
+    var pos = t.search(par[0]);
+    if (pos >= 0 && (!mejor || pos < mejor.pos)) mejor = { cat: par[1], pos: pos };
+  });
+  return mejor ? mejor.cat : null;
+}
+var NOMBRE_CAT = { zapatillas: 'zapatillas', gorras: 'gorras', perfumes: 'perfumes importados',
+  camperas: 'camperas', buzos: 'buzos', camisetas: 'camisetas', pantalones: 'pantalones',
+  bermudas: 'bermudas y mallas', chombas: 'chombas y camisas', remeras: 'remeras',
+  musculosas: 'musculosas', accesorios: 'accesorios', otros: 'otros' };
+
+function responder(raw){
+  var q = norm(raw);
+  var wa = '<a href="https://wa.me/' + WA_NUM + '" target="_blank">WhatsApp</a>';
+  var P = precios();
+
+  if (/hola|buenas|buen dia|que tal|como (estas|andas)|que onda/.test(q) && nMsg <= 1)
+    return '\u00a1Hola! Bienvenido a Brack. Tenemos ' + CAT.length + ' productos disponibles ahora mismo: ' +
+      porCat('gorras').length + ' gorras, ' + porCat('zapatillas').length + ' zapatillas, ' +
+      porCat('buzos').length + ' buzos, ' + porCat('perfumes').length + ' perfumes importados y bastante más. ' +
+      '¿Qué andás buscando?';
+
+  // La duda numero uno de comprar ropa online no es el precio: es si te entra.
+  if (/talle|medida|me entra|que talle|cm|centimetro|large|small|chico|grande|xl|xxl/.test(q)) {
+    var c0 = categoriaPedida(q);
+    var conTalle = (c0 ? porCat(c0) : CAT).filter(function(d){ return d.mm && d.mm !== '\u00danico'; });
+    var tset = [];
+    conTalle.forEach(function(d){ if (tset.indexOf(d.mm) < 0) tset.push(d.mm); });
+    return 'Cada producto publica su talle y, cuando aplica, la tabla de medidas en centímetros — así elegís sabiendo, sin venir a probarte.' +
+      (tset.length ? '<br><br>En ' + (c0 ? NOMBRE_CAT[c0] : 'catálogo') + ' hay: <b>' + tset.slice(0, 10).join(' \u00b7 ') + '</b>.' : '') +
+      '<br><br>Si dudás entre dos, mandame tus medidas por ' + wa + ' y te digo cuál te va.';
+  }
+
+  var c = categoriaPedida(q);
+  if (c) {
+    var hits = porCat(c);
+    if (!hits.length) return 'De ' + NOMBRE_CAT[c] + ' ahora no me queda nada publicado. Escribime por ' + wa + ' y te aviso apenas entre la próxima tanda.';
+    var pr = hits.map(function(d){ return d.range; }).filter(Boolean).sort(function(a, b){ return a - b; });
+    return 'En ' + NOMBRE_CAT[c] + ' tenemos <b>' + hits.length + '</b> ' + (hits.length === 1 ? 'producto' : 'productos') +
+      (pr.length ? ', desde ' + pesos(pr[0]) + ' hasta ' + pesos(pr[pr.length - 1]) : '') + '. Te tiro los primeros:<br>' +
+      lista(hits, 3) + '<br><br>Están todos en <a href="#catalogo">el catálogo</a>, con filtro por talle. ¿Te reservo alguno por ' + wa + '?';
+  }
+
+  var marca = null;
+  MARCAS.forEach(function(m){ if (norm(m).length > 2 && q.indexOf(norm(m)) >= 0) marca = m; });
+  if (marca) {
+    var mh = CAT.filter(function(d){ return d.brand === marca; });
+    return 'De <b>' + marca + '</b> tengo ' + mh.length + ' ' + (mh.length === 1 ? 'producto' : 'productos') + ':<br>' +
+      lista(mh, 4) + (mh.length > 4 ? '<br>\u2026y ' + (mh.length - 4) + ' más en <a href="#catalogo">el catálogo</a>.' : '') +
+      '<br><br>Te lo reservo por ' + wa + '.';
+  }
+
+  var libres = q.split(/\s+/).filter(function(w){ return w.length >= 4; });
+  if (libres.length) {
+    var lh = CAT.filter(function(d){
+      var t = norm(d.model + ' ' + d.brand + ' ' + d.cond);
+      return libres.some(function(w){ return t.indexOf(w) >= 0; });
+    });
+    if (lh.length) return 'Encontré ' + lh.length + ':<br>' + lista(lh, 4) +
+      (lh.length > 4 ? '<br>\u2026y ' + (lh.length - 4) + ' más.' : '') + '<br><br>¿Te reservo alguno por ' + wa + '?';
+  }
+
+  if (/precio|cuanto (sale|vale|cuesta)|valor|caro|barato|presupuesto/.test(q))
+    return 'El catalogo va de <b>' + pesos(P.min) + '</b> a <b>' + pesos(P.max) + '</b>. ' +
+      'Y hay tres cosas que conviene saber antes de elegir:<br>' +
+      '\u00b7 <b>20% off pagando en efectivo</b><br>\u00b7 <b>6 cuotas sin interés</b> con tarjeta<br>\u00b7 <b>envio gratis</b> superando los $200.000' +
+      '<br><br>Decime qué buscás y te paso los precios finales.';
+
+  if (/pago|cuota|tarjeta|transferencia|efectivo|financ|mercado pago|debito/.test(q))
+    return 'Podés pagar como te quede cómodo: <b>efectivo con 20% off</b>, transferencia, débito o tarjeta en <b>6 cuotas sin interés</b>. ' +
+      'Si comprás por la tienda te lo cobra Mercado Pago; si venís al local, ahí mismo.';
+
+  if (/envio|enviar|mandan|llega a|correo|provincia|interior|cuanto tarda|demora/.test(q))
+    return 'Enviamos a todo el país por correo, con seguimiento. <b>Superando los $200.000 el envío es gratis.</b> ' +
+      'Si sos de Santa Rosa podés retirar en el local sin costo. Coordinamos por ' + wa + '.';
+
+  if (/cambio|devolucion|devolver|no me entra|garantia|arrepent/.test(q))
+    return 'Si el talle no te va, se cambia. Escribinos por ' + wa + ' apenas lo recibís, con la prenda sin uso y su etiqueta, y lo resolvemos.';
+
+  if (/donde|ubicacion|direccion|local|llegar|santa rosa|pampa|sucursal/.test(q))
+    return 'Estamos en <b>' + DIREC + '</b>. ' +
+      '<a href="https://maps.google.com/?q=25+de+Mayo+772+Santa+Rosa+La+Pampa" target="_blank">Cómo llegar</a>. ' +
+      'Todo lo que ves publicado está en el local: venís, te lo probás y te lo llevás.';
+
+  if (/horario|abren|cierran|abierto|atienden|hora /.test(q))
+    return 'El local atiende de lunes a sábado en horario comercial. Si querés asegurarte de que esté tu talle antes de venir, escribime por ' + wa + ' y te lo aparto.';
+
+  if (/instagram|redes|tiktok|seguir|face/.test(q))
+    return 'Seguinos en <a href="https://www.instagram.com/brack.indumentaria" target="_blank">@brack.indumentaria</a>: ahí subimos cada tanda apenas entra, antes que a la web.';
+
+  if (/humano|persona real|hablar con|atienda|telefono|llamar|sos un bot|sos real/.test(q))
+    return 'Soy el asistente de la tienda, sí. Para hablar con alguien del local escribinos por ' + wa + ' (' + WA_TXT + ') — contestamos rápido.';
+
+  if (/stock|disponible|queda|tienen|hay /.test(q))
+    return 'Todo lo que está publicado <b>está disponible</b>: si se agota, lo bajamos. Hoy hay ' + CAT.length + ' productos. ' +
+      'Decime cuál te interesa y te confirmo el talle por ' + wa + '.';
+
+  if (/nuevo|drop|ingreso|novedad|ultimo|reponen|cuando entra/.test(q))
+    return 'Las tandas entran seguido y <b>no se repiten</b>: lo que hay es lo que hay. ' +
+      'Dejanos tu WhatsApp <a href="#registro">acá abajo</a> y te avisamos apenas entra la próxima \u2014 y cuando vuelve tu talle.';
+
+  if (/mayorista|revender|por cantidad|al por mayor/.test(q))
+    return 'Por compras de cantidad se conversa aparte. Escribinos por ' + wa + ' contando qué buscás y te pasamos condiciones.';
+
+  if (/original|autentic|trucho|falso|fake|replica|calidad/.test(q))
+    return 'Es todo importado y de primera calidad. Lo que subimos lo tenemos en el local: podés venir a verlo y tocarlo antes de comprar. ' +
+      'Y si comprás online y no es lo que esperabas, se cambia.';
+
+  if (/regalo|regalar|cumple|aniversario|para mi (novio|novia|hermano|viejo|hijo)/.test(q))
+    return 'Para regalar andan bien los <b>perfumes importados</b> (' + porCat('perfumes').length + ' en catálogo, no fallan con el talle) ' +
+      'y las <b>gorras</b> (' + porCat('gorras').length + '). Si me decís presupuesto y para quién es, te tiro tres opciones concretas.';
+
+  if (/recomenda|que me llevo|no se que|ayudame a elegir|que esta bueno/.test(q)) {
+    var dest = CAT.filter(function(d){ return d.featured; });
+    return 'Te muestro lo que más sale:<br>' + lista(dest.length ? dest : CAT, 3) +
+      '<br><br>Pero para acertar de verdad decime dos cosas: <b>para qué lo querés</b> y <b>tu talle</b>.';
+  }
+
+  if (/gracias|genial|barbaro|perfecto|buenisimo|dale/.test(q))
+    return '\u00a1De nada! Cualquier cosa escribime por ' + wa + '. ' + CHISTES[Math.floor(Math.random() * CHISTES.length)];
+
+  var base = 'Buena pregunta. Puedo ayudarte con el <b>catálogo</b> (' + CAT.length + ' productos), <b>talles y medidas</b>, ' +
+    '<b>precios y cuotas</b>, <b>envíos</b> o <b>dónde estamos</b>. ¿Por cuál arrancamos?';
+  return (nMsg % 3 === 2) ? base + '<br><br>' + CHISTES[Math.floor(Math.random() * CHISTES.length)] : base;
+}
+fab.addEventListener('click', function(){
+  chat.classList.toggle('open');
+  if (!opened) {
+    opened = true;
+    typing(function(){
+      add('¡Hola! Soy el asistente de <b>Brack</b>. Preguntame por talles, precios, envíos o qué hay en catálogo — te contesto al toque.', 'bot');
+    }, 700);
+  }
+});
+document.getElementById('mtClose').addEventListener('click', function(){ chat.classList.remove('open'); });
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  var v = inp.value.trim();
+  if (!v) return;
+  add(v.replace(/</g, '&lt;'), 'user');
+  inp.value = '';
+  nMsg++;
+  typing(function(){ add(responder(v), 'bot'); });
+});
+})();
+</script>
+</body>
+</html>

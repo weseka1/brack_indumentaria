@@ -1,0 +1,18 @@
+# dependencias y builds
+node_modules/
+dist/
+.vite/
+*.log
+
+# secretos
+.env
+.env.*
+!.env.example
+
+# 🔴 MATERIAL COMERCIAL — no va al repo que se comparte con terceros.
+# Sigue en disco, en esta misma carpeta: solo no se versiona ni se sube.
+00_SCOPE/
+01_BRIEF/
+
+.DS_Store
+Thumbs.db

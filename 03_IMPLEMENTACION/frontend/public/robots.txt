@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /panel
+Disallow: /admin
+Disallow: /ingresar
+Disallow: /cuenta
+Disallow: /favoritos
+Disallow: /mayorista
+Disallow: /carrito
+
+Sitemap: https://aderrefrigeracion.com.ar/sitemap.xml
