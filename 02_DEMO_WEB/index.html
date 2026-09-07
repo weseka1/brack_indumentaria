@@ -282,7 +282,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .chip.is-on{border-color:var(--gold);color:var(--gold-deep);background:rgba(var(--line-rgb),.05)}
 .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2.6rem 1.8rem;padding:0 5vw}
 .piece{cursor:pointer;position:relative;background:rgba(var(--surface-rgb),.6);backdrop-filter:blur(18px);border:1px solid rgba(var(--surface-rgb),.75);border-radius:1.4rem;overflow:hidden;box-shadow:var(--halo),0 8px 30px rgba(var(--shadow-rgb),.06);transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
-.piece:hover{transform:translateY(-4px);box-shadow:0 22px 48px rgba(var(--shadow-rgb),.1)}
+.piece:hover{transform:translateY(-4px);box-shadow:var(--halo),0 22px 48px rgba(var(--shadow-rgb),.1)}
 .piece-imgwrap{position:relative;aspect-ratio:3/3.2;overflow:hidden;background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
 .piece.featured{grid-column:span 2}
 .piece.featured .piece-imgwrap{aspect-ratio:3/1.98}
@@ -466,14 +466,27 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   </div>
 </section>
 <style>
-.hero-hora{position:absolute;right:5vw;bottom:5vh;z-index:6;display:flex;align-items:center;gap:1rem;color:rgba(233,237,242,.75)}
-.hr-face{position:relative;width:64px;height:64px;border-radius:50%;border:1px solid rgba(233,237,242,.35)}
+/* El reloj estaba pintado en claro fijo (--dark-ink y rgba(233,237,242,…)):
+   de noche se leía perfecto, pero de día cae sobre el scrim CLARO del hero y
+   quedaba blanco sobre blanco —medido: contraste 1.26 la aguja, 1.14 el aro,
+   1.16 la etiqueta; el mínimo para un gráfico es 3.0—. Ahora la tinta es la del
+   tema, y como abajo hay una FOTO y el contraste depende de la imagen, el disco
+   y la etiqueta llevan su propia chapa de legibilidad: el mismo patrón que ya
+   usan .map-tag, .sv-label y .piece-idx. */
+.hero-hora{position:absolute;right:5vw;bottom:5vh;z-index:6;display:flex;align-items:center;gap:1rem;color:var(--ink-60)}
+.hr-face{position:relative;width:64px;height:64px;border-radius:50%;
+  border:1px solid rgba(var(--line-rgb),.55);
+  background:rgba(var(--chip-rgb),.74);backdrop-filter:blur(10px);
+  box-shadow:0 4px 18px rgba(var(--shadow-rgb),.10)}
 .hr-face span{position:absolute;left:50%;bottom:50%;transform-origin:bottom center;border-radius:2px}
-.hr-h{width:2px;height:15px;background:var(--dark-ink)}
-.hr-m{width:1.5px;height:22px;background:var(--dark-ink)}
+.hr-h{width:2px;height:15px;background:var(--ink)}
+.hr-m{width:1.5px;height:22px;background:var(--ink)}
+/* el segundero y el eje van con el acento: tinta de día, ámbar de noche */
 .hr-s{width:1px;height:26px;background:var(--accent)}
 .hr-pin{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:var(--accent)}
-.hr-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase}
+.hr-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ink);background:rgba(var(--chip-rgb),.74);backdrop-filter:blur(10px);
+  padding:.4rem .7rem;border-radius:1.4rem}
 @media(max-width:900px){.hero-hora{display:none}}
 </style>
 <script>
@@ -709,7 +722,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   border:1px solid rgba(var(--surface-rgb),.8);border-radius:1.4rem;overflow:hidden;
   box-shadow:var(--halo),0 6px 24px rgba(var(--shadow-rgb),.05);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
-.uni:hover{transform:translateY(-6px);box-shadow:0 22px 48px rgba(var(--shadow-rgb),.1)}
+.uni:hover{transform:translateY(-6px);box-shadow:var(--halo),0 22px 48px rgba(var(--shadow-rgb),.1)}
 .uni-media{position:relative;aspect-ratio:3/3.4;overflow:hidden;background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
 .uni-media img{width:100%;height:100%;object-fit:cover;filter:saturate(.92);transition:transform 1s var(--ease)}
 .uni:hover .uni-media img{transform:scale(1.05)}
