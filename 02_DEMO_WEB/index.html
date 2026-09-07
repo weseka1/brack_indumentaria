@@ -834,6 +834,91 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(min-width:1200px){.cortes-grid{gap:2rem}}
 </style>
 
+<!-- REELS DE INSTAGRAM — embed público oficial (blockquote + embed.js).
+     En producción: conectar Instagram Graph API para que los reels se
+     actualicen solos. Hoy los cuatro permalinks están escritos a mano.
+
+     El embed llega en un iframe de otro dominio: NO se puede estilar por
+     dentro. Todo lo estético vive en el marco de afuera. -->
+<section class="reels" id="reels">
+  <div class="carr-head">
+    <div>
+      <p class="kicker">En Instagram</p>
+      <h2 class="h2">Lo que subimos <em style="font-style:italic">esta semana.</em></h2>
+    </div>
+    <p class="head-note">Cada tanda entra primero por Instagram. Estos son los últimos reels
+      del local — se ven acá mismo, y si tocás uno se abre en la app.</p>
+  </div>
+
+  <div class="reels-rail" id="reelsRail">
+    <article class="reel" data-reel="https://www.instagram.com/reel/DYIsSLfpSoy/">
+      <div class="reel-hueco"><span class="reel-cargando">Cargando el reel…</span></div>
+    </article>
+    <article class="reel" data-reel="https://www.instagram.com/reel/DbbOJXwNArY/">
+      <div class="reel-hueco"><span class="reel-cargando">Cargando el reel…</span></div>
+    </article>
+    <article class="reel" data-reel="https://www.instagram.com/reel/DSkjNwajY-n/">
+      <div class="reel-hueco"><span class="reel-cargando">Cargando el reel…</span></div>
+    </article>
+    <article class="reel" data-reel="https://www.instagram.com/reel/DXkB23DETO2/">
+      <div class="reel-hueco"><span class="reel-cargando">Cargando el reel…</span></div>
+    </article>
+  </div>
+
+  <!-- si Instagram no carga (bloqueador, sin conexión), esto ocupa el lugar en
+       vez de dejar un hueco -->
+  <div class="reels-caido" id="reelsCaido" hidden>
+    <p>No pudimos cargar los reels acá —puede ser un bloqueador de contenido—.
+      Están todos en nuestro Instagram.</p>
+    <a class="pill pill-gold" href="https://www.instagram.com/brack.indumentaria" target="_blank" rel="noopener" data-hover>Ver @brack.indumentaria</a>
+  </div>
+
+  <p class="reels-pie"><a href="https://www.instagram.com/brack.indumentaria" target="_blank" rel="noopener" data-hover>Seguinos en @brack.indumentaria</a></p>
+</section>
+<style>
+/* El alto lo fija el marco, no el embed: así el hueco reserva exactamente el
+   lugar que después ocupa el iframe y la página no pega un salto al cargar. */
+.reels{padding:14vh 0 12vh;background:var(--white)}
+.reels-rail{display:flex;gap:1.4rem;overflow-x:auto;padding:1rem 6vw 3rem;
+  scrollbar-width:none;cursor:grab;align-items:flex-start;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.reels-rail::-webkit-scrollbar{display:none}
+.reels-rail.dragging{cursor:grabbing;scroll-snap-type:none}
+.reel{flex:0 0 auto;width:min(326px,82vw);scroll-snap-align:center;
+  border-radius:1.4rem;overflow:hidden;position:relative;
+  border:1px solid rgba(var(--surface-rgb),.75);
+  background:linear-gradient(170deg,var(--ph-a),var(--ph-b));
+  box-shadow:var(--halo),0 8px 30px rgba(var(--shadow-rgb),.06);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
+.reel:hover{transform:translateY(-4px);box-shadow:var(--halo),0 22px 48px rgba(var(--shadow-rgb),.1)}
+/* el hueco reserva el alto del embed antes de que exista */
+/* 326/613 no es un número elegido a ojo: es el alto exacto que Instagram le da
+   al iframe con este ancho, medido. Así el hueco reserva lo mismo que después
+   ocupa el embed y la página no se mueve cuando aparece. */
+.reel-hueco{aspect-ratio:326/613;display:flex;align-items:center;justify-content:center}
+.reel-cargando{font-family:var(--mono);font-size:.6rem;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--ink-35)}
+/* el iframe de Instagram, encajado en el marco. Por dentro no se toca. */
+.reel iframe,.reel .instagram-media{width:100%!important;min-width:0!important;
+  max-width:100%!important;margin:0!important;border:0!important;border-radius:0!important;
+  box-shadow:none!important;display:block!important}
+/* Capa que se queda con el arrastre. Sin esto el gesto muere apenas el puntero
+   entra en el iframe: un documento de otro dominio se traga los eventos y la
+   fila se frena en seco. Un clic sin arrastre abre el reel en Instagram. */
+.reel-capa{position:absolute;inset:0;z-index:3;cursor:inherit}
+.reels-caido{padding:0 6vw;max-width:36rem}
+.reels-caido p{color:var(--ink-60);margin-bottom:1.2rem}
+.reels-pie{padding:1.5rem 6vw 0}
+.reels-pie a{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-deep);
+  border-bottom:1px solid rgba(var(--line-rgb),.25);padding-bottom:.45rem;
+  display:inline-block;min-height:44px;line-height:44px}
+.reels-pie a:hover{border-color:var(--gold-deep)}
+@media(max-width:900px){
+  .reel-cargando{font-size:.64rem}
+  .reels-caido p{font-size:.95rem}
+}
+</style>
+
 <!-- RECIÉN LLEGADOS — macro sangrando fuera del canvas -->
 <section class="bleed">
   <div class="bleed-stage" aria-hidden="true">
@@ -1549,30 +1634,126 @@ DATA.filter(d => d.featured).slice(0, 10).forEach((d, n) => {
   card.addEventListener('click', () => openFicha(d));
   rail.appendChild(card);
 });
-/* drag del carrusel */
-if (fine) {
-  let down = false, sx = 0, sl = 0, moved = 0;
-  let captured = false;
-  rail.addEventListener('pointerdown', e => {
+/* Arrastrar una fila con el mouse. Estaba escrito a medida para el carrusel de
+   destacados; ahora también lo usa la fila de reels, así que vive en un solo
+   lugar. En táctil no se engancha: ahí el scroll nativo del dedo ya funciona. */
+function hacerArrastrable(riel){
+  if (!fine || !riel) return;
+  let down = false, sx = 0, sl = 0, moved = 0, captured = false;
+  riel.addEventListener('pointerdown', e => {
     if (e.pointerType !== 'mouse') return;
-    down = true; moved = 0; captured = false; sx = e.clientX; sl = rail.scrollLeft;
+    down = true; moved = 0; captured = false; sx = e.clientX; sl = riel.scrollLeft;
   });
-  rail.addEventListener('pointermove', e => {
+  riel.addEventListener('pointermove', e => {
     if (!down) return;
     const dx = e.clientX - sx;
     moved = Math.max(moved, Math.abs(dx));
     if (!captured && Math.abs(dx) > 6) {
       captured = true;
-      rail.classList.add('dragging');
-      try { rail.setPointerCapture(e.pointerId); } catch (_) {}
+      riel.classList.add('dragging');
+      try { riel.setPointerCapture(e.pointerId); } catch (_) {}
     }
-    if (captured) rail.scrollLeft = sl - dx;
+    if (captured) riel.scrollLeft = sl - dx;
   });
-  const endDrag = () => { if (!down) return; down = false; rail.classList.remove('dragging'); };
-  rail.addEventListener('pointerup', endDrag);
-  rail.addEventListener('pointercancel', endDrag);
-  rail.addEventListener('click', e => { if (moved > 8) { e.stopPropagation(); e.preventDefault(); } }, true);
+  const endDrag = () => { if (!down) return; down = false; riel.classList.remove('dragging'); };
+  riel.addEventListener('pointerup', endDrag);
+  riel.addEventListener('pointercancel', endDrag);
+  /* si se arrastró, el click que viene después no cuenta: si no, soltar sobre
+     una card abría su ficha */
+  riel.addEventListener('click', e => { if (moved > 8) { e.stopPropagation(); e.preventDefault(); } }, true);
 }
+hacerArrastrable(rail);
+window.BRACK_arrastrable = hacerArrastrable;
+
+/* ---------- REELS DE INSTAGRAM ----------
+   embed.js NO se pide al abrir la página: recién cuando la sección se acerca al
+   viewport. La home abre con 1,5 MB y no se puede deshacer eso por cuatro reels
+   que están abajo de todo y que mucha gente no va a llegar a ver.
+
+   El blockquote oficial se inyecta acá y no en el HTML porque, si estuviera
+   escrito desde el principio y el script nunca llegara a cargar, quedarían
+   cuatro citas vacías con el texto pelado adentro. */
+(function(){
+  var seccion = document.getElementById('reels');
+  if (!seccion) return;
+  var riel = document.getElementById('reelsRail');
+  var caido = document.getElementById('reelsCaido');
+  var tarjetas = Array.prototype.slice.call(riel.querySelectorAll('.reel'));
+  var pedido = false;
+
+  hacerArrastrable(riel);
+
+  function rendirse(){
+    riel.hidden = true;
+    caido.hidden = false;
+  }
+
+  /* De a uno, no los cuatro juntos. Cada embed es un documento completo de
+     Instagram: entre los cuatro bajan 4,8 MB, y el 98% de eso son el script y
+     el CSS de Instagram repetidos —el mismo archivo de 244 KB, cuatro veces,
+     porque cada iframe es un documento aparte—. Las fotos de los reels son
+     apenas 0,26 MB. Montando solo el que se va a ver, el que entra a la sección
+     y no arrastra paga una fracción. */
+  function montarUna(t){
+    if (t.dataset.montada) return;
+    t.dataset.montada = '1';
+    var url = t.dataset.reel;
+    var bq = document.createElement('blockquote');
+    bq.className = 'instagram-media';
+    bq.setAttribute('data-instgrm-permalink', url);
+    bq.setAttribute('data-instgrm-version', '14');
+    bq.style.cssText = 'width:100%;min-width:0;margin:0;border:0;box-shadow:none';
+    t.innerHTML = '';
+    t.appendChild(bq);
+    /* la capa va DESPUÉS del blockquote para quedar encima del iframe */
+    var capa = document.createElement('a');
+    capa.className = 'reel-capa';
+    capa.href = url;
+    capa.target = '_blank';
+    capa.rel = 'noopener';
+    capa.setAttribute('aria-label', 'Ver este reel en Instagram');
+    t.appendChild(capa);
+    if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process();
+  }
+
+  /* mira el riel de costado: monta la tarjeta cuando está por asomarse */
+  function vigilarTarjetas(){
+    if (!window.IntersectionObserver) { tarjetas.forEach(montarUna); return; }
+    var ioT = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) montarUna(e.target); });
+    }, { root: riel, rootMargin: '0px 220px 0px 220px', threshold: 0 });
+    tarjetas.forEach(function(t){ ioT.observe(t); });
+  }
+
+  function cargar(){
+    if (pedido) return;
+    pedido = true;
+
+    var sc = document.createElement('script');
+    sc.async = true;
+    sc.src = 'https://www.instagram.com/embed.js';
+    sc.onload = function(){
+      vigilarTarjetas();
+      /* que el script cargue no garantiza que los iframes aparezcan: si a los
+         6 segundos no hay ninguno, se muestra el link al perfil igual */
+      setTimeout(function(){
+        if (!riel.querySelector('iframe')) rendirse();
+      }, 6000);
+    };
+    sc.onerror = rendirse;   // bloqueador o sin conexión
+    document.body.appendChild(sc);
+  }
+
+  if (!window.IntersectionObserver) { cargar(); return; }
+  var io = new IntersectionObserver(function(entradas){
+    entradas.forEach(function(e){
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      cargar();
+    });
+  }, { rootMargin: '300px 0px 300px 0px', threshold: 0 });
+  io.observe(seccion);
+})();
 
 /* ---------- ficha ---------- */
 const ficha = document.getElementById('ficha');
