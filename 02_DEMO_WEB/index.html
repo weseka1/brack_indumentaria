@@ -417,26 +417,30 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .foot-col a:hover::after{transform:scaleX(1)}
 /* los items entran escalonados; sin JS o sin movimiento, quedan visibles */
 .foot-col a,.foot-col .t{will-change:opacity,transform}
-/* La línea gigante NO entra en el ancho —"BRACK indumentaria" mide 152px más
-   que la caja en escritorio y 171px más en un teléfono— y antes se cortaba solo
-   a la derecha, que es lo que la hacía parecer un error.
+/* El gesto es el contraste entre BRACK en contorno e "indumentaria" en itálica
+   llena: si una de las dos mitades queda fuera de pantalla, no hay contraste que
+   ver. Por eso el tamaño está calculado para que la línea ENTERA entre en el
+   viewport —11,4vw, medido— en vez de buscar el cuerpo más grande posible.
 
-   Ahora sangra por los DOS lados en partes iguales: display:flex con
-   justify-content:center hace que el sobrante se reparta, en vez del corte
-   izquierdo-anclado que hace text-align:center. Deja de leerse como un tajo y
-   pasa a leerse como un letrero más grande que la vidriera. Y el desplazamiento
-   con el scroll termina de mostrar lo que quedaba afuera.
+   Sigue con display:flex y justify-content:center, no text-align:center: si en
+   una pantalla angosta llegara a no entrar, el sobrante se reparte entre los dos
+   lados en vez de comerse todo por la derecha, que es lo que hacía que pareciera
+   un error en lugar de una decisión.
 
    translateZ(0) no es decorativo: sin una capa propia, Windows dibuja este
    texto con ClearType —antialiasing por subpíxel— y en un contorno fino con
    relleno transparente eso aparece como franjas rosadas y celestes en vez de
    gris. Con capa propia, el navegador pasa a antialiasing en escala de grises. */
 .foot-giant{display:flex;justify-content:center;margin:0 -6vw;
-  font-family:var(--serif);font-weight:300;font-size:clamp(3.4rem,15vw,14rem);
+  font-family:var(--serif);font-weight:300;font-size:clamp(2.4rem,11.4vw,10.6rem);
   line-height:.95;letter-spacing:.02em;color:transparent;
   -webkit-text-stroke:1px rgba(var(--line-rgb),.25);white-space:nowrap;
   -webkit-font-smoothing:antialiased;transform:translateZ(0);will-change:transform}
 .foot-giant > *{flex:0 0 auto}
+/* En un teléfono, 11,4vw todavía deja la línea 37px más ancha que la pantalla y
+   se pierden la B y la última a. Con 9,4vw entra entera y el contraste entre las
+   dos mitades se ve completo, que es de lo que vive el gesto. */
+@media(max-width:700px){.foot-giant{font-size:9.4vw}}
 .foot-giant em{font-style:italic;color:var(--gold);-webkit-text-stroke:0}
 /* La firma de la derecha no se cortaba: se la comía el botón flotante del
    asistente, que es fixed y cae justo encima. Se le reserva ese carril. */
@@ -1712,9 +1716,14 @@ window.BRACK_arrastrable = hacerArrastrable;
 
   if (!reduced) {
     var caja = linea.parentElement;
+    /* Un acompañamiento, no un viaje: el 2% del ancho del propio texto. Y nunca
+       más que el aire que queda a cada lado, para que la línea no se salga de la
+       pantalla —lo que arruinaría el gesto, que necesita las dos mitades a la
+       vista al mismo tiempo—. No es un marquee: recorre y se queda. */
     var recorrido = function(){
-      var sobra = Math.max(0, linea.scrollWidth - caja.clientWidth);
-      return Math.min(sobra / 2, 220);   // tope, para que quede un movimiento y no un marquee
+      var ancho = linea.scrollWidth;
+      var aire = Math.max(0, (caja.clientWidth - ancho) / 2);
+      return Math.min(ancho * 0.02, aire);
     };
     gsap.fromTo(linea, { x: function(){ return recorrido(); } },
       { x: function(){ return -recorrido(); }, ease: 'none',
