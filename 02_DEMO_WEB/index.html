@@ -91,7 +91,18 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 }
 
 /* ===== hero: video full-bleed (slot) con fallback foto ===== */
-.hero{position:relative;height:100svh;overflow:hidden;background:var(--dark)}
+/* PANEL 1 — el hero deja de ir a sangre y pasa a flotar sobre el fondo de la
+   página. El alto descuenta la barra y los dos márgenes para que el panel
+   entre entero en la primera pantalla, sin obligar a scrollear. */
+.hero{position:relative;overflow:hidden;background:var(--dark);
+  height:calc(100svh - var(--nav-alto) - var(--panel-gap) * 2);
+  margin:calc(var(--nav-alto) + var(--panel-gap)) var(--panel-x) 0;
+  border-radius:var(--panel-r);
+  border:var(--panel-borde);
+  box-shadow:var(--panel-sombra)}
+@media(max-width:900px){
+  :root{--nav-alto:71px;--panel-r:22px}
+}
 .hero-media,.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero-video{opacity:0;transition:opacity 1s;object-position:center 42%}
 .hero.has-video .hero-video{opacity:1}
@@ -122,10 +133,6 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 /* Estaba clavado en el centro exacto del viewport, sin relación con nada: ni
    con el titular, que arranca a 5vw, ni con la foto. Ahora cuelga de la misma
    columna que el texto. */
-.hero-down{position:absolute;left:5vw;bottom:3.4vh;z-index:5;color:rgba(var(--line-rgb),.55);
-  font-size:.6rem;letter-spacing:.4em;text-transform:uppercase;display:flex;flex-direction:column;align-items:flex-start;gap:.7rem}
-.hero-down::after{content:"";width:1px;height:3rem;background:linear-gradient(to bottom,var(--accent),transparent);animation:drip 2.2s var(--ease) infinite}
-@keyframes drip{0%{transform:scaleY(0);transform-origin:top}55%{transform:scaleY(1);transform-origin:top}56%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
 /* ===== sección VITRINA: la prenda flota bajo el reflector ===== */
 .estrella{position:relative;min-height:100svh;background:radial-gradient(120% 90% at 50% 30%,var(--white) 0%,var(--paper) 55%,var(--paper-2) 100%);
@@ -146,31 +153,36 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .estrella-side.l{left:11vw}
 .estrella-side.r{right:11vw}
 @media(max-width:900px){.estrella-side{display:none}}
+/* PUNTO 4 — controles circulares: dejan de ser dos signos pegados al borde y
+   pasan a ser botones que flotan sobre la pieza. El vidrio es el mismo del
+   sistema y la sombra en dos capas también, así que se apoyan como todo lo
+   demás en vez de estar dibujados encima. */
 .estrella-arrow{position:absolute;top:52%;transform:translateY(-50%);z-index:6;font-family:var(--serif);
-  font-weight:300;font-size:2.8rem;line-height:1;color:var(--ink-35);padding:1rem 1.6rem;
-  transition:color .3s,transform .3s var(--ease)}
-.estrella-arrow:hover{color:var(--gold-deep)}
-.estrella-arrow.prev{left:5vw}
-.estrella-arrow.prev:hover{transform:translateY(-50%) translateX(-.3rem)}
-.estrella-arrow.next{right:7vw}   /* fuera del carril del botón del asistente */
-.estrella-arrow.next:hover{transform:translateY(-50%) translateX(.3rem)}
+  font-weight:300;font-size:1.7rem;line-height:1;color:var(--ink-60);padding:0;
+  width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(var(--chip-rgb),var(--vidrio-op-chip));
+  backdrop-filter:blur(10px) saturate(var(--vidrio-sat));
+  border:var(--panel-borde);
+  box-shadow:var(--sombra-contacto),var(--sombra-ambiente);
+  transition:color .3s,transform .35s var(--ease),box-shadow .35s var(--ease)}
+.estrella-arrow:hover{color:var(--gold-deep);
+  box-shadow:var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
+.estrella-arrow.prev{left:6vw}
+.estrella-arrow.prev:hover{transform:translateY(-50%) translateX(-.25rem)}
+.estrella-arrow.next{right:6vw}
+.estrella-arrow.next:hover{transform:translateY(-50%) translateX(.25rem)}
 /* .5rem dejaba la flecha a 8px del borde en un teléfono: se leía como si
    estuviera cortada contra el canto de la pantalla. Y el padding lateral ancho
    la empujaba todavía más afuera. */
 @media(max-width:700px){
-  /* el padding chico la despega del borde, pero la superficie de toque tiene
-     que seguir siendo de 44px */
-  .estrella-arrow{padding:1rem .7rem;font-size:2.4rem;min-width:44px;min-height:44px;
-    display:flex;align-items:center;justify-content:center}
-  .estrella-arrow.prev{left:1.1rem}
-  .estrella-arrow.next{right:1.1rem}
+  .estrella-arrow{width:46px;height:46px;font-size:1.5rem}
+  .estrella-arrow.prev{left:.9rem}
+  .estrella-arrow.next{right:.9rem}
 }
 .estrella-kicker{position:absolute;top:9vh;left:0;right:0;text-align:center;z-index:3;
   font-size:.66rem;letter-spacing:.46em;text-transform:uppercase;color:var(--accent)}
-/* cortina orgánica: el oscuro del hero se derrite alrededor de la pieza */
-.estrella-curtain{position:absolute;top:-2px;left:0;width:100%;height:min(36vh,340px);z-index:1;display:block;pointer-events:none}
-@media(max-width:700px){.estrella-curtain{display:none}.estrella{background:linear-gradient(180deg,var(--dark) 0%,var(--paper) 18%,var(--paper-2) 100%)}.estrella-kicker{color:var(--gold-deep)}}
-.estrella-curtain path{fill:var(--dark)}
+@media(max-width:700px){.estrella-kicker{color:var(--gold-deep)}}
 /* identificación editorial — sin caja, deslizable */
 .estrella-stage{cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .estrella-stage.dragging{cursor:grabbing}
@@ -193,8 +205,36 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   .estrella-cta{justify-self:center}
 }
 
+/* PUNTO 5 — ETIQUETAS FLOTANTES
+   El único lugar del sitio donde el vidrio se usa como en la referencia: una
+   píldora que flota sobre la foto y dice qué se está viendo. Los datos son del
+   catálogo —producto y precio reales—, no una leyenda decorativa: la foto de
+   sección deja de ser ambientación y pasa a señalar algo que se puede comprar.
+   El punto va en el ámbar del local, el mismo del interruptor de noche. */
+.foto-tag{position:absolute;z-index:6;left:5vw;bottom:5vh;display:inline-flex;align-items:center;gap:.6rem;
+  padding:.6rem 1.1rem .6rem .9rem;border-radius:3rem;
+  background:rgba(var(--chip-rgb),var(--vidrio-op-chip));
+  backdrop-filter:blur(12px) saturate(var(--vidrio-sat));
+  border:var(--panel-borde);box-shadow:var(--sombra-contacto),var(--sombra-ambiente);
+  font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-60);min-height:44px}
+.foto-tag b{font-weight:500;color:var(--ink)}
+.foto-tag::before{content:"";width:7px;height:7px;border-radius:50%;flex:0 0 auto;
+  background:var(--amber);box-shadow:0 0 8px 1px rgba(255,164,87,.5)}
+@media(max-width:900px){
+  .foto-tag{left:auto;right:auto;margin:0 5vw;bottom:3.5vh;font-size:.58rem;
+    letter-spacing:.1em;padding:.55rem .9rem .55rem .8rem;max-width:90%}
+}
+
 /* ===== bloques campaña full-bleed ===== */
-.blq{position:relative;height:92svh;overflow:hidden;background:var(--dark)}
+/* PANEL 2 — los bloques de campaña. Mismo tratamiento que el hero: el alto baja
+   un poco porque, con márgenes arriba y abajo, un bloque de 92svh empujaba la
+   sección siguiente fuera de cuadro. */
+.blq{position:relative;height:84svh;overflow:hidden;background:var(--dark);
+  margin:var(--panel-gap) var(--panel-x);
+  border-radius:var(--panel-r);
+  border:var(--panel-borde);
+  box-shadow:var(--panel-sombra)}
 .blq-media,.blq-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .blq-video{opacity:0;transition:opacity 1s}
 .blq.has-video .blq-video{opacity:1}
@@ -480,7 +520,6 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(max-width:860px){.foot-cols{grid-template-columns:1fr 1fr}}
 
 /* videos: SIEMPRE full-bleed edge-to-edge — integración total, el scrim y el grano hacen el resto */
-@media(max-width:900px){.hero-down{display:none}}
 [data-fade]{opacity:0;transform:translateY(34px)}
 .no-anim [data-fade],.no-anim .hero-sub,.no-anim .hero-cta{opacity:1!important;transform:none!important}
 .no-anim .hero-title .l span,.no-anim .pre-name span{transform:none!important}
@@ -595,6 +634,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 <section class="hero" id="top">
   <img class="hero-media" src="fotos/hero_poster.webp" alt="Brack Indumentaria — drop de temporada">
   <div class="hero-scrim"></div>
+  <span class="foto-tag"><b>Buzos NFL Importados</b> · $136.500</span>
   <div class="hero-copy">
     <p class="hero-kicker">Indumentaria urbana · Santa Rosa, La Pampa</p>
     <h1 class="hero-title">
@@ -603,16 +643,6 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
     </h1>
     <p class="hero-sub">Los drops salen por tanda y no se repiten. Todas las medidas publicadas talle por talle, 20% off en efectivo y envío gratis superando $200.000.</p>
     <div class="hero-cta"><a class="pill pill-gold" data-hover data-magnetic href="#estrella">Ver el catálogo</a></div>
-  </div>
-  <div class="hero-down">Bajá</div>
-  <div class="hero-hora">
-    <div class="hr-face">
-      <span class="hr-h" id="hrH"></span>
-      <span class="hr-m" id="hrM"></span>
-      <span class="hr-s" id="hrS"></span>
-      <span class="hr-pin"></span>
-    </div>
-    <span class="hr-label">Santa Rosa — GMT-3</span>
   </div>
 </section>
 <style>
@@ -625,7 +655,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    usan .map-tag, .sv-label y .piece-idx. */
 /* El botón del asistente es fixed y vive en el mismo rincón: con right:5vw la
    etiqueta del reloj le quedaba justo debajo. Se le cede ese carril. */
-.hero-hora{position:absolute;right:calc(5vw + 4.8rem);bottom:5vh;z-index:6;display:flex;align-items:center;gap:1rem;color:var(--ink-60)}
+.local-hora{display:flex;align-items:center;gap:1rem;color:var(--ink-60);margin-bottom:1.6rem}
 .hr-face{position:relative;width:64px;height:64px;border-radius:50%;
   border:1px solid rgba(var(--line-rgb),.55);
   background:rgba(var(--chip-rgb),var(--vidrio-op-chip));backdrop-filter:blur(10px) saturate(var(--vidrio-sat));
@@ -639,7 +669,8 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .hr-label{font-family:var(--mono);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;
   color:var(--ink);background:rgba(var(--chip-rgb),var(--vidrio-op-chip));backdrop-filter:blur(10px) saturate(var(--vidrio-sat));
   padding:.4rem .7rem;border-radius:1.4rem}
-@media(max-width:900px){.hero-hora{display:none}}
+/* en el hero se escondía en el teléfono; acá es un dato útil y se queda */
+@media(max-width:640px){.local-hora{margin-bottom:1.2rem}}
 </style>
 <script>
 (function(){
@@ -687,9 +718,6 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 
 <!-- VITRINA (la prenda recortada bajo la luz que barre + deslizable) -->
 <section class="estrella" id="estrella">
-  <svg class="estrella-curtain" viewBox="0 0 1440 700" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,0 H1440 V90 C1290,152 1180,112 1080,152 C990,188 962,300 900,398 C852,472 812,508 720,508 C628,508 588,472 540,398 C478,300 450,188 360,152 C260,112 150,152 0,90 Z"/>
-  </svg>
   <p class="estrella-kicker">Lo que está saliendo</p>
   <div class="estrella-light"></div>
   <div class="estrella-stage">
@@ -715,6 +743,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 <section class="blq">
   <img class="blq-media" src="fotos/campera-over-kbrkrv-sgssp-0.webp" alt="">
   <div class="blq-scrim"></div>
+  <span class="foto-tag"><b>Campera OVER KBRKRV</b> · $99.000</span>
   <div class="blq-copy">
     <p class="blq-kicker">Talles y medidas</p>
     <h2 class="blq-title">Todas las medidas publicadas, <em>talle por talle.</em></h2>
@@ -875,17 +904,18 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    tamaño de una estampilla justo en la sección que existe para mirarla. */
 .cortes{padding:14vh 0 12vh;background:var(--paper)}
 .cortes-grid{display:grid;grid-template-columns:1fr;gap:2.4rem;padding:0 6vw}
-.corte{background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(16px) saturate(var(--vidrio-sat));
+.corte{padding:var(--radio-aire);background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(16px) saturate(var(--vidrio-sat));
   border:1px solid rgba(var(--surface-rgb),.75);border-radius:1.4rem;overflow:hidden;
   box-shadow:var(--halo),var(--sombra-contacto),var(--sombra-ambiente);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
 .corte:hover{transform:translateY(-4px);box-shadow:var(--halo),var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
 .corte-foto{display:block;position:relative;aspect-ratio:760/1064;overflow:hidden;
+  border-radius:var(--radio-interior);
   background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
 .corte-foto img{width:100%;height:100%;object-fit:cover;object-position:center 62%;
   transition:transform 1s var(--ease)}
 .corte:hover .corte-foto img{transform:scale(1.035)}
-.corte-txt{padding:1.5rem 1.6rem 1.8rem}
+.corte-txt{padding:1.3rem 1rem 1.1rem}
 .corte-nombre{font-family:var(--serif);font-weight:400;font-size:1.7rem;letter-spacing:.01em}
 .corte-cae{margin-top:.7rem;color:var(--ink-60);font-size:.95rem;max-width:34rem}
 .corte-link{display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;
@@ -1051,14 +1081,23 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   </div>
 </section>
 <style>
-.unis{background:var(--white);padding:14vh 0 12vh}
-.unis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;padding:0 4vw}
-.uni{position:relative;display:block;background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(16px) saturate(var(--vidrio-sat));
+/* PANEL 3 — los cuatro mundos. Acá el panel es de superficie, no de foto: el
+   fondo --white sobre el --paper de la página ya lo separa, y el borde y la
+   sombra le dan el canto. */
+.unis{background:var(--white);padding:12vh 0 10vh;
+  margin:var(--panel-gap) var(--panel-x);
+  border-radius:var(--panel-r);
+  border:var(--panel-borde);
+  box-shadow:var(--panel-sombra)}
+.unis-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;padding:0 3vw}
+.uni{position:relative;display:block;padding:var(--radio-aire);
+  background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(16px) saturate(var(--vidrio-sat));
   border:1px solid rgba(var(--surface-rgb),.8);border-radius:1.4rem;overflow:hidden;
   box-shadow:var(--halo),var(--sombra-contacto),var(--sombra-ambiente);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
 .uni:hover{transform:translateY(-6px);box-shadow:var(--halo),var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
-.uni-media{position:relative;aspect-ratio:3/3.4;overflow:hidden;background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
+.uni-media{position:relative;aspect-ratio:3/3.4;overflow:hidden;border-radius:var(--radio-interior);
+  background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
 .uni-media img{width:100%;height:100%;object-fit:cover;filter:saturate(.92);transition:transform 1s var(--ease)}
 .uni:hover .uni-media img{transform:scale(1.05)}
 .uni-media video,.uni-tex video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s;z-index:1}
@@ -1077,10 +1116,10 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .uni-tex span{position:relative;font-family:var(--serif);font-style:italic;font-weight:300;font-size:6.5rem;line-height:1;
   color:rgba(var(--line-rgb),.20);transition:all .7s var(--ease)}
 .uni:hover .uni-tex span{color:rgba(var(--line-rgb),.38);transform:translateY(-6px)}
-.uni-num{position:absolute;top:1rem;left:1.1rem;z-index:2;font-family:var(--mono);font-size:.54rem;
+.uni-num{position:absolute;top:1.5rem;left:1.5rem;z-index:2;font-family:var(--mono);font-size:.54rem;
   letter-spacing:.26em;text-transform:uppercase;color:var(--gold-deep);
   background:rgba(var(--chip-rgb),var(--vidrio-op-chip));backdrop-filter:blur(6px) saturate(var(--vidrio-sat));padding:.35rem .7rem;border-radius:2rem}
-.uni-bar{padding:1.2rem 1.4rem 1.4rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;min-height:6.1rem;box-sizing:border-box}
+.uni-bar{padding:1.1rem .9rem 1rem;display:flex;justify-content:space-between;align-items:baseline;gap:1rem;min-height:6.1rem;box-sizing:border-box}
 .uni-bar h3{font-family:var(--serif);font-weight:400;font-size:1.3rem;line-height:1.15}
 .uni-bar p{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;margin-top:.5rem;color:var(--ink-35)}
 .uni-bar::after{content:"→";font-family:var(--serif);font-size:1.1rem;color:var(--gold-deep);transition:transform .4s var(--ease)}
@@ -1108,6 +1147,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 <section class="blq blq-alt">
   <img class="blq-media" src="fotos/buzo-shato-frizado-2kek1-3.webp" alt="">
   <div class="blq-scrim"></div>
+  <span class="foto-tag"><b>Buzo Shato Frizado</b> · $86.500</span>
   <div class="blq-copy">
     <p class="blq-kicker">Santa Rosa, La Pampa</p>
     <h2 class="blq-title">La confianza <em>no se improvisa.</em></h2>
@@ -1198,6 +1238,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
            muted playsinline preload="none" aria-hidden="true"></video>
   </div>
   <div class="franja-velo" aria-hidden="true"></div>
+  <span class="foto-tag"><b>El local</b> · 25 de Mayo 772</span>
   <div class="franja-copy">
     <p class="franja-kicker">El local</p>
     <h2 class="franja-title">Todo esto también existe <em>fuera de la pantalla.</em></h2>
@@ -1215,6 +1256,17 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
     <p class="show-addr">25 de Mayo 772, Santa Rosa, La Pampa. Todo lo publicado está acá: venís, te lo probás y te lo llevás.</p>
     <!-- el video del local ahora vive en la franja de arriba (#franja) -->
     <div class="show-info-media">
+      <!-- El reloj estaba en un rincón del hero sin decir nada. Acá, al lado de
+           los horarios, contesta algo concreto: si el local está abierto ahora. -->
+        <div class="local-hora">
+          <div class="hr-face">
+            <span class="hr-h" id="hrH"></span>
+            <span class="hr-m" id="hrM"></span>
+            <span class="hr-s" id="hrS"></span>
+            <span class="hr-pin"></span>
+          </div>
+          <span class="hr-label">Santa Rosa — GMT-3</span>
+        </div>
       <div class="show-facts">
         <div class="fact"><span class="k">Lunes a viernes</span><span>10:00 — 19:00</span></div>
         <div class="fact"><span class="k">Sábado</span><span>10:00 — 15:00</span></div>

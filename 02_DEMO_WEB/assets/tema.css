@@ -80,6 +80,26 @@
      la tinta oscura del titular necesita esta densidad para leerse. */
   --hero-velo:linear-gradient(to top,rgba(var(--scrim-rgb),.94) 0%,rgba(var(--scrim-rgb),.30) 46%,rgba(var(--scrim-rgb),.50) 100%),
               linear-gradient(to right,rgba(var(--scrim-rgb),.92) 0%,rgba(var(--scrim-rgb),.58) 44%,rgba(var(--scrim-rgb),.06) 80%);
+
+  /* ---- ARQUITECTURA DE PANELES ----
+     Las secciones dejan de ir a sangre y pasan a ser paneles apoyados sobre el
+     fondo de la página. El margen lateral es un clamp para que en un teléfono
+     se achique pero nunca llegue a cero: si desaparece, vuelve a ser una web a
+     sangre y se pierde el registro entero.
+     El borde y la sombra cambian por tema porque hacen trabajos distintos: de
+     día el panel es oscuro sobre papel claro y se recorta solo —la sombra solo
+     lo despega—; de noche el panel y el fondo son los dos oscuros y hace falta
+     un filo de luz para que el canto exista. */
+  --panel-x:clamp(10px,1.5vw,22px);
+  --panel-r:28px;
+  --panel-gap:.85rem;
+  --nav-alto:78px;
+  --panel-borde:1px solid rgba(17,18,20,.07);
+  --panel-sombra:0 24px 60px -26px rgba(20,22,26,.30);
+  /* radios anidados: el interior SIEMPRE menor que el del panel que lo contiene,
+     y un poco de aire entre uno y otro para que el anidado se vea */
+  --radio-interior:16px;
+  --radio-aire:10px;
   /* velo de la franja de video: de día alcanza con velar lo justo para que el
      texto se lea sobre cualquier fotograma */
   --velo-franja:linear-gradient(to top,rgba(8,9,11,.82) 0%,rgba(8,9,11,.30) 52%,rgba(8,9,11,.42) 100%);
@@ -164,6 +184,11 @@
      apenas para asentar el CTA y el reloj. */
   --hero-velo:linear-gradient(to right,rgba(var(--scrim-rgb),.90) 0%,rgba(var(--scrim-rgb),.72) 26%,rgba(var(--scrim-rgb),.28) 58%,rgba(var(--scrim-rgb),.04) 82%,rgba(var(--scrim-rgb),0) 100%),
               linear-gradient(to top,rgba(var(--scrim-rgb),.62) 0%,rgba(var(--scrim-rgb),.06) 38%,rgba(var(--scrim-rgb),.22) 100%);
+
+  /* de noche el panel se apoya sobre un fondo casi negro: sin este filo claro
+     en el borde, el canto del panel no existiría */
+  --panel-borde:1px solid rgba(237,238,240,.11);
+  --panel-sombra:0 26px 64px -26px rgba(0,0,0,.75);
   /* de noche una ventana de video brillante en una página apagada encandila:
      el velo baja un escalón más y la franja se integra al local a media luz */
   --velo-franja:linear-gradient(to top,rgba(4,5,6,.90) 0%,rgba(4,5,6,.52) 52%,rgba(4,5,6,.62) 100%);
