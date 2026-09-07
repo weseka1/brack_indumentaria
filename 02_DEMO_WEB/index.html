@@ -345,19 +345,44 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .show-facts{border-top:var(--hairline);max-width:30rem;flex:1 1 15rem}
 .fact{display:flex;justify-content:space-between;gap:2rem;padding:.9rem 0;border-bottom:var(--hairline);font-size:.78rem}
 .fact .k{color:var(--ink-35);letter-spacing:.14em;text-transform:uppercase;font-size:.66rem;padding-top:.15rem}
-.show-video{position:relative;flex:0 0 auto;width:min(180px,40vw);aspect-ratio:9/16;border-radius:1.2rem;
-  overflow:hidden;background:var(--dark);box-shadow:0 10px 34px rgba(var(--shadow-rgb),.14);isolation:isolate}
-.sv-clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0}
-.sv-clip.is-on{opacity:1}
-.sv-label{position:absolute;left:.7rem;bottom:.7rem;z-index:2;font-family:var(--mono);font-size:.5rem;
-  letter-spacing:.14em;text-transform:uppercase;color:#F6F7F8;background:rgba(11,12,13,.4);
-  backdrop-filter:blur(6px);padding:.35rem .6rem;border-radius:1rem;pointer-events:none}
-.sv-play{position:absolute;inset:0;z-index:3;width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-  background:rgba(11,12,13,.28);cursor:pointer}
-.sv-play[hidden]{display:none}
-.sv-play-tri{width:0;height:0;border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #F6F7F8;
-  margin-left:3px}
-@media(max-width:640px){.show-info-media{flex-direction:column}.show-video{width:min(220px,60vw)}}
+@media(max-width:640px){.show-info-media{flex-direction:column}}
+
+/* ===== FRANJA DEL LOCAL — el video a ancho completo, entre el catálogo y #showroom =====
+   Los clips son verticales (720x1080 y 884x1080) y la franja es apaisada: van
+   con object-fit:cover y encuadre centrado, así llenan el ancho sin franjas a
+   los costados en ninguna medida. */
+.franja{position:relative;height:70svh;overflow:hidden;background:var(--dark);isolation:isolate}
+/* el media sobresale arriba y abajo para que al hacer parallax no se vea el borde */
+.franja-media{position:absolute;inset:-9% 0;will-change:transform}
+.fr-clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;
+  opacity:0;transition:opacity .55s var(--ease)}
+.fr-clip.is-on{opacity:1}
+/* Velo de legibilidad. Es de tema porque el trabajo que hace es distinto:
+   de DÍA la franja es un bloque oscuro dentro de una página blanca y alcanza
+   con velar lo justo; de NOCHE una ventana de video brillante en una página
+   apagada encandila, así que baja un escalón más. El texto es claro en los dos
+   casos: está sobre el video, no sobre el papel. */
+.franja-velo{position:absolute;inset:0;z-index:2;background:var(--velo-franja)}
+.franja-copy{position:absolute;left:0;right:0;bottom:11.5%;z-index:3;text-align:center;padding:0 6vw;color:#F7F8FA}
+.franja-kicker{font-family:var(--mono);font-size:.62rem;letter-spacing:.44em;text-transform:uppercase;
+  color:var(--accent-dark)}
+.franja-title{font-family:var(--serif);font-weight:300;font-size:clamp(1.9rem,4.4vw,3.6rem);
+  line-height:1.1;letter-spacing:-.01em;margin-top:1.1rem;
+  text-shadow:0 2px 26px rgba(0,0,0,.55)}
+.franja-title em{font-style:italic}
+/* botón de play: solo aparece con prefers-reduced-motion, donde el video no arranca solo */
+.franja-play{position:absolute;inset:0;z-index:4;width:100%;height:100%;display:flex;
+  align-items:center;justify-content:center;background:rgba(11,12,13,.22);cursor:pointer}
+.franja-play[hidden]{display:none}
+.franja-play-tri{width:0;height:0;border-style:solid;border-width:13px 0 13px 22px;
+  border-color:transparent transparent transparent #F7F8FA;margin-left:4px;
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,.5))}
+@media(max-width:760px){
+  .franja{height:50svh}
+  .franja-copy{bottom:8%}
+  .franja-title{font-size:clamp(1.5rem,6.4vw,2.2rem)}
+  .franja-kicker{font-size:.56rem;letter-spacing:.34em}
+}
 .show-cta{display:flex;flex-direction:column;gap:.9rem;align-items:flex-start}
 .map-card{position:relative;width:100%;aspect-ratio:4/3;border-radius:1.4rem;overflow:hidden;
   border:1px solid rgba(var(--surface-rgb),.8);box-shadow:0 10px 34px rgba(var(--shadow-rgb),.08);margin-bottom:1rem}
@@ -851,27 +876,38 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 })();
 </script>
 
+<!-- FRANJA DEL LOCAL — transición entre el catálogo y #showroom -->
+<!-- VIDEO PLACEHOLDER — capturas de historias de Instagram, reemplazar por material filmado en el local -->
+<section class="franja" id="franja">
+  <div class="franja-media" id="franjaMedia">
+    <video class="fr-clip is-on" src="video/IMG_2376-web.mp4" poster="video/poster-local-1.webp"
+           muted playsinline preload="none" aria-hidden="true"></video>
+    <video class="fr-clip" src="video/IMG_2377-web.mp4" poster="video/poster-local-2.webp"
+           muted playsinline preload="none" aria-hidden="true"></video>
+  </div>
+  <div class="franja-velo" aria-hidden="true"></div>
+  <div class="franja-copy">
+    <p class="franja-kicker">El local</p>
+    <h2 class="franja-title">Todo esto también existe <em>fuera de la pantalla.</em></h2>
+  </div>
+  <button class="franja-play" id="franjaPlay" aria-label="Reproducir el video del local" hidden>
+    <span class="franja-play-tri"></span>
+  </button>
+</section>
+
 <!-- EL LOCAL -->
 <section class="showroom" id="showroom">
   <div>
     <p class="kicker">El local</p>
     <h2 class="show-title" style="margin-top:1rem">Vení al local, <em>25 de Mayo 772.</em></h2>
     <p class="show-addr">25 de Mayo 772, Santa Rosa, La Pampa. Todo lo publicado está acá: venís, te lo probás y te lo llevás.</p>
+    <!-- el video del local ahora vive en la franja de arriba (#franja) -->
     <div class="show-info-media">
       <div class="show-facts">
         <div class="fact"><span class="k">Lunes a viernes</span><span>10:00 — 19:00</span></div>
         <div class="fact"><span class="k">Sábado</span><span>10:00 — 15:00</span></div>
         <div class="fact"><span class="k">WhatsApp</span><span>2954 51-7938</span></div>
         <div class="fact"><span class="k">Cómo comprás</span><span>20% — más de 800 clientes</span></div>
-      </div>
-      <!-- VIDEO PLACEHOLDER — capturas de historias de Instagram, reemplazar por material filmado en el local -->
-      <div class="show-video" id="showVideo">
-        <video class="sv-clip is-on" src="video/IMG_2376-web.mp4" poster="video/poster-local-1.webp" muted playsinline preload="metadata"></video>
-        <video class="sv-clip" src="video/IMG_2377-web.mp4" poster="video/poster-local-2.webp" muted playsinline preload="metadata"></video>
-        <button class="sv-play" id="svPlay" aria-label="Reproducir video del local" hidden>
-          <span class="sv-play-tri"></span>
-        </button>
-        <span class="sv-label">25 de Mayo 772 — en vivo</span>
       </div>
     </div>
   </div>
@@ -1009,27 +1045,33 @@ document.querySelectorAll('.hero, .blq, .uni, .bleed').forEach(sec => {
   v.addEventListener('error', () => sec.classList.remove('has-video'));
 });
 
-/* ---------- video del local: loop continuo encadenando los clips con crossfade ---------- */
+/* ---------- FRANJA DEL LOCAL: clips encadenados con crossfade ----------
+   Arranca cuando la franja se asoma y PAUSA cuando se va: si el visitante
+   siguió bajando, no tiene sentido que el video siga corriendo gastando
+   batería. El rootMargin de 20% dispara con anticipación, así el video ya está
+   reproduciendo cuando la franja se ve entera —si no, con un scroll rápido se
+   perdía el arranque—. Los clips van con preload="none" y recién piden datos
+   cuando hace falta. */
 (function(){
-  var wrap = document.getElementById('showVideo');
+  var wrap = document.getElementById('franjaMedia');
   if (!wrap) return;
-  var clips = Array.prototype.slice.call(wrap.querySelectorAll('.sv-clip'));
-  var playBtn = document.getElementById('svPlay');
-  var idx = 0;
+  var clips = Array.prototype.slice.call(wrap.querySelectorAll('.fr-clip'));
+  var playBtn = document.getElementById('franjaPlay');
+  var franja = document.getElementById('franja');
+  var idx = 0, arrancado = false, aLaVista = false;
+
+  function reproducir(v){ var pr = v.play(); if (pr && pr.catch) pr.catch(function(){}); }
 
   function goTo(next){
     var cur = clips[idx], nxt = clips[next];
-    if (cur === nxt) { cur.currentTime = 0; cur.play().catch(function(){}); return; }
+    if (cur === nxt) { cur.currentTime = 0; reproducir(cur); return; }
     nxt.currentTime = 0;
-    nxt.play().catch(function(){});
-    if (window.gsap) {
-      gsap.to(cur, { opacity: 0, duration: .4, ease: 'power1.out' });
-      gsap.to(nxt, { opacity: 1, duration: .4, ease: 'power1.out', onStart: function(){ nxt.classList.add('is-on'); },
-        onComplete: function(){ cur.pause(); cur.classList.remove('is-on'); } });
-    } else {
-      cur.classList.remove('is-on'); cur.pause();
-      nxt.classList.add('is-on');
-    }
+    reproducir(nxt);
+    nxt.classList.add('is-on');
+    cur.classList.remove('is-on');
+    /* el crossfade lo hace la transición CSS de .fr-clip; la pausa espera a que
+       termine para que no se corte a la mitad del fundido */
+    setTimeout(function(){ if (clips[idx] !== nxt) return; cur.pause(); }, 600);
     idx = next;
   }
 
@@ -1037,16 +1079,42 @@ document.querySelectorAll('.hero, .blq, .uni, .bleed').forEach(sec => {
     clip.addEventListener('ended', function(){ goTo((i + 1) % clips.length); });
   });
 
+  function encender(){
+    if (reduced) return;
+    clips.forEach(function(c){ if (c.preload === 'none') c.preload = 'auto'; });
+    arrancado = true;
+    reproducir(clips[idx]);
+  }
+  function apagar(){ clips.forEach(function(c){ c.pause(); }); }
+
   if (reduced) {
-    if (playBtn) {
-      playBtn.hidden = false;
-      playBtn.addEventListener('click', function(){
-        playBtn.hidden = true;
-        clips[idx].play().catch(function(){});
+    /* sin movimiento: se queda en el póster y arranca solo si lo piden */
+    playBtn.hidden = false;
+    playBtn.addEventListener('click', function(){
+      playBtn.hidden = true;
+      clips.forEach(function(c){ c.preload = 'auto'; });
+      reproducir(clips[idx]);
+    });
+  } else if (window.IntersectionObserver) {
+    new IntersectionObserver(function(entradas){
+      entradas.forEach(function(e){
+        aLaVista = e.isIntersecting;
+        if (aLaVista) encender(); else apagar();
       });
-    }
+    }, { rootMargin: '20% 0px 20% 0px', threshold: 0 }).observe(franja);
+    /* si la pestaña se va a segundo plano, tampoco tiene sentido seguir */
+    document.addEventListener('visibilitychange', function(){
+      if (document.visibilityState !== 'visible') apagar();
+      else if (aLaVista && arrancado) reproducir(clips[idx]);
+    });
   } else {
-    clips[idx].play().catch(function(){});
+    encender();
+  }
+
+  /* parallax leve: el video se mueve un poco menos que la página */
+  if (!reduced) {
+    gsap.to(wrap, { yPercent: 9, ease: 'none',
+      scrollTrigger: { trigger: franja, start: 'top bottom', end: 'bottom top', scrub: 1 } });
   }
 })();
 
