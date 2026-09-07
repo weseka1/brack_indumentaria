@@ -398,15 +398,50 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(max-width:900px){.showroom{grid-template-columns:1fr}}
 
 /* ===== footer + firma ===== */
-.footer{background:var(--paper);border-top:var(--hairline);padding:9vh 6vw 3vh}
+/* overflow:hidden acá para que la línea gigante pueda sangrar fuera del ancho
+   del footer y moverse con el scroll sin generar barra horizontal en la página */
+.footer{background:var(--paper);border-top:var(--hairline);padding:9vh 6vw 3vh;overflow:hidden}
 .foot-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;max-width:1200px;margin:0 auto 8vh}
 .foot-col .t{font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-35);margin-bottom:1.1rem}
-.foot-col a{display:block;font-size:.85rem;color:var(--ink-60);padding:.3rem 0;transition:color .3s}
+/* block para que cada link ocupe su renglón —inline-block los pegaba todos en
+   la misma línea—, y width:fit-content para que la línea del hover mida lo que
+   mide la palabra y no el ancho entero de la columna. */
+.foot-col a{position:relative;display:block;width:fit-content;font-size:.85rem;color:var(--ink-60);
+  padding:.3rem 0;transition:color .3s}
 .foot-col a:hover{color:var(--gold-deep)}
-.foot-giant{max-width:100%;overflow:hidden;font-family:var(--serif);font-weight:300;text-align:center;font-size:clamp(3.4rem,12vw,11rem);
-  line-height:.95;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(var(--line-rgb),.25);white-space:nowrap}
+/* la línea se DIBUJA de izquierda a derecha, no aparece de golpe: es el mismo
+   gesto que el resto del sitio (la flecha que corre, el halo que sube) */
+.foot-col a::after{content:"";position:absolute;left:0;right:0;bottom:.15rem;height:1px;
+  background:currentColor;transform:scaleX(0);transform-origin:left center;
+  transition:transform .45s var(--ease)}
+.foot-col a:hover::after{transform:scaleX(1)}
+/* los items entran escalonados; sin JS o sin movimiento, quedan visibles */
+.foot-col a,.foot-col .t{will-change:opacity,transform}
+/* La línea gigante NO entra en el ancho —"BRACK indumentaria" mide 152px más
+   que la caja en escritorio y 171px más en un teléfono— y antes se cortaba solo
+   a la derecha, que es lo que la hacía parecer un error.
+
+   Ahora sangra por los DOS lados en partes iguales: display:flex con
+   justify-content:center hace que el sobrante se reparta, en vez del corte
+   izquierdo-anclado que hace text-align:center. Deja de leerse como un tajo y
+   pasa a leerse como un letrero más grande que la vidriera. Y el desplazamiento
+   con el scroll termina de mostrar lo que quedaba afuera.
+
+   translateZ(0) no es decorativo: sin una capa propia, Windows dibuja este
+   texto con ClearType —antialiasing por subpíxel— y en un contorno fino con
+   relleno transparente eso aparece como franjas rosadas y celestes en vez de
+   gris. Con capa propia, el navegador pasa a antialiasing en escala de grises. */
+.foot-giant{display:flex;justify-content:center;margin:0 -6vw;
+  font-family:var(--serif);font-weight:300;font-size:clamp(3.4rem,15vw,14rem);
+  line-height:.95;letter-spacing:.02em;color:transparent;
+  -webkit-text-stroke:1px rgba(var(--line-rgb),.25);white-space:nowrap;
+  -webkit-font-smoothing:antialiased;transform:translateZ(0);will-change:transform}
+.foot-giant > *{flex:0 0 auto}
 .foot-giant em{font-style:italic;color:var(--gold);-webkit-text-stroke:0}
+/* La firma de la derecha no se cortaba: se la comía el botón flotante del
+   asistente, que es fixed y cae justo encima. Se le reserva ese carril. */
 .foot-base{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:5vh;
+  padding-right:5.2rem;
   font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-35)}
 @media(max-width:860px){.foot-cols{grid-template-columns:1fr 1fr}}
 
@@ -455,7 +490,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   .blq-kicker,.kicker,.franja-kicker{font-size:.7rem;letter-spacing:.3em}
 
   /* el pie: enlaces reales que hay que poder tocar */
-  .foot-col a{padding:.6rem 0;min-height:44px;display:flex;align-items:center;font-size:.92rem}
+  .foot-col a{padding:.6rem 0;min-height:44px;display:flex;align-items:center;width:fit-content;font-size:.92rem}
   .foot-col .t{font-size:.68rem}
   .foot-base{font-size:.68rem;line-height:1.8}
 
@@ -1213,7 +1248,7 @@ document.getElementById('leadForm').addEventListener('submit', function(e){
       <a href="https://wa.me/5492954517938" target="_blank" rel="noopener" data-hover>WhatsApp</a>
       </div>
   </div>
-  <div class="foot-giant">BRACK <em>indumentaria</em></div>
+  <div class="foot-giant"><span class="foot-giant-l">BRACK <em>indumentaria</em></span></div>
   <div class="foot-base">
     <span>© 2026 Brack Indumentaria — Santa Rosa, La Pampa</span>
     <span>Sitio conceptual — WESEKA</span>
@@ -1664,6 +1699,51 @@ function hacerArrastrable(riel){
 }
 hacerArrastrable(rail);
 window.BRACK_arrastrable = hacerArrastrable;
+
+/* ---------- EL PIE: la línea que corre y los links que entran ----------
+   El recorrido no es un número fijo: se calcula con lo que la línea sobresale
+   del ancho real. Así nunca deja un hueco en el borde —si se moviera más de lo
+   que sangra, aparecería el fondo pelado a un costado— y funciona igual en un
+   monitor que en un teléfono, donde sobresale mucho menos. */
+(function(){
+  var pie = document.querySelector('.footer');
+  var linea = document.querySelector('.foot-giant-l');
+  if (!pie || !linea) return;
+
+  if (!reduced) {
+    var caja = linea.parentElement;
+    var recorrido = function(){
+      var sobra = Math.max(0, linea.scrollWidth - caja.clientWidth);
+      return Math.min(sobra / 2, 220);   // tope, para que quede un movimiento y no un marquee
+    };
+    gsap.fromTo(linea, { x: function(){ return recorrido(); } },
+      { x: function(){ return -recorrido(); }, ease: 'none',
+        scrollTrigger: { trigger: pie, start: 'top bottom', end: 'bottom bottom',
+                         scrub: 1, invalidateOnRefresh: true } });
+  }
+
+  /* Los links entran escalonados por columna y por posición: la columna manda
+     el arranque y el item suma lo suyo, así el barrido se lee en diagonal.
+     Rápido —el pie no es el lugar para una coreografía—. */
+  var cols = Array.prototype.slice.call(pie.querySelectorAll('.foot-col'));
+  if (reduced || !window.IntersectionObserver) return;
+  cols.forEach(function(col){
+    var items = Array.prototype.slice.call(col.querySelectorAll('.t, a'));
+    gsap.set(items, { opacity: 0, y: 12 });
+  });
+  var io = new IntersectionObserver(function(entradas){
+    entradas.forEach(function(e){
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      cols.forEach(function(col, c){
+        var items = col.querySelectorAll('.t, a');
+        gsap.to(items, { opacity: 1, y: 0, duration: .5, ease: 'power2.out',
+          stagger: .055, delay: c * .09 });
+      });
+    });
+  }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
+  io.observe(pie.querySelector('.foot-cols'));
+})();
 
 /* ---------- REELS DE INSTAGRAM ----------
    embed.js NO se pide al abrir la página: recién cuando la sección se acerca al
