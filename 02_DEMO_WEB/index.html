@@ -525,6 +525,33 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .no-anim .hero-title .l span,.no-anim .pre-name span{transform:none!important}
 .no-anim .estrella-id{opacity:1!important}
 
+/* ===== PANELES: TODAS las secciones =====
+   Estaban solo el hero, las dos campañas y los cuatro mundos: cuatro de
+   dieciséis. El resultado era que la página arrancaba con lógica de app y a los
+   tres scrolls volvía a ser una web a sangre, alternando los dos lenguajes.
+   El registro no se sostiene a medias: o todo flota, o no flota nada.
+
+   Va al final de la hoja porque estas secciones definen su margen y su fondo más
+   arriba; acá se les suma el canto del panel sin reescribir cada regla.
+
+   El overflow recorta el contenido contra el radio. Los rieles horizontales
+   —carrusel, reels, reseñas— siguen desplazándose igual: su scroll es propio y
+   este recorte es del padre. */
+.marcas,.estrella,.carrusel,.puesto,.cortes,.reels,.bleed,
+.historia,.reviews,.franja,.showroom,.registro{
+  margin:var(--panel-gap) var(--panel-x);
+  border-radius:var(--panel-r);
+  border:var(--panel-borde);
+  box-shadow:var(--panel-sombra);
+  overflow:hidden}
+
+/* la vitrina medía una pantalla entera CONTANDO el margen: con el panel se
+   pasaba de largo y obligaba a un scroll de más para verla completa */
+.estrella{min-height:calc(100svh - var(--panel-gap) * 2)}
+/* el registro traía su fondo y su padding en el atributo style del HTML; el
+   radio necesita que el fondo quede adentro del recorte */
+.registro{border-radius:var(--panel-r)!important}
+
 /* ===== MÓVIL: superficie de toque y tamaño de letra =====
    Va al FINAL de la hoja a propósito: un @media no suma especificidad, así que
    si este bloque se pone antes que las reglas base, la base gana por orden de
@@ -994,18 +1021,27 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
 .reels-rail::-webkit-scrollbar{display:none}
 .reels-rail.dragging{cursor:grabbing;scroll-snap-type:none}
-.reel{flex:0 0 auto;width:min(326px,82vw);scroll-snap-align:center;
+/* El embed de Instagram es blanco por dentro y no se puede tocar: en un sitio
+   oscuro, cuatro de ellos en fila eran la única mancha blanca de toda la página.
+   No se puede cambiar su interior, pero sí ENCUADRARLO: se le pone el marco
+   oscuro alrededor con el mismo anidado que el resto (panel afuera, radio menor
+   adentro), y se achica el ancho. El blanco deja de ser una masa y pasa a
+   leerse como cuatro pantallas apoyadas sobre el panel. */
+.reel{flex:0 0 auto;width:min(296px,78vw);scroll-snap-align:center;
+  padding:var(--radio-aire);
   border-radius:1.4rem;overflow:hidden;position:relative;
   border:1px solid rgba(var(--surface-rgb),.75);
   background:linear-gradient(170deg,var(--ph-a),var(--ph-b));
-  box-shadow:var(--halo),0 8px 30px rgba(var(--shadow-rgb),.06);
+  box-shadow:var(--halo),var(--sombra-contacto),var(--sombra-ambiente);
   transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
+/* el iframe, con su radio propio menor que el del marco */
+.reel iframe,.reel .instagram-media,.reel-hueco{border-radius:var(--radio-interior)!important;overflow:hidden}
 .reel:hover{transform:translateY(-4px);box-shadow:var(--halo),0 22px 48px rgba(var(--shadow-rgb),.1)}
 /* el hueco reserva el alto del embed antes de que exista */
 /* 326/613 no es un número elegido a ojo: es el alto exacto que Instagram le da
    al iframe con este ancho, medido. Así el hueco reserva lo mismo que después
    ocupa el embed y la página no se mueve cuando aparece. */
-.reel-hueco{aspect-ratio:326/613;display:flex;align-items:center;justify-content:center}
+.reel-hueco{aspect-ratio:276/560;display:flex;align-items:center;justify-content:center}
 .reel-cargando{font-family:var(--mono);font-size:.6rem;letter-spacing:.24em;
   text-transform:uppercase;color:var(--ink-35)}
 /* el iframe de Instagram, encajado en el marco. Por dentro no se toca. */
@@ -1015,7 +1051,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 /* Capa que se queda con el arrastre. Sin esto el gesto muere apenas el puntero
    entra en el iframe: un documento de otro dominio se traga los eventos y la
    fila se frena en seco. Un clic sin arrastre abre el reel en Instagram. */
-.reel-capa{position:absolute;inset:0;z-index:3;cursor:inherit}
+.reel-capa{position:absolute;inset:var(--radio-aire);z-index:3;cursor:inherit;border-radius:var(--radio-interior)}
 .reels-caido{padding:0 6vw;max-width:36rem}
 .reels-caido p{color:var(--ink-60);margin-bottom:1.2rem}
 .reels-pie{padding:1.5rem 6vw 0}
