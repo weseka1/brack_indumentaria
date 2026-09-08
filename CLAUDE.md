@@ -234,3 +234,6 @@ git push deploy wsk-panel-live:main      # Render, ~2 min
 70 MB. Optimizadas quedan en ~30 MB.
 
 Ver `_CEREBRO/Clientes/Brack Indumentaria.md` · `_CEREBRO/Sesiones/2026-08-19.md`
+## Estándar visual obligatorio
+Antes de cualquier decisión de diseño, leer ESTANDAR-IOS.md.
+Pedido explícito del cliente: basarse en iOS.

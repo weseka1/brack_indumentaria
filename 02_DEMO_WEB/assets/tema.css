@@ -187,11 +187,15 @@
      rodearla como un neón. Ámbar del local (255,164,87) a alpha bajo.
      Ojo con el orden: primero el halo, y la sombra negra de la card DESPUÉS,
      para que el ámbar no se coma el contorno. */
-  --halo:0 18px 46px -22px rgba(255,164,87,.34),0 2px 20px -14px rgba(255,164,87,.16);
-  --halo-on:0 26px 62px -20px rgba(255,164,87,.50),0 4px 28px -12px rgba(255,164,87,.22);
-  --halo-off:0 10px 26px -24px rgba(255,164,87,.10);
-  --halo-cat:0 12px 32px -22px rgba(255,164,87,.26);
-  --vecina:.62;
+  /* El halo ámbar se retira: iOS no marca la selección con un resplandor de
+     color. Lo que marca el foco es la ESCALA de lo elegido y el DESENFOQUE de
+     lo que la rodea. Las variables quedan en apagado para no reescribir las
+     declaraciones de box-shadow de cada card. */
+  --halo:0 0 0 0 rgba(0,0,0,0);
+  --halo-on:0 0 0 0 rgba(0,0,0,0);
+  --halo-off:0 0 0 0 rgba(0,0,0,0);
+  --halo-cat:0 0 0 0 rgba(0,0,0,0);
+  --vecina:1;
   /* Casi imperceptible a propósito: no se tiene que leer como un efecto, sino
      como que el centro de la pantalla está iluminado. El tramo transparente
      llega hasta el 72% MEDIDO, no a ojo: con la curva anterior el centro del
@@ -357,3 +361,62 @@ body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;
              inset 0 1px 0 var(--canto-luz),
              inset 0 -1px 0 var(--canto-sombra),
              var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
+
+
+/* ============ EL FOCO, A LA MANERA DE iOS ============
+   Nada de glow. Lo elegido CRECE y lo que lo rodea se DESENFOCA: el
+   desenfoque es lo que produce la profundidad, no una sombra de color.
+   La curva es la de resorte de iOS —cubic-bezier(.32,.72,0,1)—, que arranca
+   rápido y frena largo, en 400ms.
+
+   Solo con puntero fino y sin reduced-motion: es un realce de intención, y no
+   existe la intención de "señalar" en una pantalla táctil. */
+.ccard,.piece,.uni,.corte,.grid .card{
+  transition:transform .4s cubic-bezier(.32,.72,0,1),
+             filter .4s cubic-bezier(.32,.72,0,1),
+             box-shadow .4s cubic-bezier(.32,.72,0,1),
+             opacity .4s cubic-bezier(.32,.72,0,1),
+             background .4s cubic-bezier(.32,.72,0,1)}
+
+/* el reflejo especular del canto superior: un gradiente, no un resplandor */
+.ccard::after,.piece::after,.uni::after,.corte::after,.grid .card::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:4;
+  opacity:0;transition:opacity .4s cubic-bezier(.32,.72,0,1);
+  background:linear-gradient(180deg,
+    rgba(255,255,255,.22) 0%,
+    rgba(255,255,255,.07) 12%,
+    rgba(255,255,255,0) 34%)}
+
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  /* lo elegido crece y sube de plano */
+  .carr-rail .ccard:hover,.puesto-grid .ccard:hover,.cat-grid .piece:hover,
+  .unis-grid .uni:hover,.cortes-grid .corte:hover,.grid .card:hover{
+    transform:scale(1.05);z-index:3}
+  .ccard:hover::after,.piece:hover::after,.uni:hover::after,
+  .corte:hover::after,.grid .card:hover::after{opacity:1}
+
+  /* y lo que lo rodea se va atrás */
+  .carr-rail:has(.ccard:hover) .ccard:not(:hover),
+  .puesto-grid:has(.ccard:hover) .ccard:not(:hover),
+  .cat-grid:has(.piece:hover) .piece:not(:hover),
+  .unis-grid:has(.uni:hover) .uni:not(:hover),
+  .cortes-grid:has(.corte:hover) .corte:not(:hover){
+    filter:blur(6px) brightness(.7)}
+
+  /* EL CATÁLOGO VA APARTE: son 119 cards, y desenfocarlas todas a la vez lleva
+     el percentil 95 de 17 a 31,6ms mientras el mouse recorre la grilla —medido—,
+     o sea la mitad de los cuadros. Acá el desenfoque va solo a los dos vecinos
+     de cada lado: el efecto de profundidad se lee igual, porque lo que el ojo
+     compara es la card elegida contra las que tiene AL LADO, no contra las 118. */
+  .grid .card:hover + .card,
+  .grid .card:hover + .card + .card,
+  .grid .card:has(+ .card:hover),
+  .grid .card:has(+ .card + .card:hover){
+    filter:blur(6px) brightness(.7)}
+}
+
+/* sin movimiento: el cambio es directo y sin desenfoque */
+@media (prefers-reduced-motion:reduce){
+  .ccard,.piece,.uni,.corte,.grid .card{transition:none!important}
+  .ccard::after,.piece::after,.uni::after,.corte::after,.grid .card::after{display:none}
+}
