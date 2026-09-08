@@ -265,6 +265,10 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(max-width:900px){
   .foto-tag{left:auto;right:auto;margin:0 5vw;bottom:3.5vh;font-size:.58rem;
     letter-spacing:.1em;padding:.55rem .9rem .55rem .8rem;max-width:90%}
+  /* lo que ocupa la cápsula desde el piso, más aire. La copia se apoya en
+     esta medida —ver el bloque del final del documento— en vez de en un
+     número suelto: si cambia el alto de la cápsula, la copia lo sigue. */
+  :root{--tag-piso:calc(3.5vh + 44px + .9rem)}
 }
 /* en un teléfono achatado el botón del hero baja hasta donde está la etiqueta */
 @media(max-width:900px) and (max-height:700px){
@@ -1225,7 +1229,22 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    oscuro alrededor con el mismo anidado que el resto (panel afuera, radio menor
    adentro), y se achica el ancho. El blanco deja de ser una masa y pasa a
    leerse como cuatro pantallas apoyadas sobre el panel. */
-.reel{flex:0 0 auto;width:min(296px,78vw);scroll-snap-align:center;
+/* EL ANCHO DEL EMBED NO SE NEGOCIA: 326px.
+   Estaba forzado a 274 con min-width:0!important, y adentro de un iframe eso
+   no achica el diseño de Instagram, lo APRIETA: el usuario se truncaba
+   ("brack.indu…"), el título del audio partía en dos líneas y la tarjeta se
+   iba a lo alto. Eso es lo que se veía estirado en el teléfono.
+
+   Así que el embed va a los 326px que declara —ahí el usuario entra entero— y
+   lo que se achica es la TARJETA, con un scale. Escalar respeta las
+   proporciones internas; forzar el ancho no. Sin esto, a 326 reales la
+   tarjeta mide 346 y en un teléfono de 390 no queda asomo de la siguiente,
+   que es lo único que avisa que la fila se desliza. */
+.reel{flex:0 0 auto;scroll-snap-align:center;
+  --reel-ancho:326px;
+  --reel-esc:1;
+  width:calc(var(--reel-ancho) * var(--reel-esc) + var(--radio-aire) * 2);
+  height:calc(var(--reel-alto,613px) * var(--reel-esc) + var(--radio-aire) * 2);
   padding:var(--radio-aire);
   border-radius:1.4rem;overflow:hidden;position:relative;
   border:1px solid rgba(var(--surface-rgb),.75);
@@ -1239,11 +1258,18 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 /* 326/613 no es un número elegido a ojo: es el alto exacto que Instagram le da
    al iframe con este ancho, medido. Así el hueco reserva lo mismo que después
    ocupa el embed y la página no se mueve cuando aparece. */
-.reel-hueco{aspect-ratio:276/560;display:flex;align-items:center;justify-content:center}
+/* 326/613 es el alto exacto que Instagram le da al iframe con ese ancho,
+   medido. Así el hueco reserva lo mismo que después ocupa el embed y la página
+   no se mueve cuando aparece. Solo mientras es hueco: una vez montado el alto
+   lo manda el iframe. */
+.reel-hueco{width:var(--reel-ancho);
+  transform:scale(var(--reel-esc));transform-origin:top left;
+  display:flex;align-items:center;justify-content:center}
+.reel-hueco:not([data-montada]){aspect-ratio:326/613}
 .reel-cargando{font-family:var(--mono);font-size:.6rem;letter-spacing:.24em;
   text-transform:uppercase;color:var(--ink-35)}
 /* el iframe de Instagram, encajado en el marco. Por dentro no se toca. */
-.reel iframe,.reel .instagram-media{width:100%!important;min-width:0!important;
+.reel iframe,.reel .instagram-media{width:100%!important;
   max-width:100%!important;margin:0!important;border:0!important;border-radius:0!important;
   box-shadow:none!important;display:block!important}
 /* Capa que se queda con el arrastre. Sin esto el gesto muere apenas el puntero
@@ -1264,6 +1290,9 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   .reels-pie{padding-left:5vw;padding-right:5vw}
   .reel-cargando{font-size:.64rem}
   .reels-caido p{font-size:.95rem}
+  /* .86 sale de la cuenta, no del ojo: en 390px el riel deja 351px útiles,
+     la tarjeta queda en 326*.86+20 = 300 y sobran ~50 de asomo. */
+  .reel{--reel-esc:.86}
 }
 </style>
 
@@ -2220,9 +2249,17 @@ window.BRACK_arrastrable = hacerArrastrable;
     bq.className = 'instagram-media';
     bq.setAttribute('data-instgrm-permalink', url);
     bq.setAttribute('data-instgrm-version', '14');
-    bq.style.cssText = 'width:100%;min-width:0;margin:0;border:0;box-shadow:none';
-    t.innerHTML = '';
-    t.appendChild(bq);
+    bq.style.cssText = 'width:100%;margin:0;border:0;box-shadow:none';
+    /* el embed va DENTRO del hueco, no en la tarjeta. Antes esto hacia
+       t.innerHTML='' sobre el <article>, y eso se llevaba puesto al
+       .reel-hueco, que es el que carga el scale: el iframe de 326px quedaba
+       suelto en una tarjeta de 280 de interior y se recortaba el boton "Ver
+       perfil". Se veia como que el embed estaba cortado a la derecha. */
+    var hueco = t.querySelector('.reel-hueco');
+    if (!hueco) { hueco = document.createElement('div'); hueco.className = 'reel-hueco'; t.appendChild(hueco); }
+    hueco.innerHTML = '';
+    hueco.dataset.montada = '1';   /* apaga el aspect-ratio del placeholder */
+    hueco.appendChild(bq);
     /* la capa va DESPUÉS del blockquote para quedar encima del iframe */
     var capa = document.createElement('a');
     capa.className = 'reel-capa';
@@ -2231,8 +2268,40 @@ window.BRACK_arrastrable = hacerArrastrable;
     capa.rel = 'noopener';
     capa.setAttribute('aria-label', 'Ver este reel en Instagram');
     capa.draggable = false;
+    /* la capa se queda en la TARJETA, fuera del hueco: adentro se escalaria
+       con el y su inset dejaria de coincidir con el borde. */
     t.appendChild(capa);
     if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process();
+    seguirAlto(hueco);
+  }
+
+  /* El alto del iframe lo decide Instagram cuando termina de medirse, y puede
+     no ser el 613 que reserva el hueco. Como la tarjeta va escalada, su alto
+     tiene que ser el del iframe POR la escala, o queda un vacio abajo.
+
+     offsetHeight y no getBoundingClientRect(): el rect de algo adentro de un
+     transform viene ya escalado, y lo que necesito es la medida sin escalar
+     para multiplicarla yo. */
+  function seguirAlto(t){
+    var card = t.closest('.reel');
+    if (!card || !window.ResizeObserver) return;
+    var ro = new ResizeObserver(function(){
+      var f = t.querySelector('iframe');
+      if (!f) return;
+      var h = f.offsetHeight;
+      if (h > 40) card.style.setProperty('--reel-alto', Math.round(h) + 'px');
+    });
+    ro.observe(t);
+    /* el iframe aparece despues del process(), asi que el observer del hueco
+       puede llegar antes que el; un par de reintentos cortos lo cubren */
+    var n = 0, tic = setInterval(function(){
+      var f = t.querySelector('iframe');
+      if (f && f.offsetHeight > 40) {
+        card.style.setProperty('--reel-alto', Math.round(f.offsetHeight) + 'px');
+        ro.observe(f);
+      }
+      if (++n > 20) clearInterval(tic);
+    }, 400);
   }
 
   /* mira el riel de costado: monta la tarjeta cuando está por asomarse */
@@ -2741,6 +2810,22 @@ form.addEventListener('submit', function(e){
     margin-left:max(var(--panel-x), env(safe-area-inset-left));
     margin-right:max(var(--panel-x), env(safe-area-inset-right))}
   .footer{padding-bottom:max(3vh, env(safe-area-inset-bottom))}
+}
+
+/* LA CAPSULA Y LA COPIA DEJAN DE PISARSE.
+   En escritorio .foto-tag es un chip en la esquina y la copia va centrada: no
+   se cruzan nunca. En el telefono la etiqueta deja de ser una esquina —pasa a
+   margin 0 5vw y max-width 90%— y se planta justo debajo de la copia, que
+   tambien esta anclada al piso. Medido en 390px: la capsula ocupa de 31 a 75px
+   del piso, el titular de la franja terminaba a 44 y el de los bloques de
+   campana a 69. Se pisaban 31px y 6px.
+
+   Va al final del documento y no junto a .foto-tag, que es donde lo escribi
+   primero: los @media NO suman especificidad, asi que alla arriba perdia
+   contra .blq-copy (linea 299) y .franja-copy (linea 651) por orden de
+   declaracion. Es la tercera vez que esta cascada me muerde en este archivo. */
+@media(max-width:900px){
+  .blq-copy,.franja-copy{bottom:var(--tag-piso)}
 }
 </style>
 
