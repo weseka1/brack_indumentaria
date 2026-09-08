@@ -320,6 +320,23 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 @media(max-width:900px) and (max-height:700px){
   .hero .foto-tag{bottom:auto;top:2.5vh}
 }
+/* LA CAPSULA Y EL BOTON DEL ASISTENTE.
+   En 390px el FAB arranca en x=304 y la capsula llegaba a 318: se cruzaban.
+   No lo cause yo del todo —con el texto anterior ya se cruzaban 7px—, pero el
+   texto nuevo lo llevaba a 13.
+
+   Dos cosas, no una: el tipo baja un escalon (el mismo gesto que ya hace la
+   regla de 900px, que lo baja de .62 a .58) y ademas hay un TOPE de ancho
+   calculado contra el hueco real, para que la capsula no pueda meterse debajo
+   del boton aunque el tipo caiga distinto en otro telefono. El tope es la red,
+   el tamano es lo que hace que el texto entre en una linea.
+
+   Va con .hero .foto-tag —dos clases— y no con .foto-tag: asi gana por
+   especificidad y no depende de donde quede en el archivo. */
+@media(max-width:430px){
+  .hero .foto-tag{font-size:.54rem;letter-spacing:.07em;
+    max-width:min(90%,calc(100% - 5rem))}
+}
 
 /* ===== bloques campaña full-bleed ===== */
 /* PANEL 2 — los bloques de campaña. Mismo tratamiento que el hero: el alto baja
@@ -897,7 +914,17 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 <section class="hero" id="top">
   <img class="hero-media" src="fotos/hero-lookbook.webp" alt="Brack Indumentaria — drop de temporada">
   <div class="hero-scrim"></div>
-  <span class="foto-tag"><b>Buzos NFL Importados</b> · $136.500</span>
+  <!-- La etiqueta nombraba un producto que en esta foto no esta. Las otras tres
+       del sitio si nombran lo que se ve —y una, la de la franja, ya nombraba un
+       lugar en vez de una prenda: <b>El local</b> · 25 de Mayo 772—, asi que la
+       forma admite un dato que no sea un precio. Los dos numeros salen del
+       catalogo real: 119 productos, los 119 con era "Temporada 2026".
+
+       Dice "en catalogo" y no "prendas" porque de los 119 no todos lo son: hay
+       perfumeria entre las 13 categorias. Y va corta a proposito —mas corta que
+       la que reemplaza— porque en 390px la capsula tiene max-width:90% y con
+       una linea mas se partia en dos y se cruzaba con el boton del asistente. -->
+  <span class="foto-tag"><b>Temporada 2026</b> · 119 en catálogo</span>
   <div class="hero-copy">
     <p class="hero-kicker">Indumentaria urbana · Santa Rosa, La Pampa</p>
     <h1 class="hero-title">
