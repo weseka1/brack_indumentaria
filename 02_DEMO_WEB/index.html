@@ -342,7 +342,16 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .ccard{flex:0 0 min(310px,74vw);scroll-snap-align:center;overflow:hidden;border-radius:1.4rem;border:1px solid rgba(var(--surface-rgb),.75);
   box-shadow:var(--halo),0 8px 30px rgba(var(--shadow-rgb),.06);
   background:var(--tint-card);position:relative;
-  transition:box-shadow .55s var(--ease),opacity .55s var(--ease),background .55s var(--ease)}
+  }
+/* LA TRANSICION LA PONE tema.css, y esta es la razon por la que el foco se
+   sentia brusco. Cada una de estas reglas redeclaraba `transition` con una
+   LISTA PARCIAL de propiedades: ninguna nombraba `filter`, y .ccard tampoco
+   nombraba `transform`. Como la hoja de la pagina se carga despues de
+   tema.css, esa lista corta ganaba, y transition-property quedaba sin filter
+   -> el desenfoque de las vecinas y la escala NO transicionaban: saltaban.
+   Ninguna curva podia arreglar eso, porque no habia transicion que curvar.
+   Ahora la lista completa vive en un solo lugar. */
+
 .ccard:nth-child(even){margin-top:3.2rem}
 .ccard:nth-child(3n){flex-basis:min(360px,78vw)}
 .carr-rail img{-webkit-user-drag:none;pointer-events:none}
@@ -398,6 +407,15 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   background:var(--velo-cabecera),var(--velo-marca)}
 .historia-head,.hitos{position:relative;z-index:2}
 
+/* Sin @property, una variable de CSS es texto: cambia de golpe y no
+   interpola. Registrarlas con su tipo es lo que permite que el reflejo se
+   deslice y que el canto se encienda en vez de aparecer. --mx/--my heredan
+   porque las escribe el JS en .hito y las lee su ::after. */
+@property --mx{syntax:"<percentage>";inherits:true;initial-value:50%}
+@property --my{syntax:"<percentage>";inherits:true;initial-value:20%}
+@property --canto-ang{syntax:"<angle>";inherits:true;initial-value:180deg}
+@property --canto-on{syntax:"<number>";inherits:false;initial-value:0}
+
 /* LAS CINCO PLACAS.
    22px adentro del panel de 28: el radio de un hijo no se copia del padre, se
    baja, o los cantos no quedan concéntricos.
@@ -416,14 +434,29 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .hito{position:relative;padding:1.7rem 1.25rem 1.5rem;border-radius:22px;
   background:var(--marca-vidrio);
   -webkit-backdrop-filter:blur(30px) saturate(180%);
-          backdrop-filter:blur(30px) saturate(180%);
-  transition:background .4s cubic-bezier(.32,.72,0,1)}
+          backdrop-filter:blur(30px) saturate(180%)}
+  /* la transicion de .hito la pone tema.css junto con la de las demas cards:
+     una sola definicion de entrada y salida para todo el sitio */
 
-/* el canto: la luz cae de arriba, así que el borde de arriba se aclara y el de
-   abajo se hunde. Fijo en los dos temas, como el vidrio. */
+/* EL CANTO, en dos capas.
+   La de abajo es la fija: la luz cae de arriba, el borde de arriba se aclara y
+   el de abajo se hunde. Esa no se mueve nunca, porque es la que dice de dónde
+   viene la luz de la sala.
+
+   La de arriba se enciende del lado por donde entra el cursor. Es un segundo
+   gradiente cuyo ÁNGULO lo escribe el JS: el blanco queda siempre del lado del
+   mouse. En reposo su opacidad es 0, así que no existe.
+
+   Los ángulos de CSS van al revés de lo que uno espera: en linear-gradient el
+   primer stop cae en el extremo OPUESTO a la dirección del ángulo. Con el
+   cursor arriba (0º) el ángulo va a 180º, con el cursor a la derecha (90º) va
+   a 270º. De ahí el +180 en el script. */
 .hito::before{
   content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
-  background:linear-gradient(180deg,rgba(255,255,255,.20) 0%,transparent 46%,rgba(0,0,0,.42) 100%);
+  transition:--canto-on var(--t-salida) var(--muelle-salida);
+  background:
+    linear-gradient(var(--canto-ang,180deg),rgba(255,255,255,var(--canto-on,0)) 0%,transparent 42%),
+    linear-gradient(180deg,rgba(255,255,255,.20) 0%,transparent 46%,rgba(0,0,0,.42) 100%);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
           mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;mask-composite:exclude;
@@ -435,7 +468,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    se inclina: lo que se mueve es el reflejo, que es lo que hace iOS. */
 .hito::after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;
-  opacity:0;transition:opacity .4s cubic-bezier(.32,.72,0,1);
+  opacity:0;transition:opacity var(--t-salida) var(--muelle-salida);
   background:radial-gradient(circle 200px at var(--mx,50%) var(--my,0%),
     rgba(255,255,255,.095) 0%,rgba(255,255,255,.035) 40%,transparent 74%)}
 /* z-index 1 y no 2: el ::after es el último hijo, así que con el mismo nivel
@@ -445,7 +478,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    medido—, cuando el piso es 4,5. */
 
 .hito .n{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,3.7vw,3.5rem);color:var(--accent-dark);line-height:1;
-  position:relative;z-index:2;transition:transform .4s cubic-bezier(.32,.72,0,1)}
+  position:relative;z-index:2;transition:transform var(--t-salida) var(--muelle-salida)}
 .hito .k{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(246,247,248,.72);margin-top:.9rem;position:relative;z-index:2}
 .hito p{font-size:.86rem;color:rgba(246,247,248,.84);margin-top:.7rem;position:relative;z-index:2}
 
@@ -454,8 +487,25 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    leerse como un rectángulo pintado. Sin rotar nada: inclinar la Fraunces de
    3,5rem la saca de la grilla de píxeles y se ensucia. */
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
-  .hito:hover::after{opacity:1}
-  .hito:hover .n{transform:translateY(-3px)}}
+  .hito:hover::after{opacity:1;
+    transition-duration:var(--t-entrada);transition-timing-function:var(--muelle)}
+  .hito:hover::before{--canto-on:.34;
+    transition-duration:var(--t-entrada);transition-timing-function:var(--muelle)}
+  .hito:hover .n{transform:translateY(-3px);
+    transition-duration:var(--t-entrada);transition-timing-function:var(--muelle)}}
+
+/* SIN CURSOR no hay a quién seguir, así que la placa activa es la que quedó
+   CENTRADA en la pantalla —lo resuelve luzEnFoco() en tema.js, el mismo
+   IntersectionObserver que ya usan el carrusel y los universos— y el reflejo
+   se pasea solo. Poder animar --mx/--my es exactamente para lo que se
+   registraron arriba. */
+@media (hover:none) and (prefers-reduced-motion:no-preference){
+  .hito.is-lit::after{opacity:1;animation:reflejoDeriva 11s ease-in-out infinite alternate}
+  .hito.is-lit::before{--canto-on:.26}
+  .hito.is-lit .n{transform:translateY(-3px)}}
+@keyframes reflejoDeriva{
+  from{--mx:24%;--my:14%}
+  to{--mx:76%;--my:58%}}
 
 @media(max-width:1000px){.hitos{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.hitos{grid-template-columns:1fr}}
@@ -463,8 +513,9 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 /* sin movimiento: el video queda en su póster (lo frena el JS, que ni siquiera
    le pone src), y nada de la placa reacciona */
 @media (prefers-reduced-motion:reduce){
-  .hito,.hito .n,.hito::after{transition:none}
-  .hito::after{display:none}}
+  .hito,.hito .n,.hito::after,.hito::before{transition:none;animation:none}
+  .hito::after{display:none}
+  .hito::before{--canto-on:0}}
 
 /* ===== catálogo claro ===== */
 .catalogo{padding:14vh 0 12vh;background:var(--paper)}
@@ -485,7 +536,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .chip:hover{color:var(--ink)}
 .chip.is-on{border-color:var(--gold);color:var(--gold-deep);background:rgba(var(--line-rgb),.05)}
 .cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2.6rem 1.8rem;padding:0 5vw}
-.piece{cursor:pointer;position:relative;background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(18px) saturate(var(--vidrio-sat));border:1px solid rgba(var(--surface-rgb),.75);border-radius:1.4rem;overflow:hidden;box-shadow:var(--halo),var(--sombra-contacto),var(--sombra-ambiente);transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
+.piece{cursor:pointer;position:relative;background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(18px) saturate(var(--vidrio-sat));border:1px solid rgba(var(--surface-rgb),.75);border-radius:1.4rem;overflow:hidden;box-shadow:var(--halo),var(--sombra-contacto),var(--sombra-ambiente)}
 .piece:hover{transform:translateY(-4px);box-shadow:var(--halo),var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
 .piece-imgwrap{position:relative;aspect-ratio:3/3.2;overflow:hidden;background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
 .piece.featured{grid-column:span 2}
@@ -1078,7 +1129,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .corte{padding:var(--radio-aire);background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(16px) saturate(var(--vidrio-sat));
   border:1px solid rgba(var(--surface-rgb),.75);border-radius:1.4rem;overflow:hidden;
   box-shadow:var(--halo),var(--sombra-contacto),var(--sombra-ambiente);
-  transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
+  }
 .corte:hover{transform:translateY(-4px);box-shadow:var(--halo),var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
 .corte-foto{display:block;position:relative;aspect-ratio:760/1064;overflow:hidden;
   border-radius:var(--radio-interior);
@@ -1290,7 +1341,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
   background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(16px) saturate(var(--vidrio-sat));
   border:1px solid rgba(var(--surface-rgb),.8);border-radius:1.4rem;overflow:hidden;
   box-shadow:var(--halo),var(--sombra-contacto),var(--sombra-ambiente);
-  transition:transform .5s var(--ease),box-shadow .5s var(--ease),opacity .5s var(--ease)}
+  }
 .uni:hover{transform:translateY(-6px);box-shadow:var(--halo),var(--sombra-contacto-alta),var(--sombra-ambiente-alta)}
 .uni-media{position:relative;aspect-ratio:3/3.4;overflow:hidden;border-radius:var(--radio-interior);
   background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
@@ -1414,6 +1465,15 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
       var b = h.getBoundingClientRect();
       h.style.setProperty("--mx", (((ev.clientX - b.left) / b.width) * 100).toFixed(1) + "%");
       h.style.setProperty("--my", (((ev.clientY - b.top) / b.height) * 100).toFixed(1) + "%");
+
+      /* y el canto se enciende del lado por donde entra el cursor.
+         atan2(dx, -dy) da 0 arriba y 90 a la derecha; el +180 es porque en un
+         linear-gradient el primer stop cae en el extremo OPUESTO al angulo.
+         El angulo NO se transiciona a proposito: al cruzar de 359 a 0 daria
+         una vuelta entera. Sigue al cursor cuadro a cuadro y listo. */
+      var ang = Math.atan2(ev.clientX - (b.left + b.width / 2),
+                          -(ev.clientY - (b.top + b.height / 2))) * 180 / Math.PI;
+      h.style.setProperty("--canto-ang", ((ang + 180) % 360).toFixed(0) + "deg");
     });
   });
 })();

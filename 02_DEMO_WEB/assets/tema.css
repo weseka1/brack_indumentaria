@@ -35,6 +35,10 @@
   --sans:"Archivo",system-ui,sans-serif;
   --serif:"Fraunces",Georgia,serif;
   --mono:"IBM Plex Mono",monospace;
+  /* --ease es la curva que usa casi toda transicion de estado del sitio. Se
+     unifica redefiniendola mas abajo con el muelle: asi no hay que tocar
+     veinte declaraciones y no queda ninguna afuera. El valor de aca es el
+     que sobrevive en un navegador sin linear(). */
   --ease:cubic-bezier(.22,1,.36,1);
 
   /* ---- roles de color, en canales sueltos ----
@@ -133,6 +137,39 @@
      y un poco de aire entre uno y otro para que el anidado se vea */
   --radio-interior:16px;
   --radio-aire:10px;
+
+  /* ---- EL MUELLE ----
+     La curva de todo el sitio. Antes era cubic-bezier(.32,.72,0,1), que es una
+     IMITACION de resorte: arranca rapido y frena, pero no puede pasarse del
+     destino y volver, porque una cubica de Bezier acotada a [0,1] no sobrepasa.
+     Y ese pasarse de largo y acomodarse es lo que hace que un movimiento se
+     sienta fisico y no cronometrado.
+
+     Esto es un resorte de verdad, muestreado con los mismos parametros que usa
+     iOS (UISpringTimingParameters): response .5, damping .75.
+         wn = 2pi/response      wd = wn*raiz(1-z^2)
+         x(t) = 1 - e^(-z*wn*t) * [cos(wd*t) + (z*wn/wd)*sin(wd*t)]
+     31 muestras en 520ms, normalizadas para que asiente sola en vez de dar un
+     salton al final. Sobrepasa 1,75 por ciento a los ~380ms y vuelve.
+
+     La SALIDA es otra curva y mas corta, como en iOS: 300ms y criticamente
+     amortiguada (damping 1). Rebotar al soltar se siente como un error: lo que
+     rebota es lo que llega, no lo que se va. */
+  --muelle:linear(0 0%,0.021 3.3%,0.0752 6.7%,0.1512 10%,0.2398 13.3%,0.3339 16.7%,0.4282 20%,0.5189 23.3%,0.6032 26.7%,0.6796 30%,0.7472 33.3%,0.8058 36.7%,0.8554 40%,0.8966 43.3%,0.9301 46.7%,0.9566 50%,0.977 53.3%,0.9923 56.7%,1.0032 60%,1.0105 63.3%,1.0149 66.7%,1.0171 70%,1.0175 73.3%,1.0167 76.7%,1.015 80%,1.0128 83.3%,1.0102 86.7%,1.0076 90%,1.0049 93.3%,1.0024 96.7%,1 100%);
+  --muelle-salida:linear(0 0%,0.0491 5.6%,0.1573 11.1%,0.2855 16.7%,0.4125 22.2%,0.5279 27.8%,0.6275 33.3%,0.7106 38.9%,0.7782 44.4%,0.8323 50%,0.875 55.6%,0.9083 61.1%,0.934 66.7%,0.9537 72.2%,0.9688 77.8%,0.9801 83.3%,0.9887 88.9%,0.9952 94.4%,1 100%);
+  --t-entrada:520ms;
+  --t-salida:300ms;
+
+  /* el desenfoque de las vecinas, escalonado por distancia: la atencion se
+     propaga desde la elegida hacia afuera en vez de cambiar el bloque entero
+     de golpe. Las de al lado se van mas y enseguida; las de mas alla, poco y
+     tarde. */
+  --vecina-1:blur(7px) brightness(.66);
+  --vecina-2:blur(4.5px) brightness(.76);
+  --vecina-3:blur(2.5px) brightness(.86);
+  --dly-1:0ms;
+  --dly-2:55ms;
+  --dly-3:110ms;
   /* velo de la franja de video: de día alcanza con velar lo justo para que el
      texto se lea sobre cualquier fotograma */
   --velo-franja:linear-gradient(to top,rgba(8,9,11,.82) 0%,rgba(8,9,11,.30) 52%,rgba(8,9,11,.42) 100%);
@@ -166,6 +203,14 @@
 /* ============ MODO NOCHE — el local con las luces bajas ============
    Todo pasa por acá: ni una regla duplicada, ni un segundo stylesheet.
    Las fotos de producto NO se tocan (ningún filter, ninguna opacidad). */
+
+/* Aca se unifica la curva del sitio: donde linear() existe, --ease ES el
+   muelle, y con eso queda con resorte todo lo que ya la usaba sin tener que
+   tocar veinte declaraciones. Donde no existe, esta regla se descarta entera
+   y --ease sigue siendo la bezier: se pierde el rebote, no la transicion. */
+@supports (transition-timing-function:linear(0,1)){
+  :root{--ease:var(--muelle)}
+}
 :root[data-theme="night"]{
   /* ---- ESCALA DE ELEVACIÓN DE iOS ----
      La regla que ordena todo esto: en oscuro, iOS ACLARA lo que está elevado.
@@ -407,57 +452,100 @@ body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;
 /* ============ EL FOCO, A LA MANERA DE iOS ============
    Nada de glow. Lo elegido CRECE y lo que lo rodea se DESENFOCA: el
    desenfoque es lo que produce la profundidad, no una sombra de color.
-   La curva es la de resorte de iOS —cubic-bezier(.32,.72,0,1)—, que arranca
-   rápido y frena largo, en 400ms.
 
-   Solo con puntero fino y sin reduced-motion: es un realce de intención, y no
-   existe la intención de "señalar" en una pantalla táctil. */
-.ccard,.piece,.uni,.corte,.grid .card{
-  transition:transform .4s cubic-bezier(.32,.72,0,1),
-             filter .4s cubic-bezier(.32,.72,0,1),
-             box-shadow .4s cubic-bezier(.32,.72,0,1),
-             opacity .4s cubic-bezier(.32,.72,0,1),
-             background .4s cubic-bezier(.32,.72,0,1)}
+   Tres cosas lo hacian sentir brusco, y las tres estan aca:
+     1. la curva era una imitacion de resorte -- ver --muelle;
+     2. 400ms iguales para entrar y para salir. Ahora entra en 520 y sale en
+        300: lo que llega se toma su tiempo, lo que se va no estorba;
+     3. el desenfoque entraba de 0 a 6px de una y parejo en todo el bloque.
+        Ahora esta escalonado por distancia.
+
+   Solo con puntero fino y sin reduced-motion: es un realce de intencion, y no
+   existe la intencion de "senalar" en una pantalla tactil. */
+.ccard,.piece,.uni,.corte,.grid .card,.hito{
+  transition:transform var(--t-salida) var(--muelle-salida),
+             filter var(--t-salida) var(--muelle-salida),
+             box-shadow var(--t-salida) var(--muelle-salida),
+             opacity var(--t-salida) var(--muelle-salida),
+             background var(--t-salida) var(--muelle-salida)}
 
 /* el reflejo especular del canto superior: un gradiente, no un resplandor */
 .ccard::after,.piece::after,.uni::after,.corte::after,.grid .card::after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:4;
-  opacity:0;transition:opacity .4s cubic-bezier(.32,.72,0,1);
+  opacity:0;transition:opacity var(--t-salida) var(--muelle-salida);
   background:linear-gradient(180deg,
     rgba(255,255,255,.22) 0%,
     rgba(255,255,255,.07) 12%,
     rgba(255,255,255,0) 34%)}
 
 @media (hover:hover) and (prefers-reduced-motion:no-preference){
-  /* lo elegido crece y sube de plano */
+  /* lo elegido crece y sube de plano -- y aca si manda el muelle, con el
+     sobrepaso: la card se pasa un pelo de 1.05 y se acomoda */
   .carr-rail .ccard:hover,.puesto-grid .ccard:hover,.cat-grid .piece:hover,
   .unis-grid .uni:hover,.cortes-grid .corte:hover,.grid .card:hover{
-    transform:scale(1.05);z-index:3}
+    transform:scale(1.05);z-index:3;
+    transition-duration:var(--t-entrada);
+    transition-timing-function:var(--muelle)}
   .ccard:hover::after,.piece:hover::after,.uni:hover::after,
-  .corte:hover::after,.grid .card:hover::after{opacity:1}
+  .corte:hover::after,.grid .card:hover::after{
+    opacity:1;transition-duration:var(--t-entrada);transition-timing-function:var(--muelle)}
 
-  /* y lo que lo rodea se va atrás */
-  .carr-rail:has(.ccard:hover) .ccard:not(:hover),
-  .puesto-grid:has(.ccard:hover) .ccard:not(:hover),
-  .cat-grid:has(.piece:hover) .piece:not(:hover),
-  .unis-grid:has(.uni:hover) .uni:not(:hover),
-  .cortes-grid:has(.corte:hover) .corte:not(:hover){
-    filter:blur(6px) brightness(.7)}
+  /* --- las vecinas, en tres escalones ---
+     El nivel mas lejano va con :where() a proposito. :where() no suma
+     especificidad, asi que este -- que es el mas general -- queda por DEBAJO
+     de los dos siguientes en vez de ganarles por ser el ultimo declarado.
+     Sin eso, .carr-rail:has(.ccard:hover) .ccard:not(:hover) mide 0,5,0 y le
+     ganaba a .carr-rail .ccard:hover + .ccard, que mide 0,3,0. */
+  :where(.carr-rail:has(.ccard:hover)) .ccard:not(:hover),
+  :where(.puesto-grid:has(.ccard:hover)) .ccard:not(:hover),
+  :where(.cat-grid:has(.piece:hover)) .piece:not(:hover),
+  :where(.unis-grid:has(.uni:hover)) .uni:not(:hover),
+  :where(.cortes-grid:has(.corte:hover)) .corte:not(:hover){
+    filter:var(--vecina-3);transition-delay:var(--dly-3);
+    transition-duration:var(--t-entrada);transition-timing-function:var(--muelle-salida)}
 
-  /* EL CATÁLOGO VA APARTE: son 119 cards, y desenfocarlas todas a la vez lleva
-     el percentil 95 de 17 a 31,6ms mientras el mouse recorre la grilla —medido—,
-     o sea la mitad de los cuadros. Acá el desenfoque va solo a los dos vecinos
-     de cada lado: el efecto de profundidad se lee igual, porque lo que el ojo
-     compara es la card elegida contra las que tiene AL LADO, no contra las 118. */
-  .grid .card:hover + .card,
+  /* a dos de distancia */
+  .carr-rail .ccard:hover + .ccard + .ccard,
+  .puesto-grid .ccard:hover + .ccard + .ccard,
+  .cat-grid .piece:hover + .piece + .piece,
+  .unis-grid .uni:hover + .uni + .uni,
+  .cortes-grid .corte:hover + .corte + .corte,
   .grid .card:hover + .card + .card,
-  .grid .card:has(+ .card:hover),
+  .carr-rail .ccard:has(+ .ccard + .ccard:hover),
+  .puesto-grid .ccard:has(+ .ccard + .ccard:hover),
+  .cat-grid .piece:has(+ .piece + .piece:hover),
+  .unis-grid .uni:has(+ .uni + .uni:hover),
+  .cortes-grid .corte:has(+ .corte + .corte:hover),
   .grid .card:has(+ .card + .card:hover){
-    filter:blur(6px) brightness(.7)}
+    filter:var(--vecina-2);transition-delay:var(--dly-2);
+    transition-duration:var(--t-entrada);transition-timing-function:var(--muelle-salida)}
+
+  /* pegadas: las que mas se van, y sin esperar */
+  .carr-rail .ccard:hover + .ccard,
+  .puesto-grid .ccard:hover + .ccard,
+  .cat-grid .piece:hover + .piece,
+  .unis-grid .uni:hover + .uni,
+  .cortes-grid .corte:hover + .corte,
+  .grid .card:hover + .card,
+  .carr-rail .ccard:has(+ .ccard:hover),
+  .puesto-grid .ccard:has(+ .ccard:hover),
+  .cat-grid .piece:has(+ .piece:hover),
+  .unis-grid .uni:has(+ .uni:hover),
+  .cortes-grid .corte:has(+ .corte:hover),
+  .grid .card:has(+ .card:hover){
+    filter:var(--vecina-1);transition-delay:var(--dly-1);
+    transition-duration:var(--t-entrada);transition-timing-function:var(--muelle-salida)}
 }
+
+/* EL CATALOGO NO TIENE NIVEL LEJANO, y es deliberado: son 119 cards, y
+   desenfocarlas todas a la vez lleva el percentil 95 de 17 a 31,6ms mientras
+   el mouse recorre la grilla -- medido --, o sea la mitad de los cuadros. Ahi
+   el desenfoque llega hasta dos vecinas por lado y las demas quedan nitidas:
+   lo que el ojo compara es la prenda elegida contra las que tiene AL LADO, no
+   contra las 118. */
 
 /* sin movimiento: el cambio es directo y sin desenfoque */
 @media (prefers-reduced-motion:reduce){
-  .ccard,.piece,.uni,.corte,.grid .card{transition:none!important}
+  .ccard,.piece,.uni,.corte,.grid .card,.hito{transition:none!important}
   .ccard::after,.piece::after,.uni::after,.corte::after,.grid .card::after{display:none}
 }

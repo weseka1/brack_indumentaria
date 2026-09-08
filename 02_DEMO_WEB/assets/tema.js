@@ -94,13 +94,16 @@
      escucha scroll, no calcula posiciones, lo hace el navegador.
 
      No entra el catálogo de 119: ahí no hay una "pieza mirada", y observar cien
-     y pico de elementos para un efecto que casi no se ve no se paga. */
+     y pico de elementos para un efecto que casi no se ve no se paga.
+
+     SÍ entran las cinco placas de La marca (.hitos): ahí el reflejo sigue al
+     cursor, y sin cursor la placa activa tiene que ser la que estás mirando. */
   function luzEnFoco() {
     if (!window.IntersectionObserver || !window.matchMedia) return;
     if (window.matchMedia("(hover:hover)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    document.querySelectorAll(".carr-rail, .puesto-grid, .unis-grid").forEach(function (grupo) {
+    document.querySelectorAll(".carr-rail, .puesto-grid, .unis-grid, .hitos").forEach(function (grupo) {
       var hijos = Array.prototype.slice.call(grupo.children);
       if (hijos.length < 2) return;
       /* el carrusel scrollea adentro suyo: la banda se mide contra el riel.

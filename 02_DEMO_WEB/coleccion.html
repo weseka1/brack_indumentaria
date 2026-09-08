@@ -54,8 +54,12 @@ padding:.6rem 1.1rem;border-radius:3rem;background:var(--white);transition:all .
 .chip.on{border-color:var(--gold);color:var(--gold-deep);background:rgba(var(--line-rgb),.05)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.3rem}
 .card{background:rgba(var(--surface-rgb),var(--vidrio-op));backdrop-filter:blur(16px) saturate(var(--vidrio-sat));border:1px solid rgba(var(--surface-rgb),.8);
-border-radius:1.3rem;overflow:hidden;cursor:pointer;box-shadow:var(--halo-cat),0 6px 24px rgba(var(--shadow-rgb),.05);
-transition:transform .45s var(--ease),box-shadow .45s var(--ease),opacity .45s var(--ease)}
+border-radius:1.3rem;overflow:hidden;cursor:pointer;box-shadow:var(--halo-cat),0 6px 24px rgba(var(--shadow-rgb),.05)}
+/* LA TRANSICION LA PONE tema.css, y esta es la razon por la que el foco se
+   sentia brusco. Esta regla redeclaraba `transition` con una LISTA PARCIAL:
+   no nombraba `filter`. Como transition-property se queda con esa lista, el
+   desenfoque de las vecinas no transicionaba: saltaba. Ninguna curva podia
+   arreglar eso, porque no habia transicion que curvar. */
 .card:hover{transform:translateY(-4px);box-shadow:var(--halo-cat),0 18px 40px rgba(var(--shadow-rgb),.1)}
 .card .im{aspect-ratio:1/1;overflow:hidden;background:linear-gradient(170deg,var(--ph-a),var(--ph-b))}
 .card .im img{width:100%;height:100%;object-fit:cover;filter:saturate(.94);transition:transform .7s var(--ease)}
