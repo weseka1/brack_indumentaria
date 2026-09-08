@@ -23,7 +23,7 @@
   --paper-2:#ECEEF0;
   --white:#FCFCFD;          /* superficie de cards */
   --ink:#111214;            /* tinta: casi negro, con temperatura */
-  --ink-60:rgba(17,18,20,.58);
+  --ink-60:rgba(17,18,20,.68);   /* .58 dejaba varios textos en 4,48: al filo */
   --ink-35:rgba(17,18,20,.32);
   --gold:#111214;           /* el "acento" es la propia tinta: monocromo total.
                                En una tienda de ropa el color lo pone la prenda,
@@ -137,25 +137,38 @@
    Todo pasa por acá: ni una regla duplicada, ni un segundo stylesheet.
    Las fotos de producto NO se tocan (ningún filter, ninguna opacidad). */
 :root[data-theme="night"]{
-  --paper:#0E0F11;
-  --paper-2:#141619;
-  --white:#15171A;             /* la card deja de ser papel y pasa a ser vitrina */
-  --ink:#EDEEF0;
-  --ink-60:rgba(237,238,240,.64);
-  --ink-35:rgba(237,238,240,.42);
-  --gold:#EDEEF0;              /* el acento sigue siendo la tinta, ahora clara */
+  /* ---- ESCALA DE ELEVACIÓN DE iOS ----
+     La regla que ordena todo esto: en oscuro, iOS ACLARA lo que está elevado.
+     Una superficie apoyada sobre el fondo es más CLARA que el fondo, y una card
+     dentro de esa superficie es más clara todavía. Lo que separa las capas es el
+     color, no la sombra: por eso más abajo las sombras de panel quedan en nada.
+
+       fondo de la página   #1C1C1E
+       elevación 1          #2C2C2E   secciones y paneles
+       elevación 2          #3A3A3C   cards dentro de los paneles
+       separadores          #38383A
+
+     Y el texto lleva el tinte azulado de iOS (235,235,245) con alpha, no un gris
+     plano: sobre un fondo neutro, el gris plano se ve muerto. */
+  --paper:#1C1C1E;             /* fondo de la página */
+  --paper-2:#2C2C2E;
+  --white:#2C2C2E;             /* elevación 1: el fondo de las secciones */
+  --ink:#FFFFFF;
+  --ink-60:rgba(235,235,245,.60);
+  --ink-35:rgba(235,235,245,.30);
+  --gold:#FFFFFF;              /* el acento sigue siendo la tinta */
   --gold-deep:#FFFFFF;
-  --dark:#08090A;              /* los bloques que ya eran oscuros bajan un escalón */
-  --dark-ink:#F6F7F8;
-  --hairline:1px solid rgba(237,238,240,.13);
-  --surface-rgb:34,37,42;
+  --dark:#2C2C2E;              /* los bloques de color son una elevación más, no un pozo */
+  --dark-ink:#FFFFFF;
+  --hairline:1px solid #38383A;
+  --surface-rgb:58,58,60;      /* elevación 2 (#3A3A3C): las cards */
   --shadow-rgb:0,0,0;
-  --chip-rgb:22,24,28;
-  --nav-rgb:12,13,15;
-  --scrim-rgb:9,10,11;
-  --line-rgb:237,238,240;
-  --ph-a:#1A1D21;
-  --ph-b:#121417;
+  --chip-rgb:58,58,60;         /* las píldoras flotan sobre foto: elevación 2 */
+  --nav-rgb:44,44,46;          /* la barra es material, elevación 1 */
+  --scrim-rgb:28,28,30;        /* el velo sobre las fotos sigue siendo el fondo base */
+  --line-rgb:235,235,245;      /* el tinte de iOS para las líneas con alpha */
+  --ph-a:#3A3A3C;
+  --ph-b:#2C2C2E;
   --accent:#FFA457;            /* de noche el acento sobre papel se enciende: el ámbar */
   --accent-dark:#FFA457;       /* sobre bloque oscuro no cambia: ya era la luz encendida */
   --online:#4FBF7F;            /* el verde sube de tono para leerse sobre el vidrio oscuro */
@@ -186,7 +199,7 @@
      Ahora la zona donde vive el producto queda intacta, bit a bit. */
   --vineta:radial-gradient(150% 125% at 50% 42%,
     transparent 0%,transparent 72%,rgba(0,0,0,.34) 100%);
-  --tint-card:linear-gradient(165deg,#16181C,#101215);
+  --tint-card:linear-gradient(165deg,#3A3A3C,#333335);  /* elevación 2 */
   /* De noche el texto ya es claro y no necesita que se apague la foto: el velo
      baja y se vuelve DIRECCIONAL. Denso a la izquierda, donde vive el titular;
      casi nulo a la derecha, que es donde está la prenda —la primera imagen del
@@ -195,10 +208,12 @@
   --hero-velo:linear-gradient(to right,rgba(var(--scrim-rgb),.90) 0%,rgba(var(--scrim-rgb),.72) 26%,rgba(var(--scrim-rgb),.28) 58%,rgba(var(--scrim-rgb),.04) 82%,rgba(var(--scrim-rgb),0) 100%),
               linear-gradient(to top,rgba(var(--scrim-rgb),.62) 0%,rgba(var(--scrim-rgb),.06) 38%,rgba(var(--scrim-rgb),.22) 100%);
 
-  /* de noche el panel se apoya sobre un fondo casi negro: sin este filo claro
-     en el borde, el canto del panel no existiría */
-  --panel-borde:1px solid rgba(237,238,240,.11);
-  --panel-sombra:0 26px 64px -26px rgba(0,0,0,.75);
+  /* En oscuro las capas se separan por COLOR, no por sombra: el panel es más
+     claro que el fondo y con eso ya se lee elevado. Una sombra negra sobre un
+     fondo oscuro no separa nada, solo ensucia. Queda el separador de iOS
+     dibujando el canto y una sombra mínima de contacto. */
+  --panel-borde:1px solid #38383A;
+  --panel-sombra:0 1px 0 rgba(0,0,0,.35);
   /* de noche una ventana de video brillante en una página apagada encandila:
      el velo baja un escalón más y la franja se integra al local a media luz */
   --velo-franja:linear-gradient(to top,rgba(4,5,6,.90) 0%,rgba(4,5,6,.52) 52%,rgba(4,5,6,.62) 100%);
@@ -211,16 +226,18 @@
   --vidrio-op-chip:.94;
   --canto-luz:rgba(255,255,255,.16);
   --canto-sombra:rgba(0,0,0,.55);
-  --sombra-contacto:0 1px 2px rgba(0,0,0,.55);
-  --sombra-ambiente:0 22px 48px -14px rgba(0,0,0,.6);
-  --sombra-contacto-alta:0 2px 5px rgba(0,0,0,.6);
-  --sombra-ambiente-alta:0 36px 74px -18px rgba(0,0,0,.7);
+  /* misma lógica en las cards: separan por color contra el panel que las
+     contiene, no por una sombra que en oscuro no se ve */
+  --sombra-contacto:0 1px 0 rgba(0,0,0,.30);
+  --sombra-ambiente:0 0 0 rgba(0,0,0,0);
+  --sombra-contacto-alta:0 1px 0 rgba(0,0,0,.35);
+  --sombra-ambiente-alta:0 8px 24px -12px rgba(0,0,0,.5);
 }
 
 /* ---- el interruptor, igual en las dos páginas ---- */
 /* interruptor de noche: un punto que se enciende. Sin sol ni luna. */
 .nite{display:inline-flex;align-items:center;gap:.55rem;font-family:var(--mono);font-size:.56rem;
-  letter-spacing:.22em;text-transform:uppercase;color:var(--ink-35);padding:.7rem .9rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--ink-60);padding:.7rem .9rem;
   border-radius:3rem;transition:color .35s var(--ease)}
 .nite:hover{color:var(--ink-60)}
 .nite-dot{width:7px;height:7px;border-radius:50%;border:1px solid currentColor;flex:0 0 auto;
