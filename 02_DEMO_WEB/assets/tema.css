@@ -60,20 +60,35 @@
   --accent:#111214;            /* sobre papel: de día el acento ES la tinta */
   --accent-dark:#FFA457;       /* sobre bloque oscuro: el ámbar del local, día y noche */
 
-  /* ---- EL AMBIENTE DE «LA MARCA» ----
-     El campo de luz que va DETRÁS del vidrio de esa sección. Tres manchas
-     enormes de ámbar a una opacidad muy baja: es la luz encendida del local,
-     no un foco sobre nada. La opacidad va por tema porque el bloque no es el
-     mismo negro —de día es #0B0C0D y de noche #2C2C2E—, así que la misma
-     mancha rinde distinto: sobre el casi negro del día alcanza con menos.
+  /* ---- «LA MARCA»: VELO Y VIDRIO ----
+     Detrás de esa sección corre el video del local. El campo de ámbar generado
+     que había antes se fue: era una solución circular —inventábamos algo que
+     refractar para justificar el vidrio— y además reintroducía por el fondo el
+     mismo lenguaje de halo que habíamos sacado de las cards.
 
-     El vidrio de las placas es oscuro en los DOS temas, como --accent-dark,
-     porque la sección es un bloque oscuro siempre. Pero en los dos queda MÁS
-     CLARO que su fondo: una capa que sube se aclara, no se hunde. */
-  --campo-1:.062;
-  --campo-2:.050;
-  --campo-3:.038;
-  --marca-vidrio:rgba(44,46,50,.62);
+     El velo tiene que dejar VIVO el video: si lo apaga del todo volvemos al
+     fondo plano y el vidrio deja de existir. Es más oscuro arriba y abajo
+     —donde caen el titular y las placas— y se abre en el medio, que es la
+     banda donde el movimiento se ve.
+
+     El vidrio de las placas se define RELATIVO a lo que tiene debajo: misma
+     tinta que el velo, con un escalón de luz. Sobre medios iOS no aclara la
+     superficie, la espesa —la barra de Fotos sobre una foto clara es una losa
+     oscura—; lo que separa la placa del fondo ahí es el canto, no el tono. */
+  --velo-marca:linear-gradient(180deg,rgba(8,9,11,.66) 0%,rgba(8,9,11,.50) 40%,rgba(8,9,11,.70) 100%);
+  /* segundo velo, DIRECCIONAL: el titular y el kicker van directo sobre el
+     video, sin vidrio que los proteja, y medí que en el fotograma más claro el
+     kicker caía a 2,77:1. Este cae de izquierda a derecha —que es donde vive
+     la copia— y se abre antes de la mitad, así que el lado donde el video
+     tiene movimiento queda intacto. Oscurecer la banda entera lo habría
+     matado parejo. */
+  --velo-cabecera:linear-gradient(100deg,rgba(6,7,9,.52) 0%,rgba(6,7,9,.36) 40%,rgba(6,7,9,.05) 68%,transparent 82%);
+  /* y un velo LOCAL a la copia. El direccional pierde fuerza justo donde vive
+     el texto —su 0% cae fuera de la esquina visible— y para que llegara había
+     que oscurecer media sección. Esto es una elipse pegada a la cabecera: hace
+     el trabajo donde hace falta y deja el resto del cuadro vivo. */
+  --velo-copia:rgba(6,7,9,.26);
+  --marca-vidrio:rgba(24,26,30,.62);
   --online:#2E8B57;            /* el verde de "estamos atendiendo" (semáforo, no marca) */
   --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23111214'/%3E%3C/svg%3E");
   /* el mapa de día: gris, como estaba */
@@ -187,13 +202,16 @@
   --accent:#FFA457;            /* de noche el acento sobre papel se enciende: el ámbar */
   --accent-dark:#FFA457;       /* sobre bloque oscuro no cambia: ya era la luz encendida */
 
-  /* el bloque de «La marca» ya es una elevación (#2C2C2E), así que el ámbar
-     tiene menos negro contra el cual encenderse y sube un punto. El vidrio
-     sube a #3A3A3C, que es el escalón de card de la escala de iOS. */
-  --campo-1:.078;
-  --campo-2:.062;
-  --campo-3:.046;
-  --marca-vidrio:rgba(58,58,60,.70);
+  /* de noche el velo aprieta un poco más: la página entera está apagada y un
+     video sin velar ahí adentro deslumbra. El vidrio afloja la opacidad para
+     compensar —deja pasar más video, que es lo que hay que refractar. */
+  --velo-marca:linear-gradient(180deg,rgba(4,5,6,.74) 0%,rgba(4,5,6,.58) 40%,rgba(4,5,6,.78) 100%);
+  /* de noche el velo de base ya aprieta más, así que el de cabecera afloja */
+  --velo-cabecera:linear-gradient(100deg,rgba(4,5,6,.42) 0%,rgba(4,5,6,.27) 40%,rgba(4,5,6,.04) 68%,transparent 82%);
+  /* de noche el contraste ya daba 4,79:1 sin esto, así que la elipse apenas se
+     insinúa: está por consistencia de forma, no por necesidad */
+  --velo-copia:rgba(4,5,6,.10);
+  --marca-vidrio:rgba(30,32,36,.58);
   --online:#4FBF7F;            /* el verde sube de tono para leerse sobre el vidrio oscuro */
   --caret:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23EDEEF0'/%3E%3C/svg%3E");
   /* El iframe de Google Maps es blanco siempre y no se puede estilar por dentro:
