@@ -117,6 +117,11 @@
      la tinta oscura del titular necesita esta densidad para leerse. */
   --hero-velo:linear-gradient(to top,rgba(var(--scrim-rgb),.94) 0%,rgba(var(--scrim-rgb),.30) 46%,rgba(var(--scrim-rgb),.50) 100%),
               linear-gradient(to right,rgba(var(--scrim-rgb),.92) 0%,rgba(var(--scrim-rgb),.58) 44%,rgba(var(--scrim-rgb),.06) 80%);
+  /* El mismo velo cuando el panel es VERTICAL. De dia no cambia: medido, el
+     texto del hero da 6,34:1 en telefono tal como esta. */
+  --hero-velo-v:linear-gradient(to top,rgba(var(--scrim-rgb),.94) 0%,rgba(var(--scrim-rgb),.30) 46%,rgba(var(--scrim-rgb),.50) 100%),
+                linear-gradient(to right,rgba(var(--scrim-rgb),.92) 0%,rgba(var(--scrim-rgb),.58) 44%,rgba(var(--scrim-rgb),.06) 80%);
+  --hero-sub-ink:rgba(17,18,20,.68);
 
   /* ---- ARQUITECTURA DE PANELES ----
      Las secciones dejan de ir a sangre y pasan a ser paneles apoyados sobre el
@@ -295,8 +300,24 @@
      casi nulo a la derecha, que es donde está la prenda —la primera imagen del
      sitio, y se estaba viendo gris en vez de negra—. El barrido de abajo queda
      apenas para asentar el CTA y el reloj. */
-  --hero-velo:linear-gradient(to right,rgba(var(--scrim-rgb),.90) 0%,rgba(var(--scrim-rgb),.72) 26%,rgba(var(--scrim-rgb),.28) 58%,rgba(var(--scrim-rgb),.04) 82%,rgba(var(--scrim-rgb),0) 100%),
-              linear-gradient(to top,rgba(var(--scrim-rgb),.62) 0%,rgba(var(--scrim-rgb),.06) 38%,rgba(var(--scrim-rgb),.22) 100%);
+  /* La foto del hero pasó a ser una toma de estudio sobre fondo GRIS CLARO, y
+     los alfas de antes estaban calibrados para una prenda oscura: medido, la
+     bajada caía a 2,56:1 en escritorio y a 2,21:1 en telefono. El velo sube,
+     pero lo justo. Se probaron tres densidades y esta es la mas suave que
+     llega a 4,5 sin apagar la foto (la variacion de gris de la mitad derecha
+     baja de 27,2 a 23,0; con la siguiente densidad caia a 18,9). */
+  --hero-velo:linear-gradient(to right,rgba(var(--scrim-rgb),.94) 0%,rgba(var(--scrim-rgb),.80) 30%,rgba(var(--scrim-rgb),.40) 62%,rgba(var(--scrim-rgb),.08) 84%,rgba(var(--scrim-rgb),0) 100%),
+              linear-gradient(to top,rgba(var(--scrim-rgb),.70) 0%,rgba(var(--scrim-rgb),.14) 40%,rgba(var(--scrim-rgb),.26) 100%);
+  /* En VERTICAL el velo direccional no sirve: la copia ocupa todo el ancho, no
+     la mitad izquierda, asi que no hay lado libre que dejar limpio. Ahi el
+     velo sube desde abajo. */
+  --hero-velo-v:linear-gradient(to top,rgba(var(--scrim-rgb),.92) 0%,rgba(var(--scrim-rgb),.80) 52%,rgba(var(--scrim-rgb),.34) 80%,rgba(var(--scrim-rgb),.20) 100%);
+  /* La bajada del hero sube de .60 a .78. No es un capricho: sobre el gris de
+     esta foto, con .60 NI EL BLANCO PURO llega a 4,5 —el techo es 4,00—, asi
+     que o se oscurece mucho mas la foto o se sube la tinta. Subir la tinta
+     cuesta menos: es texto sobre una FOTO, no sobre una superficie, y ahi iOS
+     tambien usa mas contraste del que usa sobre un panel. */
+  --hero-sub-ink:rgba(235,235,245,.78);
 
   /* En oscuro las capas se separan por COLOR, no por sombra: el panel es más
      claro que el fondo y con eso ya se lee elevado. Una sombra negra sobre un

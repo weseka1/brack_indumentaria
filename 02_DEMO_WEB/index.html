@@ -107,11 +107,57 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .hero.has-video .hero-video{opacity:1}
 .hero.has-video .hero-media{opacity:0}
 .hero-media{filter:saturate(.92) contrast(1.02);transform:scale(1.04)}
+/* ENCUADRE. La foto del hero es apaisada (736x490 de origen) y el panel en un
+   teléfono es vertical: con object-fit:cover, de los 736px de ancho quedan
+   visibles 218. Medido dónde caen las figuras —de x=96 a x=532—, ese recorte
+   centrado parte a las dos por la mitad.
+
+   Así que en vertical el encuadre se corre al 62%, que es donde queda entera
+   la figura parada con el bate: la ventana pasa a mostrar x=321..539. Se
+   pierde el que está agachado, pero se pierde ENTERO y a propósito, que es
+   distinto de cortar a los dos por la cintura.
+
+   Y baja un poco el punto vertical: con el centro exacto, la cabeza quedaba
+   contra el canto de arriba. */
+@media(max-aspect-ratio:1/1){
+  .hero-media{object-position:62% 44%}
+}
+
+/* EL CANTO DEL PANEL.
+   El hero era el unico panel grande del sitio sin el canto de vidrio que
+   llevan la nav, las cards, los universos y los cortes. Es la regla 3 del
+   estandar: la luz cae de arriba, entonces el filo de arriba se aclara y el de
+   abajo se hunde, y eso no es un `border` parejo en los cuatro lados sino un
+   gradiente de un canto al otro. Mismo truco que el resto: un pseudo-elemento
+   con 1px de padding y una mascara que recorta el centro, asi queda un marco
+   de 1px que no tapa nada ni se come un click.
+
+   Sobre una foto a sangre hace mas trabajo que en cualquier otro panel: es lo
+   que dibuja el borde del cristal contra la imagen, que si no queda cortada
+   contra el radio sin ningun filo. */
+.hero::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(180deg,var(--canto-luz) 0%,transparent 42%,var(--canto-sombra) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;z-index:7}
 /* El velo sale de una variable porque el trabajo que hace cambia por tema:
    de día tapa una foto clara para que la tinta oscura se lea; de noche estaba
    apagando la prenda —la primera imagen del sitio— sin necesitarlo, porque el
    texto ya es claro. Ver assets/tema.css. */
 .hero-scrim{position:absolute;inset:0;background:var(--hero-velo)}
+/* Con el panel VERTICAL la copia ocupa todo el ancho, no la mitad izquierda:
+   ahi el velo direccional no sirve porque no queda lado libre, y sube desde
+   abajo. Ver --hero-velo-v en tema.css.
+
+   Va DESPUES de la regla de arriba y no junto al object-position del hero, que
+   es donde lo escribi primero: los @media no suman especificidad, asi que alla
+   perdia contra esta misma linea por orden de declaracion. Es la cuarta vez que
+   esta cascada me muerde en este archivo. */
+@media(max-aspect-ratio:1/1){
+  .hero-scrim{background:var(--hero-velo-v)}
+}
 /* sube para dejarle el pie de la columna al "Bajá", que ahora cuelga de la
    misma línea vertical: con bottom:9vh se le montaba encima al CTA */
 /* right además de left: sin él, en un teléfono el bloque se estira hasta el
@@ -165,7 +211,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
    altura del span, no sobre la de esta caja. */
 .hero-title .l{display:block;overflow:hidden;padding-bottom:.26em;margin-bottom:-.26em}
 .hero-title .l span{display:inline-block;transform:translateY(115%)}
-.hero-sub{margin-top:1.4rem;font-size:1rem;color:var(--ink-60);opacity:0;max-width:30rem}
+.hero-sub{margin-top:1.4rem;font-size:1rem;color:var(--hero-sub-ink);opacity:0;max-width:30rem}
 .hero-cta{margin-top:2.2rem;opacity:0}
 /* Estaba clavado en el centro exacto del viewport, sin relación con nada: ni
    con el titular, que arranca a 5vw, ni con la foto. Ahora cuelga de la misma
@@ -849,7 +895,7 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 
 <!-- HERO (slot de video: assets/hero.mp4 — fallback foto con Ken Burns) -->
 <section class="hero" id="top">
-  <img class="hero-media" src="fotos/hero_poster.webp" alt="Brack Indumentaria — drop de temporada">
+  <img class="hero-media" src="fotos/hero-lookbook.webp" alt="Brack Indumentaria — drop de temporada">
   <div class="hero-scrim"></div>
   <span class="foto-tag"><b>Buzos NFL Importados</b> · $136.500</span>
   <div class="hero-copy">
