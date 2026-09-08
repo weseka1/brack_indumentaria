@@ -365,23 +365,104 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
 .ccard:hover .ccard-arrow{transform:translateX(.4rem)}
 .carr-hint{padding:0 6vw;font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-60)}
 
-/* ===== bloque historia (contraste oscuro, calmo) ===== */
-/* RITMO — el valle. Son cinco datos duros para leer de un golpe, no un momento
-   de contemplación, y ocupaban lo mismo que la vitrina. Se compacta el bloque y
-   baja la escala de los números: siguen siendo lo más grande de su sección, pero
-   dejan de competir con los titulares de las secciones vecinas. */
-.historia{background:var(--dark);color:var(--dark-ink);padding:6vh 6vw}
+/* ===== LA MARCA — vidrio sobre el ambiente del local =====
+   RITMO — el valle. Son cinco datos duros para leer de un golpe, no un momento
+   de contemplación: el bloque va compacto y los números, aunque son lo más
+   grande de su sección, no compiten con los titulares de las vecinas. */
+.historia{background:var(--dark);color:var(--dark-ink);padding:6vh 6vw;position:relative}
 .historia-head{max-width:52rem;margin:0 0 3.5vh}
 .historia-head .h2 em{font-style:italic;color:var(--accent-dark)}
-.hitos{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-top:1px solid rgba(246,247,248,.16);max-width:1240px;margin:0 auto;padding-bottom:1.2rem}
-.hito{padding:2.6rem 1.6rem 0;border-left:1px solid rgba(246,247,248,.16)}
-.hito:first-child{border-left:none}
-@media(min-width:1001px){.hito:nth-child(even){transform:translateY(1.7rem)}}
-.hito .n{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,3.7vw,3.5rem);color:var(--accent-dark);line-height:1}
-.hito .k{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(246,247,248,.55);margin-top:.9rem}
-.hito p{font-size:.86rem;color:rgba(246,247,248,.78);margin-top:.7rem}
-@media(max-width:1000px){.hitos{grid-template-columns:1fr 1fr}.hito{border-top:1px solid rgba(246,247,248,.16);padding-bottom:2rem}.hito:first-child{border-top:none}}
-@media(max-width:560px){.hitos{grid-template-columns:1fr}.hito{border-left:none;padding-left:0}}
+
+/* EL AMBIENTE — lo que el vidrio filtra.
+   Sin esto no hay vidrio, y está medido: un backdrop-filter sobre un color
+   plano devuelve el mismo color plano, 0 de 255 de diferencia. Poner las
+   placas sin esto sería dejar el código puesto y el efecto ausente.
+
+   Y es ambiente, NO es un foco. El halo ámbar que sacamos de las cards
+   señalaba UNA pieza: tenía centro, tenía borde y se encendía al pasar el
+   mouse. Esto es lo contrario — tres manchas enormes (la más chica ocupa
+   media sección), corridas de la grilla de las placas a propósito para que
+   ninguna quede centrada en una, y a una opacidad a la que no llegan a
+   dibujar un contorno. Es la luz del local, que ya estaba encendida antes de
+   que llegaras y sigue encendida cuando te vas. */
+.historia::before{
+  content:"";position:absolute;inset:-24%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(42% 46% at 19% 24%,rgba(255,164,87,var(--campo-1)) 0%,transparent 70%),
+    radial-gradient(38% 52% at 77% 9%,rgba(255,164,87,var(--campo-2)) 0%,transparent 68%),
+    radial-gradient(52% 40% at 46% 98%,rgba(255,206,158,var(--campo-3)) 0%,transparent 72%);
+  transform:translate3d(var(--campo-x,0px),var(--campo-y,0px),0);
+  transition:transform 1s cubic-bezier(.32,.72,0,1)}
+.historia-head,.hitos{position:relative;z-index:1}
+
+/* sin cursor la luz deriva sola: el ambiente no se queda quieto por no tener
+   a quién seguir. 54s de ida y vuelta — si se nota el movimiento, es un foco. */
+@media (hover:none) and (prefers-reduced-motion:no-preference){
+  .historia::before{animation:campoDeriva 54s ease-in-out infinite alternate}}
+@keyframes campoDeriva{
+  from{transform:translate3d(-1.6%,-1.1%,0)}
+  to{transform:translate3d(1.6%,1.3%,0)}}
+
+/* LAS CINCO PLACAS.
+   22px adentro del panel de 28: el radio de un hijo no se copia del padre, se
+   baja, o los cantos no quedan concéntricos.
+
+   Se fueron los filetes de 1px que las separaban: una línea divide, una placa
+   contiene. Y se fue el escalonado de las pares, que hacía rato no existía —
+   ioFade hace gsap.to(el,{y:0}) sobre cada hito y el transform inline de GSAP
+   le ganaba a la regla. Estaba en la hoja pero no en la pantalla. */
+.hitos{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.75rem;
+  max-width:1240px;margin:0 auto}
+.hito{position:relative;padding:1.7rem 1.25rem 1.5rem;border-radius:22px;
+  background:var(--marca-vidrio);
+  -webkit-backdrop-filter:blur(30px) saturate(180%);
+          backdrop-filter:blur(30px) saturate(180%);
+  transition:background .4s cubic-bezier(.32,.72,0,1)}
+
+/* el canto: la luz cae de arriba, así que el borde de arriba se aclara y el de
+   abajo se hunde. Fijo en los dos temas, como el vidrio. */
+.hito::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;
+  background:linear-gradient(180deg,rgba(255,255,255,.20) 0%,transparent 46%,rgba(0,0,0,.42) 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+          mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  pointer-events:none;z-index:3}
+
+/* EL ESPECULAR — lo único que sigue al cursor.
+   Blanco, no ámbar: es un reflejo sobre el vidrio, no una luz que marca. En
+   ámbar volvería a leerse como el halo que sacamos. Y la placa no se mueve ni
+   se inclina: lo que se mueve es el reflejo, que es lo que hace iOS. */
+.hito::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;
+  opacity:0;transition:opacity .4s cubic-bezier(.32,.72,0,1);
+  background:radial-gradient(circle 200px at var(--mx,50%) var(--my,0%),
+    rgba(255,255,255,.105) 0%,rgba(255,255,255,.04) 40%,transparent 74%)}
+/* z-index 1 y no 2: el ::after es el último hijo, así que con el mismo nivel
+   que el texto le pasaba POR ENCIMA y le velaba el contraste. El reflejo va
+   debajo de lo que hay que leer. Y el pico bajó de .14 a .105 porque a .14 el
+   fondo bajo los números llegaba a rgb(77,77,79) y el ámbar daba 4,30:1 —
+   medido—, cuando el piso es 4,5. */
+
+.hito .n{font-family:var(--serif);font-weight:300;font-size:clamp(2.2rem,3.7vw,3.5rem);color:var(--accent-dark);line-height:1;
+  position:relative;z-index:2;transition:transform .4s cubic-bezier(.32,.72,0,1)}
+.hito .k{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:rgba(246,247,248,.72);margin-top:.9rem;position:relative;z-index:2}
+.hito p{font-size:.86rem;color:rgba(246,247,248,.84);margin-top:.7rem;position:relative;z-index:2}
+
+/* EL ESPESOR: el número se despega y el texto chico no. Ese desfasaje entre
+   dos planos es todo el paralaje que hay, y alcanza para que la placa deje de
+   leerse como un rectángulo pintado. Sin rotar nada: inclinar la Fraunces de
+   3,5rem la saca de la grilla de píxeles y se ensucia. */
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .hito:hover::after{opacity:1}
+  .hito:hover .n{transform:translateY(-3px)}}
+
+@media(max-width:1000px){.hitos{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.hitos{grid-template-columns:1fr}}
+
+@media (prefers-reduced-motion:reduce){
+  .historia::before{transition:none;transform:none;animation:none}
+  .hito,.hito .n,.hito::after{transition:none}}
 
 /* ===== catálogo claro ===== */
 .catalogo{padding:14vh 0 12vh;background:var(--paper)}
@@ -1255,6 +1336,58 @@ button{font-family:inherit;background:none;border:none;color:inherit;cursor:poin
     <div class="hito" data-fade><div class="n">13</div><div class="k">Categorías</div><p>Indumentaria, zapatillas, gorras, camisetas, perfumería y más.</p></div>
   </div>
 </section>
+
+<script>
+/* ---------- LA MARCA: el reflejo sigue al cursor, la placa no ----------
+   Va acá abajo y no arriba: un script por encima de su elemento no lo
+   encuentra (ya pasó dos veces en este archivo, con el reloj y con el FAB).
+
+   Dos cosas se mueven y ninguna es la placa:
+     · el especular, dentro de la placa que tenés debajo del cursor;
+     · el campo de luz de atrás, AL REVÉS que el cursor y muy poco. Que el
+       fondo y el frente no se muevan juntos es lo que le da espesor al vidrio.
+
+   El transform del campo tiene una transición de 1s y le reescribimos el
+   destino en cada cuadro: eso deja un arrastre suave sin escribir un lerp a
+   mano. El ambiente llega tarde, como corresponde.
+
+   No corre sin cursor fino ni con prefers-reduced-motion: ahí el campo deriva
+   solo por CSS y el especular no se enciende nunca. */
+(function () {
+  var sec = document.getElementById("historia");
+  if (!sec || !window.matchMedia) return;
+  if (!matchMedia("(hover:hover)").matches) return;
+  if (matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+
+  var pedido = null, ev = null;
+
+  sec.addEventListener("pointermove", function (e) {
+    ev = e;
+    if (pedido) return;                       // un cálculo por cuadro, no por evento
+    pedido = requestAnimationFrame(function () {
+      pedido = null;
+      var r = sec.getBoundingClientRect();
+      var dx = (ev.clientX - r.left) / r.width - 0.5;
+      var dy = (ev.clientY - r.top) / r.height - 0.5;
+      sec.style.setProperty("--campo-x", (-dx * 24).toFixed(1) + "px");
+      sec.style.setProperty("--campo-y", (-dy * 18).toFixed(1) + "px");
+
+      /* una sola placa por cuadro: closest() en vez de recorrer las cinco
+         midiéndolas, que sería forzar cinco layouts por cuadro */
+      var h = ev.target.closest && ev.target.closest(".hito");
+      if (!h) return;
+      var b = h.getBoundingClientRect();
+      h.style.setProperty("--mx", (((ev.clientX - b.left) / b.width) * 100).toFixed(1) + "%");
+      h.style.setProperty("--my", (((ev.clientY - b.top) / b.height) * 100).toFixed(1) + "%");
+    });
+  });
+
+  sec.addEventListener("pointerleave", function () {
+    sec.style.setProperty("--campo-x", "0px");
+    sec.style.setProperty("--campo-y", "0px");
+  });
+})();
+</script>
 
 <!-- BLOQUE CAMPAÑA 2 — el local -->
 <section class="blq blq-alt">
